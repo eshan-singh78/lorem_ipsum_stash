@@ -1,24 +1,26 @@
 """
-Validation Layer — v3
-Type enforcement and range checks.
-Operates on plain {field: value} dicts (after unwrapping confidence layer).
+Validation Layer — v5 (Single Layer)
+Runs ONCE after correction. Responsibilities:
+  - Type casting and range enforcement
+  - Enum validation
+  - Derived field computation (emi_ratio, future_obligation_score)
+  - Confidence consistency final check
+  - NO business logic, NO behavioral overrides, NO duplicate rules
 
-Changes from v2:
-- wedding_flag removed
-- near_term_obligation_level + obligation_type added
-- is_all_null updated to reflect new schema
+This is the ONLY validation stage in the pipeline.
 """
 
 from typing import Any
+from field_registry import FieldValue, DERIVED_FIELDS, make_field, check_invariants
 
 VALID_INCOME_TYPES      = {"salaried", "business", "gig", "unknown"}
-VALID_LOSS_REACTIONS    = {"panic", "neutral", "aggressive", None}
+VALID_LOSS_REACTIONS    = {"panic", "cautious", "neutral", "aggressive", None}
 VALID_RISK_BEHAVIORS    = {"low", "medium", "high", None}
 VALID_OBLIGATION_LEVELS = {"none", "moderate", "high", None}
 VALID_OBLIGATION_TYPES  = {"wedding", "house", "education", "medical", "family", "other", None}
 
 
-def _cast_number(val: Any, allow_float: bool = True):
+def _cast_number(val: Any, allow_float: bool = True) -> float | int | None:
     if val is None:
         return None
     try:
@@ -27,7 +29,7 @@ def _cast_number(val: Any, allow_float: bool = True):
         return None
 
 
-def _cast_bool(val: Any):
+def _cast_bool(val: Any) -> bool | None:
     if val is None:
         return None
     if isinstance(val, bool):
@@ -40,74 +42,163 @@ def _cast_bool(val: Any):
     return None
 
 
-def validate(plain: dict) -> dict:
+def validate_and_cast(fields: dict[str, FieldValue]) -> dict[str, FieldValue]:
     """
-    Validate and sanitize a plain {field: value} dict.
-    Returns clean dict; invalid fields become null.
+    Type-cast and range-check all fields.
+    Invalid values become null (FieldValue.null) — confidence preserved where possible.
+    Returns new dict — does not mutate input.
     """
-    v = {}
+    out: dict[str, FieldValue] = {}
 
-    it = plain.get("income_type")
-    v["income_type"] = it if it in VALID_INCOME_TYPES else "unknown"
+    def _keep_or_null(fname: str, fv: FieldValue, new_val) -> FieldValue:
+        """If cast succeeded, keep original confidence/source. If failed, null with low conf."""
+        if new_val is None:
+            return FieldValue.null(fv.source)
+        return FieldValue(value=new_val, confidence=fv.confidence, source=fv.source)
 
-    v["monthly_income"] = _cast_number(plain.get("monthly_income"))
-    if v["monthly_income"] is not None and v["monthly_income"] <= 0:
-        v["monthly_income"] = None
+    for fname, fv in fields.items():
+        if fname in DERIVED_FIELDS:
+            out[fname] = fv  # derived fields validated separately
+            continue
 
-    v["emergency_months"] = _cast_number(plain.get("emergency_months"))
-    if v["emergency_months"] is not None and v["emergency_months"] < 0:
-        v["emergency_months"] = None
+        val = fv.value
 
-    v["emi_amount"] = _cast_number(plain.get("emi_amount"))
-    if v["emi_amount"] is not None and v["emi_amount"] < 0:
-        v["emi_amount"] = None
+        if fname == "income_type":
+            out[fname] = FieldValue(
+                value=val if val in VALID_INCOME_TYPES else "unknown",
+                confidence=fv.confidence, source=fv.source,
+            )
 
-    emi_ratio = _cast_number(plain.get("emi_ratio"))
-    v["emi_ratio"] = emi_ratio if emi_ratio is not None and 0 <= emi_ratio <= 100 else None
+        elif fname == "monthly_income":
+            n = _cast_number(val)
+            out[fname] = _keep_or_null(fname, fv, n if n and n > 0 else None)
 
-    dep = _cast_number(plain.get("dependents"), allow_float=False)
-    v["dependents"] = int(dep) if dep is not None and dep >= 0 else None
+        elif fname == "emergency_months":
+            n = _cast_number(val)
+            out[fname] = _keep_or_null(fname, fv, n if n is not None and n >= 0 else None)
 
-    ntol = plain.get("near_term_obligation_level")
-    v["near_term_obligation_level"] = ntol if ntol in VALID_OBLIGATION_LEVELS else None
+        elif fname == "emi_amount":
+            n = _cast_number(val)
+            out[fname] = _keep_or_null(fname, fv, n if n is not None and n >= 0 else None)
 
-    ot = plain.get("obligation_type")
-    v["obligation_type"] = ot if ot in VALID_OBLIGATION_TYPES else None
-    if v["near_term_obligation_level"] in ("none", None):
-        v["obligation_type"] = None
+        elif fname == "emi_ratio":
+            n = _cast_number(val)
+            out[fname] = _keep_or_null(fname, fv, n if n is not None and 0 <= n <= 100 else None)
 
-    exp = _cast_number(plain.get("experience_years"))
-    v["experience_years"] = exp if exp is not None and exp >= 0 else None
+        elif fname == "dependents":
+            n = _cast_number(val, allow_float=False)
+            out[fname] = _keep_or_null(fname, fv, int(n) if n is not None and n >= 0 else None)
 
-    fks = _cast_number(plain.get("financial_knowledge_score"), allow_float=False)
-    v["financial_knowledge_score"] = int(fks) if fks is not None and 1 <= fks <= 5 else None
+        elif fname == "near_term_obligation_level":
+            out[fname] = FieldValue(
+                value=val if val in VALID_OBLIGATION_LEVELS else None,
+                confidence=fv.confidence, source=fv.source,
+            )
 
-    v["decision_autonomy"] = _cast_bool(plain.get("decision_autonomy"))
+        elif fname == "obligation_type":
+            out[fname] = FieldValue(
+                value=val if val in VALID_OBLIGATION_TYPES else None,
+                confidence=fv.confidence, source=fv.source,
+            )
 
-    lr = plain.get("loss_reaction")
-    v["loss_reaction"] = lr if lr in VALID_LOSS_REACTIONS else None
+        elif fname == "experience_years":
+            n = _cast_number(val)
+            out[fname] = _keep_or_null(fname, fv, n if n is not None and n >= 0 else None)
 
-    rb = plain.get("risk_behavior")
-    v["risk_behavior"] = rb if rb in VALID_RISK_BEHAVIORS else None
+        elif fname == "financial_knowledge_score":
+            n = _cast_number(val, allow_float=False)
+            out[fname] = _keep_or_null(
+                fname, fv, int(n) if n is not None and 1 <= n <= 5 else None
+            )
 
-    return v
+        elif fname == "decision_autonomy":
+            out[fname] = _keep_or_null(fname, fv, _cast_bool(val))
+
+        elif fname == "loss_reaction":
+            out[fname] = FieldValue(
+                value=val if val in VALID_LOSS_REACTIONS else None,
+                confidence=fv.confidence, source=fv.source,
+            )
+
+        elif fname == "risk_behavior":
+            out[fname] = FieldValue(
+                value=val if val in VALID_RISK_BEHAVIORS else None,
+                confidence=fv.confidence, source=fv.source,
+            )
+
+        else:
+            out[fname] = fv  # pass through unknown fields unchanged
+
+    # obligation_type must be null when level is none/null
+    ntol = out.get("near_term_obligation_level")
+    if ntol and ntol.value in ("none", None):
+        ot = out.get("obligation_type")
+        if ot and ot.value is not None:
+            out["obligation_type"] = FieldValue.null(ot.source)
+
+    return out
 
 
-def is_all_null(validated: dict) -> bool:
-    """Return True if every meaningful field is null/unknown — insufficient data."""
+def compute_derived_fields(
+    fields: dict[str, FieldValue],
+    future_obligation_score: float = 0.0,
+) -> tuple[dict[str, FieldValue], list[str]]:
+    """
+    Compute all derived fields from validated inputs.
+    Called AFTER correction and validation — uses fresh inputs only.
+    Returns (updated_fields, derivation_log).
+    """
+    out  = dict(fields)
+    log: list[str] = []
+
+    emi_fv    = out.get("emi_amount")
+    income_fv = out.get("monthly_income")
+    emi_val   = emi_fv.value    if emi_fv    else None
+    income_val = income_fv.value if income_fv else None
+
+    if emi_val is not None and income_val and income_val > 0:
+        ratio = round(min((emi_val / income_val) * 100, 100), 2)
+        out["emi_ratio"]        = make_field("emi_ratio", ratio, "derived")
+        out["emi_ratio_source"] = FieldValue(value="derived", confidence="medium", source="derived")
+        log.append(f"emi_ratio={ratio:.2f}% = emi({emi_val}) / income({income_val}) × 100")
+    elif out.get("emi_ratio") and out["emi_ratio"].value is not None:
+        out["emi_ratio_source"] = FieldValue(value="llm", confidence="low", source="derived")
+        log.append(f"emi_ratio={out['emi_ratio'].value} (LLM-stated, not derived)")
+    else:
+        out["emi_ratio"]        = FieldValue.null("derived")
+        out["emi_ratio_source"] = FieldValue(value="none", confidence="medium", source="derived")
+
+    # _incomplete_emi_data flag
+    incomplete = emi_val is not None and (income_val is None or income_val <= 0)
+    out["_incomplete_emi_data"] = FieldValue(
+        value=incomplete, confidence="high", source="derived"
+    )
+    if incomplete:
+        log.append("WARNING: emi_amount present but monthly_income missing — ratio unverifiable")
+
+    # future_obligation_score
+    out["future_obligation_score"] = make_field(
+        "future_obligation_score", future_obligation_score, "derived"
+    )
+    if future_obligation_score > 0:
+        log.append(f"future_obligation_score={future_obligation_score} (from intent detection)")
+
+    return out, log
+
+
+def is_all_null(fields: dict[str, FieldValue]) -> bool:
     meaningful = [
         "monthly_income", "emergency_months", "emi_amount", "emi_ratio",
         "dependents", "experience_years", "financial_knowledge_score",
         "loss_reaction", "risk_behavior", "near_term_obligation_level",
     ]
-    return all(validated.get(f) is None for f in meaningful)
+    return all(
+        fields.get(f) is None or fields[f].value is None
+        for f in meaningful
+    )
 
 
-def compute_data_completeness(validated: dict) -> tuple[int, list[str]]:
-    """
-    Returns (completeness_pct, missing_fields_list).
-    Key fields that matter for profiling.
-    """
+def compute_data_completeness(fields: dict[str, FieldValue]) -> tuple[int, list[str]]:
     key_fields = [
         "income_type", "monthly_income", "emergency_months",
         "emi_amount", "dependents", "experience_years",
@@ -116,10 +207,31 @@ def compute_data_completeness(validated: dict) -> tuple[int, list[str]]:
     ]
     missing = []
     for f in key_fields:
-        val = validated.get(f)
-        if val is None or val == "unknown":
+        fv = fields.get(f)
+        if fv is None or fv.value is None or fv.value == "unknown":
             missing.append(f)
-
     present = len(key_fields) - len(missing)
-    pct     = int(round((present / len(key_fields)) * 100))
-    return pct, missing
+    return int(round((present / len(key_fields)) * 100)), missing
+
+
+def build_field_sources(fields: dict[str, FieldValue]) -> dict[str, str]:
+    """Return {field: source} map for audit output."""
+    return {k: v.source for k, v in fields.items() if not k.startswith("_")}
+
+
+def final_confidence_check(
+    fields: dict[str, FieldValue],
+) -> tuple[dict[str, FieldValue], list[str]]:
+    """
+    Final invariant: null value must never have high confidence.
+    Runs after all other stages as a safety net.
+    """
+    out = dict(fields)
+    violations: list[str] = []
+    for fname, fv in fields.items():
+        if fv.value is None and fv.confidence == "high":
+            out[fname] = FieldValue(value=None, confidence="low", source=fv.source)
+            violations.append(
+                f"Final check: {fname}=null had confidence='high' → forced to 'low'"
+            )
+    return out, violations

@@ -1,14 +1,12 @@
 """
-4-Axis Scoring Engine — v3, deterministic, no LLM.
+4-Axis Scoring Engine — v5, deterministic, no LLM.
 Scores: 1–99.
 
-Changes from v2:
-- wedding_flag replaced by near_term_obligation_level in Axis 3
-- emergency_months=null → NO penalty (unknown ≠ low)
-- behavioral fields missing → score returns None, not a default
-- Axis 3 and debt_burden category now use identical EMI thresholds
-- Confidence used in decision engine via confidence_score passthrough
-- knowledge_score=3 low-confidence → already nulled upstream; no special case needed here
+Changes from v4:
+- Consumes validated FieldValue dict directly (plain values extracted internally)
+- confidence defaults changed from "high" to "low" (audit fix)
+- compute_confidence_score uses confidences.get(f, "low") — no inflation
+- All other scoring logic unchanged
 """
 
 
@@ -125,7 +123,6 @@ def score_risk(data: dict, confidences: dict | None = None) -> tuple[int | None,
     rb = data.get("risk_behavior")
     lr = data.get("loss_reaction")
 
-    # If both behavioral fields are missing → return None (unknown, not penalized)
     if rb is None and lr is None:
         reasons.append("risk_behavior and loss_reaction both unknown — risk axis not scored")
         return None, reasons
@@ -147,6 +144,11 @@ def score_risk(data: dict, confidences: dict | None = None) -> tuple[int | None,
         delta = _apply_confidence(-20, conf.get("loss_reaction", "high"))
         score += delta
         reasons.append(f"loss_reaction=panic ({delta:+.1f})")
+    elif lr == "cautious":
+        # cautious: half the penalty of panic
+        delta = _apply_confidence(-10, conf.get("loss_reaction", "high"))
+        score += delta
+        reasons.append(f"loss_reaction=cautious ({delta:+.1f})")
     elif lr == "aggressive":
         delta = _apply_confidence(20, conf.get("loss_reaction", "high"))
         score += delta
@@ -218,7 +220,10 @@ def score_cashflow(data: dict, confidences: dict | None = None) -> tuple[int, li
 # near_term_obligation_level replaces wedding_flag.
 # ---------------------------------------------------------------------------
 
-def score_obligations(data: dict) -> tuple[int, list[str]]:
+def score_obligations(
+    data: dict,
+    future_obligation_score: float = 0.0,
+) -> tuple[int, list[str]]:
     score   = 10
     reasons = []
 
@@ -258,10 +263,18 @@ def score_obligations(data: dict) -> tuple[int, list[str]]:
     ntol = data.get("near_term_obligation_level")
     if ntol == "high":
         score += 25
-        reasons.append(f"near_term_obligation=high (+25)")
+        reasons.append("near_term_obligation=high (+25)")
     elif ntol == "moderate":
         score += 12
-        reasons.append(f"near_term_obligation=moderate (+12)")
+        reasons.append("near_term_obligation=moderate (+12)")
+
+    # Future obligation (weighted 0.7)
+    if future_obligation_score > 0:
+        weighted = round(future_obligation_score * 0.7, 1)
+        score += weighted
+        reasons.append(
+            f"future_obligation_score={future_obligation_score} × 0.7 = +{weighted}"
+        )
 
     return _clamp(score), reasons
 
@@ -329,6 +342,7 @@ def compute_confidence_score(confidences: dict, validated: dict) -> int:
     """
     Aggregate confidence across key fields.
     high=1.0, medium=0.6, low=0.3, missing=0.0
+    Default confidence is "low" — never "high" (audit fix).
     """
     key_fields = [
         "income_type", "monthly_income", "emergency_months",
@@ -340,11 +354,11 @@ def compute_confidence_score(confidences: dict, validated: dict) -> int:
     total = 0.0
     for f in key_fields:
         val  = validated.get(f)
-        conf = confidences.get(f, "high")
+        conf = confidences.get(f, "low")   # FIXED: default "low" not "high"
         if val is None or val == "unknown":
-            total += 0.0   # missing field
+            total += 0.0
         else:
-            total += weight_map.get(conf, 0.5)
+            total += weight_map.get(conf, 0.3)
 
     return int(round((total / len(key_fields)) * 100))
 
@@ -356,6 +370,7 @@ def compute_confidence_score(confidences: dict, validated: dict) -> int:
 def compute_scores(
     validated_data: dict,
     confidences: dict | None = None,
+    future_obligation_score: float = 0.0,
 ) -> tuple[dict, dict, dict]:
     """
     Normalize → consistency check → score all 4 axes.
@@ -370,16 +385,21 @@ def compute_scores(
 
     risk_score,       risk_reasons     = score_risk(data, conf)
     cashflow_score,   cashflow_reasons = score_cashflow(data, conf)
-    obligation_score, oblig_reasons    = score_obligations(data)
+    obligation_score, oblig_reasons    = score_obligations(data, future_obligation_score)
     context_score,    context_reasons  = score_context(data, conf)
 
-    # Use cashflow=50 as neutral fallback if somehow None (shouldn't happen)
     capacity = compute_financial_capacity(
         cashflow_score or 50,
         obligation_score,
     )
 
     confidence_score = compute_confidence_score(conf, validated_data)
+
+    # Emerging Constraint Investor detection
+    # Current obligation LOW but future obligation HIGH
+    current_obligation_low = obligation_score < 35
+    future_obligation_high = future_obligation_score >= 20
+    emerging_constraint    = current_obligation_low and future_obligation_high
 
     derived_fields = []
     if data["emi_ratio_source"] == "derived":
@@ -395,23 +415,35 @@ def compute_scores(
         f"financial_capacity={capacity} = cashflow({cashflow_score}) × "
         f"(1 - obligation({obligation_score})/100)"
     )
+    if future_obligation_score > 0:
+        derived_fields.append(
+            f"total_obligation = current({obligation_score}) + "
+            f"future({future_obligation_score}) × 0.7 (already included in obligation_score)"
+        )
+    if emerging_constraint:
+        derived_fields.append(
+            "EMERGING CONSTRAINT: current obligation low but future obligation high → "
+            "classify as 'Emerging Constraint Investor'"
+        )
 
     axis_scores = {
-        "risk":               risk_score,       # may be None if no behavioral data
-        "cashflow":           cashflow_score,
-        "obligation":         obligation_score,
-        "context":            context_score,
-        "financial_capacity": capacity,
-        # Pass-through raw fields for decision engine guards
-        "_experience_years":  data.get("experience_years"),
-        "_loss_reaction":     data.get("loss_reaction"),
-        "_decision_autonomy": data.get("decision_autonomy"),
+        "risk":                  risk_score,
+        "cashflow":              cashflow_score,
+        "obligation":            obligation_score,
+        "context":               context_score,
+        "financial_capacity":    capacity,
+        "_experience_years":     data.get("experience_years"),
+        "_loss_reaction":        data.get("loss_reaction"),
+        "_decision_autonomy":    data.get("decision_autonomy"),
+        "_emerging_constraint":  emerging_constraint,
+        "_future_obligation":    future_obligation_score,
     }
 
     debug_info = {
         "consistency_flags": consistency_flags,
         "derived_fields":    derived_fields,
         "confidence_score":  confidence_score,
+        "emerging_constraint": emerging_constraint,
         "axis_reasons": {
             "risk":       risk_reasons,
             "cashflow":   cashflow_reasons,

@@ -1,22 +1,11 @@
 """
-Category-Based Scoring Engine — v3, deterministic, no LLM.
+Category-Based Scoring Engine — v4, deterministic, no LLM.
 Receives pre-normalized data (normalize() already called in scoring.py).
 
-6 Categories:
-  income_stability        — positive (High = good)
-  emergency_preparedness  — positive (High = good) | "Unknown" if data missing
-  debt_burden             — burden   (High = bad)
-  dependency_load         — burden   (High = bad)
-  near_term_obligation    — burden   (High = bad)  [replaces cultural_obligation]
-  behavioral_risk         — burden   (High = bad)  | "Unknown" if data missing
-
-Changes from v2:
-- wedding_flag → near_term_obligation_level (none/moderate/high)
-- emergency_preparedness base = 0 (not 20); null → label="Unknown", no flag triggered
-- behavioral_risk base = 0 (not 40); null fields → label="Unknown", no flag triggered
-- Debt burden EMI thresholds aligned with Axis 3 (scoring.py)
-- Balanced Investor: unknown fields do NOT block it (only confirmed HIGH flags block)
-- Confidence-aware decision: low confidence → avoid extreme labels
+Changes from v3:
+- behavioral_risk: "cautious" loss_reaction handled (between neutral and panic)
+- Emerging Constraint Investor: new classification when current low + future high obligation
+- compute_final_decision receives emerging_constraint flag from axis_scores
 """
 
 
@@ -260,6 +249,10 @@ def score_behavioral_risk(data: dict) -> dict:
     if lr == "panic":
         score += 5
         reasons.append("loss_reaction=panic → actual tolerance low (+5)")
+    elif lr == "cautious":
+        # cautious: moderate concern, less severe than panic
+        score += 3
+        reasons.append("loss_reaction=cautious → moderate concern (+3)")
     elif lr == "aggressive":
         score += 35
         reasons.append("loss_reaction=aggressive → high tolerance (+35)")
@@ -367,6 +360,15 @@ def compute_final_decision(
         reasoning.append(
             "Guard: low experience + panic behavior + peer-driven → "
             "Flexible Investor blocked; downgraded to Moderate Constraint"
+        )
+
+    # Emerging Constraint Investor: current obligation low but future obligation high
+    emerging_constraint = axis_scores.get("_emerging_constraint", False)
+    if emerging_constraint and base_decision == "Flexible Investor":
+        base_decision = "Emerging Constraint Investor"
+        reasoning.append(
+            "Emerging Constraint: current obligation low but future obligation high → "
+            "classified as Emerging Constraint Investor"
         )
 
     # --- Behavioral overlay (blocked for High Constraint) ---
