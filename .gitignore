@@ -1,1 +1,5 @@
 *.sqlite3
+.hypothesis/
+.kiro/
+__pycache__/
+.pytest_cache/

@@ -1,0 +1,62 @@
+# ─── SEBI RAG — R2R config for local Ollama on host machine ──────────────────
+# Ollama runs on the host (not in Docker). R2R reaches it via host.docker.internal.
+
+[app]
+# openai/ prefix + api_base = Ollama's OpenAI-compat endpoint via litellm
+fast_llm      = "openai/qwen2.5:3b-instruct"
+quality_llm   = "openai/qwen2.5:3b-instruct"
+vlm           = "openai/qwen2.5:3b-instruct"
+audio_lm      = "openai/qwen2.5:3b-instruct"
+reasoning_llm = "openai/qwen2.5:3b-instruct"
+planning_llm  = "openai/qwen2.5:3b-instruct"
+
+# ─── Embeddings ───────────────────────────────────────────────────────────────
+[embedding]
+provider                 = "ollama"
+base_model               = "nomic-embed-text"
+base_dimension           = 768
+batch_size               = 32
+concurrent_request_limit = 2
+
+[completion_embedding]
+provider                 = "ollama"
+base_model               = "nomic-embed-text"
+base_dimension           = 768
+batch_size               = 32
+concurrent_request_limit = 2
+
+# ─── LLM completion ───────────────────────────────────────────────────────────
+[completion]
+provider                 = "litellm"
+concurrent_request_limit = 1
+
+  [completion.generation_config]
+  temperature          = 0.1
+  top_p                = 1
+  max_tokens_to_sample = 512
+  stream               = false
+  # host.docker.internal resolves to the Mac host from inside Docker
+  api_base             = "http://host.docker.internal:11434/v1"
+  request_timeout      = 300
+
+# ─── Ingestion / Chunking ─────────────────────────────────────────────────────
+[ingestion]
+provider                    = "r2r"
+chunking_strategy           = "recursive"
+chunk_size                  = 3_200
+chunk_overlap               = 600
+chunks_for_document_summary = 16
+document_summary_model      = "openai/qwen2.5:3b-instruct"
+automatic_extraction        = false
+
+# ─── Retrieval ────────────────────────────────────────────────────────────────
+[database]
+provider = "postgres"
+
+  [database.vector_search_settings]
+  search_strategy = "hybrid"
+  hybrid_search_settings = { full_text_weight = 1.0, semantic_weight = 5.0, full_text_limit = 200, rrf_k = 50 }
+
+# ─── Agent tools ──────────────────────────────────────────────────────────────
+[agent]
+tools = ["search_file_knowledge"]

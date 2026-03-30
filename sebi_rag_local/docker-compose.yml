@@ -1,0 +1,110 @@
+volumes:
+  postgres_data:
+    name: sebi_postgres_data
+
+networks:
+  sebi_net:
+    driver: bridge
+
+services:
+
+  # ─── PostgreSQL + pgvector ───────────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: sebi_postgres
+    networks: [sebi_net]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+    command: postgres -c max_connections=1024
+
+  # ─── R2R Engine ──────────────────────────────────────────────────────────────
+  r2r:
+    image: sciphiai/r2r:latest
+    container_name: sebi_r2r
+    networks: [sebi_net]
+    ports:
+      - "7272:7272"
+    environment:
+      # Core
+      R2R_PORT: 7272
+      R2R_HOST: 0.0.0.0
+      R2R_LOG_LEVEL: INFO
+      R2R_PROJECT_NAME: sebi_rag
+      R2R_CONFIG_PATH: /app/user_configs/sebi_ollama.toml
+      # Postgres
+      R2R_POSTGRES_USER: postgres
+      R2R_POSTGRES_PASSWORD: postgres
+      R2R_POSTGRES_HOST: postgres
+      R2R_POSTGRES_PORT: 5432
+      R2R_POSTGRES_DBNAME: postgres
+      R2R_POSTGRES_MAX_CONNECTIONS: 1024
+      # Ollama — host machine (macOS Docker networking)
+      OLLAMA_API_BASE: http://host.docker.internal:11434
+      # litellm needs a non-empty key even for local endpoints
+      OPENAI_API_KEY: "ollama"
+      # Hatchet (not used in light mode)
+      HATCHET_CLIENT_TLS_STRATEGY: none
+      # Unstructured — set to avoid KeyError even when using r2r provider
+      UNSTRUCTURED_SERVICE_URL: http://localhost:7275
+      UNSTRUCTURED_API_KEY: "none"
+    volumes:
+      - ./config:/app/user_configs
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7272/v3/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── R2R Dashboard (UI) ───────────────────────────────────────────────────────
+  r2r-dashboard:
+    image: sciphiai/r2r-dashboard:1.0.3
+    container_name: sebi_r2r_dashboard
+    networks: [sebi_net]
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_R2R_DEPLOYMENT_URL: http://localhost:7272
+      NEXT_PUBLIC_R2R_DEFAULT_EMAIL: "admin@example.com"
+      NEXT_PUBLIC_R2R_DEFAULT_PASSWORD: "change_me_immediately"
+    depends_on:
+      r2r:
+        condition: service_healthy
+    restart: on-failure
+
+  # ─── SEBI Query API (custom FastAPI layer) ────────────────────────────────────
+  sebi-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: sebi_query_api
+    networks: [sebi_net]
+    ports:
+      - "8000:8000"
+    environment:
+      R2R_BASE_URL: http://r2r:7272
+      OLLAMA_BASE_URL: http://host.docker.internal:11434/v1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      r2r:
+        condition: service_healthy
+    restart: on-failure
