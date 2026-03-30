@@ -336,6 +336,19 @@ def compute_final_decision(
     )
     reasoning.append(f"Data confidence score: {confidence_score}%")
 
+    # --- Naive investor guard ---
+    # IF: low experience (<1yr) AND panic behavior AND peer-driven
+    # THEN: MUST NOT be Flexible Investor regardless of capacity
+    exp             = axis_scores.get("_experience_years")   # passed through if available
+    is_panic        = categories["behavioral_risk"]["score"] is not None and \
+                      categories["behavioral_risk"]["score"] > 0 and \
+                      axis_scores.get("_loss_reaction") == "panic"
+    is_peer_driven  = axis_scores.get("_decision_autonomy") is False
+    is_inexperienced = axis_scores.get("_experience_years") is not None and \
+                       axis_scores.get("_experience_years") < 1
+
+    naive_guard_triggered = is_inexperienced and is_panic and is_peer_driven
+
     # --- Primary classification ---
     if financial_capacity < 30:
         reasoning.append("Financial capacity < 30 → High Constraint Investor (no override)")
@@ -347,6 +360,14 @@ def compute_final_decision(
     else:
         base_decision = "Flexible Investor"
         reasoning.append("Financial capacity ≥ 60 → Flexible")
+
+    # Naive investor guard: override Flexible → Moderate Constraint
+    if base_decision == "Flexible Investor" and naive_guard_triggered:
+        base_decision = "Moderate Constraint Investor"
+        reasoning.append(
+            "Guard: low experience + panic behavior + peer-driven → "
+            "Flexible Investor blocked; downgraded to Moderate Constraint"
+        )
 
     # --- Behavioral overlay (blocked for High Constraint) ---
     decision = base_decision

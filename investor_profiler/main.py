@@ -85,7 +85,9 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[2/6] Stage 2: llama3.1:8b correction...")
 
-    corrected_values, llm_corrections = correct_extraction(paragraph, plain_values)
+    corrected_values, llm_corrections, fallback_used, correction_source = correct_extraction(
+        paragraph, plain_values
+    )
     corrected_values, mandatory_corrections = apply_mandatory_rules(corrected_values)
     all_corrections = llm_corrections + mandatory_corrections
 
@@ -134,6 +136,8 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
                 "derived_fields":      [],
                 "obligation_reason":   "No obligation data extracted.",
                 "corrections_applied": all_corrections,
+                "fallback_used":       fallback_used,
+                "correction_source":   correction_source,
             },
             "extraction_warning": (
                 extraction_result.get("extraction_warning")
@@ -233,6 +237,8 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
             "capacity_formula":       analysis["debug"]["financial_capacity_formula"],
             "risk_vs_capacity_gap":   analysis["debug"]["risk_vs_capacity_gap"],
             "emi_ratio_source":       normalized_data.get("emi_ratio_source", "none"),
+            "fallback_used":          fallback_used,
+            "correction_source":      correction_source,
         },
         "extraction_warning": extraction_result.get("extraction_warning"),
     }

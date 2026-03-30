@@ -13,6 +13,15 @@ import requests
 OLLAMA_BASE_URL = "http://localhost:11434"
 OLLAMA_MODEL    = "qwen2.5:3b-instruct"
 
+# Imported lazily to avoid circular import — correction imports nothing from extraction
+_validate_extraction = None
+def _get_validate_extraction():
+    global _validate_extraction
+    if _validate_extraction is None:
+        from correction import validate_extraction
+        _validate_extraction = validate_extraction
+    return _validate_extraction
+
 
 # ---------------------------------------------------------------------------
 # Pre-processing: currency + time normalization
@@ -68,6 +77,17 @@ FINANCIAL KNOWLEDGE SCORE RUBRIC (use strictly — do NOT default to 3):
 5 = Expert level — professional knowledge, understands derivatives, complex instruments
 If you are not confident about the score, return null.
 
+INCOME CONVERSION RULES (CRITICAL — apply before extraction):
+- "X LPA" or "X lakh per annum" or "X lakh pa" means annual salary
+  → monthly_income = (X * 100000) / 12
+  Example: "7.5 LPA" → monthly_income = 62500
+- Do NOT leave monthly_income null if LPA is mentioned in the text
+
+EXPERIENCE CONVERSION RULES (CRITICAL):
+- "X months" of experience → experience_years = X / 12
+  Example: "8 months" → experience_years = 0.67
+- NEVER convert "8 months" to experience_years = 8
+
 INCOME TYPE RULES:
 - "salaried" = fixed monthly salary from employer (employee, job, company)
 - "business" = owns a business, self-employed with stable revenue, proprietor
@@ -77,7 +97,8 @@ INCOME TYPE RULES:
 NEAR-TERM OBLIGATION RULES:
 Detect any major upcoming financial commitment and classify:
 - "high": urgent or within 6 months — wedding, marriage, shaadi, medical emergency,
-          house purchase closing soon, "next few months", "very soon"
+          house purchase closing soon, "next few months", "very soon",
+          "secretly saving", "earmarked", "family expectation"
 - "moderate": planned within 6–24 months — education fees, home loan planned,
               buying property, "planning to", "next year", "upcoming"
 - "none": no mention of any major upcoming expense
@@ -87,13 +108,22 @@ OBLIGATION TYPE (only if near_term_obligation_level is not "none"):
 - "wedding" | "house" | "education" | "medical" | "family" | "other"
 
 BEHAVIORAL PRIORITY RULES:
-1. panic / anxiety / fear of loss / "can't sleep" → loss_reaction = "panic", risk_behavior = "low"
-2. following others / tips / friends' advice → decision_autonomy = false
-3. experience < 1 year / "just started" / "new to investing" → experience_years = 0, financial_knowledge_score ≤ 2
+1. panic / anxiety / fear of loss / "can't sleep" / "considered stopping" →
+   loss_reaction = "panic", risk_behavior = "low"
+   NOTE: panic/anxiety language ALWAYS overrides any aggressive wording in the same text
+2. following others / tips / friends' advice / peer-driven → decision_autonomy = false
+3. experience < 1 year / "just started" / "new to investing" →
+   experience_years = 0, financial_knowledge_score ≤ 2
 4. researches independently / decides themselves → decision_autonomy = true
 5. "calculated risks" → risk_behavior = "medium" (NOT "high")
 6. "buy more when markets fall" / "buy the dip" → loss_reaction = "aggressive"
 7. "stay calm" / "don't panic" → loss_reaction = "neutral"
+
+HIDDEN OBLIGATION DETECTION:
+Look for indirect signals of large upcoming expenses:
+- "secretly saving", "earmarked for", "keeping aside", "saving for [event]"
+- "family expectation", "expected to pay for"
+These should set near_term_obligation_level = "high"
 
 CONFLICT RULES:
 - loss_reaction == "panic" → risk_behavior MUST be "low"
@@ -274,15 +304,20 @@ def extract_investor_data(paragraph: str) -> dict:
 
     plain_vals, drift_fixes = _fix_knowledge_drift(plain_vals, conf_map)
 
+    # Post-extraction structural validation (catches LPA, wedding, panic gaps)
+    validate_fn = _get_validate_extraction()
+    plain_vals, validation_fixes = validate_fn(normalized_paragraph, plain_vals)
+    all_fixes = drift_fixes + validation_fixes
+
     # Rebuild wrapped with corrected confidences
     fields = {
-        field: {"value": plain_vals[field], "confidence": conf_map[field]}
+        field: {"value": plain_vals[field], "confidence": conf_map.get(field, "medium")}
         for field in plain_vals
     }
 
     return {
         "fields":             fields,
-        "conflicts_resolved": drift_fixes,
+        "conflicts_resolved": all_fixes,
         "extraction_warning": warning,
         "non_english":        False,
     }

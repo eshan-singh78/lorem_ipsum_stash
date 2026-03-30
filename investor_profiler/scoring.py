@@ -402,6 +402,10 @@ def compute_scores(
         "obligation":         obligation_score,
         "context":            context_score,
         "financial_capacity": capacity,
+        # Pass-through raw fields for decision engine guards
+        "_experience_years":  data.get("experience_years"),
+        "_loss_reaction":     data.get("loss_reaction"),
+        "_decision_autonomy": data.get("decision_autonomy"),
     }
 
     debug_info = {
