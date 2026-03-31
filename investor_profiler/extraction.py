@@ -400,7 +400,7 @@ def run_llm_analysis(
     for attempt in (1, 2):
         try:
             resp = requests.post(
-                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=120,
+                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
             )
             resp.raise_for_status()
             raw_dict = _parse_json(resp.json().get("response", ""))
