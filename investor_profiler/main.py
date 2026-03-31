@@ -1,18 +1,22 @@
 """
-Main Pipeline Orchestrator — v5
+Main Pipeline Orchestrator — InvestorDNA v6
 Architecture:
-  INPUT → RULE EXTRACTION → LLM EXTRACTION → MERGE (CONTROLLED)
-        → CORRECTION (CONFIDENCE-AWARE) → VALIDATION (SINGLE LAYER)
-        → DERIVED COMPUTATION → SCORING → DECISION
+  INPUT
+  → RULE EXTRACTION → LLM EXTRACTION → MERGE (CONTROLLED)
+  → CORRECTION (CONFIDENCE-AWARE) → VALIDATION (SINGLE LAYER)
+  → DERIVED COMPUTATION
+  → PROFILE CONTEXT (rich context object — demographics, life events, cultural, behavioral)
+  → CATEGORY ASSESSMENT (context → categories, no raw field access)
+  → AXIS SCORING (categories → 4 axes, no raw field access)
+  → CROSS-AXIS UNION (mismatch, constraint, archetype, narratives)
+  → OUTPUT
 
 Key guarantees:
-  - Each field has ONE authoritative source (field_registry.py)
-  - No silent overwrites — all merges logged
-  - Confidence reflects real certainty (no "high" defaults)
-  - LLM correction only touches low-confidence / null fields
-  - Derived fields recomputed post-correction from fresh inputs
-  - Single validation layer (validation.py) — no duplicate logic
-  - Full audit trail in debug output
+  - Raw fields are ONLY read in profile_context.py (single boundary)
+  - All scoring reads from ProfileContext or CategoryAssessment
+  - Cultural and behavioral context captured before scoring
+  - Narratives generated from full context, not just numbers
+  - Full audit trail preserved
 """
 
 import json
@@ -29,9 +33,12 @@ from validation import (
     is_all_null, compute_data_completeness,
     build_field_sources, final_confidence_check,
 )
-from scoring import compute_scores
-from analysis import cross_axis_analysis
-from categories import compute_categories
+
+# New v6 pipeline stages
+from profile_context import build_profile_context, context_to_dict
+from context_categories import assess_all_categories, categories_to_dict
+from axis_scoring import compute_axis_scores, axis_scores_to_dict
+from cross_axis import build_cross_axis_report, cross_axis_report_to_dict
 
 _KEY_FIELDS = [
     "income_type", "monthly_income", "emergency_months",
@@ -42,46 +49,40 @@ _KEY_FIELDS = [
 
 
 def _fv_plain(fields: dict[str, FieldValue]) -> dict:
-    """Extract plain {field: value} from FieldValue dict."""
     return {k: v.value for k, v in fields.items()}
 
 
 def _fv_conf(fields: dict[str, FieldValue]) -> dict:
-    """Extract {field: confidence} from FieldValue dict."""
     return {k: v.confidence for k, v in fields.items()}
 
 
 def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
-    """Full pipeline: investor paragraph → structured profile."""
+    """Full pipeline: investor paragraph → structured InvestorDNA profile."""
 
     # -----------------------------------------------------------------------
     # Stage 1: Extraction (rule + LLM + controlled merge)
     # -----------------------------------------------------------------------
     if verbose:
-        print("\n[1/6] Extraction (rule + LLM + merge)...")
+        print("\n[1/7] Extraction (rule + LLM + merge)...")
 
     extraction_result = extract_investor_data(paragraph)
 
     if extraction_result.get("non_english"):
         return {
-            "extracted_data":     {},
-            "axis_scores":        None,
+            "profile_context":    None,
             "category_scores":    None,
-            "financial_capacity": None,
+            "axis_scores":        None,
+            "cross_axis":         None,
             "final_decision":     "Error: Non-English Input",
             "decision_reasoning": ["Input is not in English."],
             "confidence_score":   0,
             "data_completeness":  0,
             "debug": {
-                "missing_fields":    _KEY_FIELDS,
-                "merge_log":         [],
-                "correction_log":    [],
-                "field_sources":     {},
-                "derived_fields":    [],
-                "confidence_corrections": [],
-                "invariant_violations":   [],
+                "missing_fields": _KEY_FIELDS,
+                "merge_log": [],
+                "correction_log": [],
+                "field_sources": {},
             },
-            "extraction_warning": extraction_result.get("extraction_warning"),
         }
 
     fields: dict[str, FieldValue] = extraction_result["fields"]
@@ -90,60 +91,44 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     future_events: list[dict]     = extraction_result["future_events"]
     future_obligation_score: float = extraction_result["future_obligation_score"]
 
-    if verbose:
-        print("Merged fields:", json.dumps(_fv_plain(fields), indent=2))
-        print(f"Future events: {len(future_events)}, score={future_obligation_score}")
-
     # -----------------------------------------------------------------------
-    # Stage 2: Correction (confidence-aware, normalized_text used)
+    # Stage 2: Correction (confidence-aware)
     # -----------------------------------------------------------------------
     if verbose:
-        print("\n[2/6] Correction (confidence-aware)...")
+        print("\n[2/7] Correction (confidence-aware)...")
 
     fields, correction_log, correction_source = run_correction(normalized_text, fields)
 
-    if verbose:
-        corrected_count = sum(1 for e in correction_log if e.get("action") == "corrected")
-        print(f"Corrections applied: {corrected_count}, source: {correction_source}")
-
     # -----------------------------------------------------------------------
-    # Stage 3: Validation (single layer — type/range/enum only)
+    # Stage 3: Validation (type/range/enum only)
     # -----------------------------------------------------------------------
     if verbose:
-        print("\n[3/6] Validation...")
+        print("\n[3/7] Validation...")
 
     fields = validate_and_cast(fields)
 
     # -----------------------------------------------------------------------
-    # Stage 4: Derived field computation (post-correction, fresh inputs)
+    # Stage 4: Derived field computation
     # -----------------------------------------------------------------------
     if verbose:
-        print("\n[4/6] Derived field computation...")
+        print("\n[4/7] Derived field computation...")
 
     fields, derivation_log = compute_derived_fields(fields, future_obligation_score)
-
-    # Final confidence invariant check
     fields, conf_violations = final_confidence_check(fields)
-
-    # Full invariant check for audit
     invariant_violations = check_invariants(fields)
 
-    # Build plain dicts for downstream (scoring expects plain values + confidences)
     plain_validated = _fv_plain(fields)
     confidences     = _fv_conf(fields)
     field_sources   = build_field_sources(fields)
 
     data_completeness, missing_fields = compute_data_completeness(fields)
 
-    if verbose:
-        print(f"Completeness: {data_completeness}%  Missing: {missing_fields}")
-
     if is_all_null(fields):
         return {
-            "extracted_data":     fields_to_dict(fields),
-            "axis_scores":        None,
+            "profile_context":    None,
             "category_scores":    None,
-            "financial_capacity": None,
+            "axis_scores":        None,
+            "cross_axis":         None,
             "final_decision":     "Insufficient Data",
             "decision_reasoning": ["All extracted fields are null — cannot profile investor."],
             "confidence_score":   0,
@@ -159,84 +144,110 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
                 "invariant_violations":   invariant_violations,
                 "future_events_detected": future_events,
                 "future_obligation_score": future_obligation_score,
-                "future_intent_reasons":  extraction_result.get("future_intent_reasons", []),
             },
-            "extraction_warning": extraction_result.get("extraction_warning"),
         }
 
     # -----------------------------------------------------------------------
-    # Stage 5: Scoring
+    # Stage 5: Profile Context (NEW — rich context object)
+    # This is the boundary: raw fields are read HERE and only here.
+    # All downstream stages read from ProfileContext.
     # -----------------------------------------------------------------------
     if verbose:
-        print("\n[5/6] Scoring...")
+        print("\n[5/7] Building profile context...")
 
-    axis_scores, normalized_data, score_debug = compute_scores(
-        plain_validated, confidences,
+    profile_ctx = build_profile_context(
+        validated_fields=plain_validated,
+        raw_text=paragraph,
         future_obligation_score=future_obligation_score,
     )
-    confidence_score = score_debug["confidence_score"]
 
     if verbose:
-        print("Axis scores:", json.dumps(
-            {k: v for k, v in axis_scores.items() if not k.startswith("_")}, indent=2
-        ))
+        print(f"  Life events: {[e.event_type for e in profile_ctx.life_events]}")
+        print(f"  Cultural signals: {[s.signal_type for s in profile_ctx.cultural_signals]}")
+        print(f"  Behavioral signals: {[s.signal_type for s in profile_ctx.behavioral_signals]}")
+        print(f"  Flags: grief={profile_ctx.grief_state}, peer={profile_ctx.peer_driven}, "
+              f"hidden_obligation={profile_ctx.hidden_obligation_detected}")
 
     # -----------------------------------------------------------------------
-    # Stage 6: Analysis + Decision
+    # Stage 6: Category Assessment (context → categories)
     # -----------------------------------------------------------------------
     if verbose:
-        print("\n[6/6] Analysis + Decision...")
+        print("\n[6/7] Category assessment...")
 
-    analysis        = cross_axis_analysis(axis_scores)
-    category_report = compute_categories(
-        normalized_data, axis_scores, confidence_score=confidence_score,
-    )
+    categories = assess_all_categories(profile_ctx)
 
-    final_decision = category_report["final_decision"]
+    if verbose:
+        print(f"  income_stability: {categories.income_stability.label} ({categories.income_stability.score})")
+        print(f"  debt_burden: {categories.debt_burden.label} ({categories.debt_burden.score})")
+        print(f"  cultural_obligation: {categories.cultural_obligation.label} ({categories.cultural_obligation.score})")
+        print(f"  behavioral_risk: {categories.behavioral_risk.label} ({categories.behavioral_risk.score})")
+
+    # -----------------------------------------------------------------------
+    # Stage 7: Axis Scoring + Cross-Axis Union
+    # -----------------------------------------------------------------------
+    if verbose:
+        print("\n[7/7] Axis scoring + cross-axis union...")
+
+    axis_scores = compute_axis_scores(categories, profile_ctx)
+    cross_axis  = build_cross_axis_report(axis_scores, categories, profile_ctx)
+
+    if verbose:
+        print(f"  Axis 1 (Risk): {axis_scores.risk}")
+        print(f"  Axis 2 (Cashflow): {axis_scores.cashflow}")
+        print(f"  Axis 3 (Obligation): {axis_scores.obligation}")
+        print(f"  Axis 4 (Context): {axis_scores.context}")
+        print(f"  Financial Capacity: {axis_scores.financial_capacity}")
+        print(f"  Archetype: {cross_axis.archetype}")
+
+    # -----------------------------------------------------------------------
+    # Final decision (from suitability classification)
+    # -----------------------------------------------------------------------
+    final_decision = cross_axis.suitability["classification"]
     if data_completeness < 40:
         final_decision = f"Low Confidence Profile ({final_decision})"
-        category_report["decision_reasoning"].append(
-            f"Data completeness {data_completeness}% < 40% — profile marked Low Confidence"
-        )
 
-    if verbose:
-        print("Final decision:", final_decision)
-
-    # Obligation reason
-    ntol  = normalized_data.get("near_term_obligation_level", "none")
-    otype = normalized_data.get("obligation_type")
-    obligation_reason = (
-        f"near_term_obligation_level={ntol}"
-        + (f", type={otype}" if otype else "")
-        if ntol in ("moderate", "high")
-        else "No near-term obligation detected"
-    )
+    # Confidence score (simple: based on data completeness + key field presence)
+    confidence_score = _compute_confidence_score(confidences, plain_validated)
 
     # -----------------------------------------------------------------------
     # Assemble output
     # -----------------------------------------------------------------------
     return {
-        "extracted_data": fields_to_dict(fields),
+        # Rich context (new in v6)
+        "profile_context": context_to_dict(profile_ctx),
+
+        # Category assessment (new in v6 — replaces flat category scores)
+        "category_scores": categories_to_dict(categories),
+
+        # Axis scores
         "axis_scores": {
-            "risk":       axis_scores["risk"],
-            "cashflow":   axis_scores["cashflow"],
-            "obligation": axis_scores["obligation"],
-            "context":    axis_scores["context"],
+            "risk":               axis_scores.risk,
+            "cashflow":           axis_scores.cashflow,
+            "obligation":         axis_scores.obligation,
+            "context":            axis_scores.context,
+            "financial_capacity": axis_scores.financial_capacity,
         },
-        "category_scores":    category_report["categories"],
-        "financial_capacity": axis_scores["financial_capacity"],
+
+        # Cross-axis union (new in v6 — full narrative output)
+        "cross_axis": cross_axis_report_to_dict(cross_axis),
+
+        # Decision
         "final_decision":     final_decision,
-        "decision_reasoning": category_report["decision_reasoning"],
-        "confidence_score":   confidence_score,
-        "data_completeness":  data_completeness,
-        "analysis": {
-            "archetype":            analysis["archetype"],
-            "mismatch":             analysis["mismatch"],
-            "constraint":           analysis["constraint"],
-            "suitability_insights": analysis["suitability_insights"],
-        },
+        "decision_reasoning": cross_axis.suitability_insights,
+
+        # Narratives (new in v6)
+        "advisor_narrative":  cross_axis.advisor_narrative,
+        "investor_narrative": cross_axis.investor_narrative,
+
+        # Metadata
+        "confidence_score":  confidence_score,
+        "data_completeness": data_completeness,
+
+        # Extracted data (for audit)
+        "extracted_data": fields_to_dict(fields),
+
+        # Debug / audit trail
         "debug": {
-            # Audit trail
             "merge_log":              merge_log,
             "correction_log":         correction_log,
             "correction_source":      correction_source,
@@ -244,29 +255,40 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
             "derived_fields":         derivation_log,
             "confidence_corrections": conf_violations,
             "invariant_violations":   invariant_violations,
-            # Scoring debug
             "missing_fields":         missing_fields,
-            "consistency_flags":      score_debug["consistency_flags"],
-            "axis_reasons":           score_debug["axis_reasons"],
-            "capacity_formula":       analysis["debug"]["financial_capacity_formula"],
-            "risk_vs_capacity_gap":   analysis["debug"]["risk_vs_capacity_gap"],
-            "emi_ratio_source":       normalized_data.get("emi_ratio_source", "none"),
-            "obligation_reason":      obligation_reason,
-            "emerging_constraint":    score_debug.get("emerging_constraint", False),
-            # Future intent
+            "axis_reasons":           axis_scores_to_dict(axis_scores)["reasons"],
             "future_events_detected": future_events,
             "future_obligation_score": future_obligation_score,
             "future_intent_reasons":  extraction_result.get("future_intent_reasons", []),
-            # Extraction
             "rule_log":               extraction_result.get("rule_log", []),
             "extraction_warning":     extraction_result.get("extraction_warning"),
         },
+
         "extraction_warning": extraction_result.get("extraction_warning"),
     }
 
 
+def _compute_confidence_score(confidences: dict, validated: dict) -> int:
+    key_fields = [
+        "income_type", "monthly_income", "emergency_months",
+        "emi_amount", "dependents", "experience_years",
+        "financial_knowledge_score", "loss_reaction", "risk_behavior",
+        "near_term_obligation_level",
+    ]
+    weight_map = {"high": 1.0, "medium": 0.6, "low": 0.3}
+    total = 0.0
+    for f in key_fields:
+        val  = validated.get(f)
+        conf = confidences.get(f, "low")
+        if val is None or val == "unknown":
+            total += 0.0
+        else:
+            total += weight_map.get(conf, 0.3)
+    return int(round((total / len(key_fields)) * 100))
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Investor Profiling Engine v5")
+    parser = argparse.ArgumentParser(description="InvestorDNA Profiling Engine v6")
     parser.add_argument("--paragraph", "-p", type=str, help="Investor description")
     parser.add_argument("--file",      "-f", type=str, help="Path to text file")
     parser.add_argument("--verbose",   "-v", action="store_true")
@@ -293,7 +315,7 @@ def main():
 
     result = run_pipeline(paragraph, verbose=args.verbose)
     print("\n" + "=" * 60)
-    print("INVESTOR PROFILE OUTPUT")
+    print("INVESTORDNA PROFILE OUTPUT")
     print("=" * 60)
     print(json.dumps(result, indent=2, default=str))
 
