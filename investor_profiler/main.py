@@ -20,6 +20,63 @@ v16 principle: retry until correct → enforce deterministically → log everyth
 
 import json
 import argparse
+import sys
+import threading
+import time
+
+
+# ---------------------------------------------------------------------------
+# Live stage logger — shows current stage + elapsed time in real time
+# ---------------------------------------------------------------------------
+
+class StageLogger:
+    """Prints a live ticker showing the current stage and elapsed seconds."""
+
+    def __init__(self):
+        self._stage = ""
+        self._start = 0.0
+        self._running = False
+        self._thread = None
+        self._lock = threading.Lock()
+
+    def start(self, stage: str):
+        with self._lock:
+            self._stage = stage
+            self._start = time.time()
+        if not self._running:
+            self._running = True
+            self._thread = threading.Thread(target=self._tick, daemon=True)
+            self._thread.start()
+        else:
+            # Just update stage — ticker keeps running
+            sys.stderr.write("\n")
+
+    def _tick(self):
+        spinner = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+        i = 0
+        while self._running:
+            with self._lock:
+                stage = self._stage
+                elapsed = time.time() - self._start
+            sys.stderr.write(f"\r{spinner[i % len(spinner)]}  {stage}  ({elapsed:.1f}s)   ")
+            sys.stderr.flush()
+            time.sleep(0.1)
+            i += 1
+
+    def done(self, stage: str = ""):
+        with self._lock:
+            elapsed = time.time() - self._start
+            label = stage or self._stage
+        sys.stderr.write(f"\r✓  {label}  ({elapsed:.1f}s)          \n")
+        sys.stderr.flush()
+
+    def stop(self):
+        self._running = False
+        if self._thread:
+            self._thread.join(timeout=0.5)
+
+
+_logger = StageLogger()
 
 from field_registry import FieldValue, check_invariants
 from extraction import extract_investor_data, fields_to_dict
@@ -108,7 +165,9 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[1/6] Extraction (rules + single LLM + merge)...")
 
+    _logger.start("Stage 1/9 — Extraction (rules + LLM)")
     extraction_result = extract_investor_data(paragraph)
+    _logger.done()
 
     if extraction_result.get("non_english"):
         return {
@@ -143,7 +202,9 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[2/6] Validation...")
 
+    _logger.start("Stage 2/9 — Validation")
     fields = validate_and_cast(fields)
+    _logger.done()
 
     # -----------------------------------------------------------------------
     # Stage 3: Derived field computation
@@ -151,9 +212,11 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[3/6] Derived fields...")
 
+    _logger.start("Stage 3/9 — Derived fields")
     fields, derivation_log = compute_derived_fields(fields, future_obligation_score)
     fields, conf_violations = final_confidence_check(fields)
     invariant_violations = check_invariants(fields)
+    _logger.done()
 
     plain_validated = _fv_plain(fields)
     confidences     = _fv_conf(fields)
@@ -193,7 +256,9 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[4] Signal extraction (LLM — unified signal layer)...")
 
+    _logger.start("Stage 4/9 — Signal extraction (LLM)")
     signals = extract_signals(paragraph)
+    _logger.done()
 
     if not signals.signals_valid:
         return {
@@ -218,7 +283,9 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[5] Narrative (LLM — understanding, grounded by signals)...")
 
+    _logger.start("Stage 5/9 — Narrative (LLM)")
     narrative = generate_narrative(normalized_text, plain_validated, signals=signals)
+    _logger.done()
 
     if not narrative.narrative_valid:
         # Switch to conservative fallback mode — do not pass placeholder text downstream
@@ -247,12 +314,14 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         if verbose:
             print("\n[6] Profile context (signal-driven, no regex)...")
 
+        _logger.start("Stage 6/9 — Profile context")
         profile_ctx = build_profile_context(
             validated_fields=plain_validated,
             raw_text=paragraph,
             future_obligation_score=future_obligation_score,
             signals=signals,
         )
+        _logger.done()
 
         # -----------------------------------------------------------------------
         # Stage 7: State Synthesis — convert signals into ONE coherent state
@@ -260,7 +329,9 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         if verbose:
             print("\n[7] State synthesis (LLM — signals → coherent state)...")
 
+        _logger.start("Stage 7/9 — State synthesis (LLM)")
         investor_state = synthesize_state(paragraph, narrative, profile_ctx, signals=signals)
+        _logger.done()
 
         if verbose:
             print(f"  Compound state:  {investor_state.compound_state}")
@@ -275,10 +346,12 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         if verbose:
             print("\n[8] Decision engine (LLM — state + narrative + signals)...")
 
+        _logger.start("Stage 8/9 — Decision engine (LLM)")
         decision = generate_decision(
             narrative, raw_text=paragraph,
             investor_state=investor_state, signals=signals,
         )
+        _logger.done()
 
         if verbose:
             print(f"  Archetype:    {decision.archetype}")
@@ -296,6 +369,7 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[8b] Constraint engine (unified enforcement)...")
 
+    _logger.start("Stage 8b/9 — Constraint engine + scoring + validation")
     decision, constraint_report = run_constraint_engine(decision, investor_state, signals)
 
     if verbose:
@@ -332,6 +406,7 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         print("\n[9] Validation layer (scores vs decision)...")
 
     validation = validate_scores_vs_decision(decision, axis_scores, narrative, investor_state=investor_state)
+    _logger.done()
 
     if verbose:
         print(f"  Scores support decision: {validation.scores_support_decision}")
@@ -345,9 +420,11 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if verbose:
         print("\n[10] Cross-axis union...")
 
+    _logger.start("Stage 9/9 — Cross-axis union")
     cross_axis = build_cross_axis_report(
         axis_scores, categories, profile_ctx, narrative, None, decision
     )
+    _logger.done()
 
     if verbose:
         print(f"  Archetype: {cross_axis.archetype}")
@@ -356,6 +433,7 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     # Trace store — record this run for analysis
     # -----------------------------------------------------------------------
     record_trace(paragraph, decision, trace_validation)
+    _logger.stop()
 
     # -----------------------------------------------------------------------
     # Assemble output
