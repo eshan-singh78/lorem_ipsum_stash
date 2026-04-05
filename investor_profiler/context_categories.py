@@ -1,34 +1,106 @@
 """
-Context-Driven Category Assessment — InvestorDNA v6
+Context-Driven Category Assessment — InvestorDNA v12
 
 Architecture:
-  ProfileContext → CategoryAssessment
+  ProfileContext + InvestorState → CategoryAssessment
 
-Each category reads ONLY from ProfileContext — never from raw fields.
+v12 change: categories read compound_state from InvestorState,
+not raw flags (grief_state, peer_driven, etc.) directly.
+The state captures the INTERACTION of signals, not their individual values.
+
 Each category produces: { score, label, reason, modifiers }
-
-Categories:
-  1. income_stability       — how predictable and resilient is income?
-  2. emergency_preparedness — buffer against shocks
-  3. debt_burden            — formal debt load
-  4. dependency_load        — people depending on this investor
-  5. cultural_obligation    — India-specific: family role, hidden obligations, religious giving
-  6. behavioral_risk        — emotional and cognitive risk patterns
-
-The cultural_obligation category is the InvestorDNA moat —
-no Western instrument captures joint family obligations, wedding savings,
-or religious giving. This is what separates psychological risk tolerance
-from financial capacity to bear losses.
 """
 
 from dataclasses import dataclass
 from typing import Any
+import json
+import re
+import requests
 from profile_context import ProfileContext
 
+OLLAMA_BASE_URL = "http://localhost:11434"
+LLM_MODEL       = "llama3.1:8b"
 
-# ---------------------------------------------------------------------------
-# Category result structure
-# ---------------------------------------------------------------------------
+
+_WEIGHT_QUERY_PROMPT = """You are a financial advisor calibrating scoring weights for an investor.
+
+Given the investor's synthesized state below, answer one question:
+
+How constrained is this investor's financial and emotional situation?
+Rate each dimension from 1 to 100 where higher = more constrained/burdened.
+
+- obligation_weight: how much should obligation burden be weighted? (1-100)
+- behavioral_weight: how much should emotional/behavioral risk be weighted? (1-100)
+- income_weight: how much should income stability matter? (1-100)
+- reasoning: one sentence explaining your calibration
+
+Return ONLY valid JSON:
+
+{{
+  "obligation_weight": integer 1-100,
+  "behavioral_weight": integer 1-100,
+  "income_weight": integer 1-100,
+  "reasoning": "one sentence"
+}}
+
+No markdown. JSON only.
+
+Investor state: {compound_state}
+State description: {state_description}
+Dominant factors: {dominant_factors}
+State implications: {state_implications}
+"""
+
+
+def _query_state_weights(investor_state) -> dict:
+    """
+    Ask LLM: given this investor state, how should scoring weights be calibrated?
+    Reads compound_state — not raw flags or individual narrative fields.
+    """
+    if investor_state is None:
+        return {"obligation_weight": 50, "behavioral_weight": 50, "income_weight": 50, "reasoning": "defaults used"}
+
+    prompt = _WEIGHT_QUERY_PROMPT.format(
+        compound_state=getattr(investor_state, "compound_state", "unknown"),
+        state_description=getattr(investor_state, "state_description", ""),
+        dominant_factors=", ".join(getattr(investor_state, "dominant_factors", [])),
+        state_implications=", ".join(getattr(investor_state, "state_implications", [])),
+    )
+
+    payload = {
+        "model":   LLM_MODEL,
+        "prompt":  prompt,
+        "stream":  False,
+        "options": {"temperature": 0, "num_predict": 256},
+        "format":  "json",
+    }
+
+    for attempt in (1, 2):
+        try:
+            resp = requests.post(
+                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
+            )
+            resp.raise_for_status()
+            text = resp.json().get("response", "").strip()
+            m = re.search(r"\{.*\}", text, re.DOTALL)
+            if m:
+                raw = json.loads(m.group(0))
+                return {
+                    "obligation_weight": max(1, min(100, int(raw.get("obligation_weight", 50)))),
+                    "behavioral_weight": max(1, min(100, int(raw.get("behavioral_weight", 50)))),
+                    "income_weight":     max(1, min(100, int(raw.get("income_weight", 50)))),
+                    "reasoning":         raw.get("reasoning", ""),
+                }
+        except Exception:
+            pass
+
+    return {"obligation_weight": 50, "behavioral_weight": 50, "income_weight": 50, "reasoning": "defaults used"}
+
+
+# Keep old name as alias for backward compat
+_query_narrative_weights = _query_state_weights
+
+
 
 @dataclass
 class CategoryResult:
@@ -297,41 +369,42 @@ def assess_dependency_load(ctx: ProfileContext) -> CategoryResult:
 #        future_obligation_score, life_events
 # ---------------------------------------------------------------------------
 
-def assess_cultural_obligation(ctx: ProfileContext) -> CategoryResult:
+def assess_cultural_obligation(ctx: ProfileContext, narrative_weight: int = 50) -> CategoryResult:
     """
-    Captures what standard risk profiling misses entirely:
-    - Joint family financial obligations
-    - Wedding/dowry savings (often hidden)
-    - Religious/charitable giving (dharmic, non-negotiable)
-    - Elder care (parents, in-laws)
-    - Social pressure obligations (community expectations)
-
-    These are FIXED obligations — the advisor cannot restructure them.
-    They must be treated as binding constraints on investable surplus.
+    Cultural obligation scoring — influenced by narrative_weight.
+    narrative_weight (1-100): LLM-derived signal of how constrained this investor is.
+    Higher weight → obligation signals amplified proportionally.
     """
     score = 5
     reasons = []
     modifiers = []
 
-    # Near-term obligation (wedding, house, education, medical)
+    # Scale factor: narrative_weight maps 1-100 → multiplier 0.6-1.4
+    # At weight=50 (neutral): multiplier=1.0 (no change)
+    # At weight=80 (high burden): multiplier=1.24 (amplified)
+    # At weight=20 (low burden): multiplier=0.76 (reduced)
+    scale = 0.6 + (narrative_weight / 100) * 0.8
+    modifiers.append(
+        f"Narrative obligation weight: {narrative_weight}/100 → score multiplier {scale:.2f}"
+    )
+
     ntol = ctx.near_term_obligation_level
     if ntol == "high":
-        score += 40
+        score += int(round(40 * scale))
         otype = f" ({ctx.obligation_type})" if ctx.obligation_type else ""
         reasons.append(
             f"High near-term obligation{otype} — significant capital required imminently"
         )
     elif ntol == "moderate":
-        score += 20
+        score += int(round(20 * scale))
         otype = f" ({ctx.obligation_type})" if ctx.obligation_type else ""
         reasons.append(
             f"Moderate near-term obligation{otype} — capital commitment expected within 1–2 years"
         )
 
-    # Cultural signals
     for sig in ctx.cultural_signals:
         if sig.signal_type == "hidden_obligation":
-            score += 20
+            score += int(round(20 * scale))
             reasons.append(
                 "Hidden financial obligation detected — investable surplus is lower than income suggests"
             )
@@ -339,35 +412,33 @@ def assess_cultural_obligation(ctx: ProfileContext) -> CategoryResult:
                 "Advisor insight: open conversation about goal-based investing for this milestone"
             )
         elif sig.signal_type == "religious":
-            score += 10
+            score += int(round(10 * scale))
             reasons.append(
                 "Religious/charitable giving commitment — fixed, non-negotiable outflow"
             )
             modifiers.append("Religious giving is culturally fixed — do not suggest reducing it")
         elif sig.signal_type == "social_pressure":
-            score += 10
+            score += int(round(10 * scale))
             reasons.append(
                 "Social/community financial expectations — implicit obligation burden"
             )
         elif sig.signal_type == "family_role":
-            score += 15
+            score += int(round(15 * scale))
             reasons.append(
                 f"Family role obligation ({sig.description}) — "
                 "financial responsibility extends beyond nuclear family"
             )
 
-    # Future obligation score (from intent detection)
     if ctx.future_obligation_score > 0:
-        weighted = round(ctx.future_obligation_score * 0.7, 1)
+        weighted = round(ctx.future_obligation_score * 0.7 * scale, 1)
         score += weighted
         reasons.append(
             f"Future financial commitment detected — adds {weighted:.0f} pts to obligation burden"
         )
 
-    # Life events that create cultural obligations
     for ev in ctx.life_events:
         if ev.event_type == "death" and ev.recency == "recent":
-            score += 10
+            score += int(round(10 * scale))
             modifiers.append(
                 "Recent bereavement may carry cultural financial obligations "
                 "(last rites, ongoing religious commitments, family support)"
@@ -392,17 +463,11 @@ def assess_cultural_obligation(ctx: ProfileContext) -> CategoryResult:
 # This is where emotional state and cognitive biases are assessed.
 # ---------------------------------------------------------------------------
 
-def assess_behavioral_risk(ctx: ProfileContext) -> CategoryResult:
+def assess_behavioral_risk(ctx: ProfileContext, narrative_weight: int = 50, investor_state=None) -> CategoryResult:
     """
-    Behavioral risk is NOT just loss_reaction + risk_behavior.
-    It integrates:
-    - Emotional state (grief amplifies loss aversion)
-    - Cognitive biases (recency bias, overconfidence, peer influence)
-    - Decision quality (analytical vs. impulsive)
-
-    A high-sophistication investor in grief state is NOT the same as
-    a low-sophistication investor with the same loss_reaction score.
-    Context is everything.
+    Behavioral risk scoring — influenced by investor_state compound state.
+    v12: reads compound_state from investor_state, not ctx.grief_state directly.
+    The state captures the INTERACTION of signals.
     """
     rb = ctx.risk_behavior
     lr = ctx.loss_reaction
@@ -420,7 +485,12 @@ def assess_behavioral_risk(ctx: ProfileContext) -> CategoryResult:
     reasons = []
     modifiers = []
 
-    # Base from risk_behavior
+    # Narrative-derived amplifier from state
+    emotional_amp = 0.5 + (narrative_weight / 100)
+    modifiers.append(
+        f"State behavioral weight: {narrative_weight}/100 → emotional amplifier {emotional_amp:.2f}"
+    )
+
     if rb == "high":
         score += 55
         reasons.append("High risk-seeking behavior reported")
@@ -431,7 +501,6 @@ def assess_behavioral_risk(ctx: ProfileContext) -> CategoryResult:
         score += 5
         reasons.append("Low risk behavior — conservative orientation")
 
-    # Loss reaction overlay
     if lr == "panic":
         score += 5
         reasons.append(
@@ -447,56 +516,49 @@ def assess_behavioral_risk(ctx: ProfileContext) -> CategoryResult:
     elif lr == "neutral":
         reasons.append("Neutral loss response — stable emotional baseline")
 
-    # Behavioral signal modifiers
     for sig in ctx.behavioral_signals:
         if sig.signal_type == "fear" and sig.strength == "strong":
             score = max(score, 10)
-            modifiers.append(
-                "Strong fear/panic signal detected in text — "
-                "behavioral risk score floored at 10 regardless of stated preference"
-            )
+            modifiers.append("Strong fear/panic signal — behavioral risk floored at 10")
         elif sig.signal_type == "anxiety":
-            score = min(100, score + 5)
-            modifiers.append(
-                "Anxiety-driven monitoring behavior (checking prices obsessively) "
-                "indicates higher emotional reactivity than scores suggest"
-            )
+            score = min(100, score + int(round(5 * emotional_amp)))
+            modifiers.append("Anxiety-driven monitoring behavior detected")
         elif sig.signal_type == "peer_influence":
-            score = min(100, score + 10)
-            modifiers.append(
-                "Peer-influenced decisions increase behavioral risk — "
-                "investor may chase returns or panic-sell based on social signals"
-            )
+            score = min(100, score + int(round(10 * emotional_amp)))
+            modifiers.append("Peer-influenced decisions increase behavioral risk")
         elif sig.signal_type == "overconfidence":
-            score = min(100, score + 15)
-            modifiers.append(
-                "Overconfidence detected — investor may underestimate downside risk"
-            )
+            score = min(100, score + int(round(15 * emotional_amp)))
+            modifiers.append("Overconfidence detected — investor may underestimate downside risk")
         elif sig.signal_type == "analytical":
-            score = max(1, score - 10)
-            modifiers.append(
-                "Analytical decision-making pattern reduces behavioral risk — "
-                "investor responds to data, not emotion"
-            )
+            score = max(1, score - int(round(10 * emotional_amp)))
+            modifiers.append("Analytical decision-making reduces behavioral risk")
 
-    # Grief state amplification: grief suppresses risk tolerance
-    # A high-sophistication investor in grief is NOT a true low-risk investor —
-    # their score is temporarily elevated, not baseline
-    if ctx.grief_state:
+    # Read grief/emotional state from compound_state, not raw flag
+    compound = getattr(investor_state, "compound_state", "").lower() if investor_state else ""
+    state_stability = getattr(investor_state, "state_stability", "stable") if investor_state else "stable"
+
+    if compound and any(w in compound for w in ("grief", "crisis", "survival", "burdened")):
         if rb in ("medium", "high") or lr in ("neutral", "aggressive"):
-            score = min(100, score + 15)
+            grief_add = int(round(15 * emotional_amp))
+            score = min(100, score + grief_add)
             modifiers.append(
-                "GRIEF STATE MODIFIER: Recent bereavement amplifies loss aversion by est. 30–40%. "
-                "Current behavioral risk score reflects grief-suppressed state, not baseline. "
-                "Reassess in 6–12 months."
+                f"Compound state '{compound}' indicates emotional suppression: "
+                f"+{grief_add} pts (state-calibrated). "
+                "Current score reflects temporary state, not baseline. Reassess in 6–12 months."
+            )
+    elif ctx.grief_state and not compound:
+        # Fallback to raw flag only when state synthesis unavailable
+        if rb in ("medium", "high") or lr in ("neutral", "aggressive"):
+            grief_add = int(round(15 * emotional_amp))
+            score = min(100, score + grief_add)
+            modifiers.append(
+                f"Grief state (fallback flag): +{grief_add} pts. Reassess in 6–12 months."
             )
 
-    # Recency bias: low experience + high risk behavior = naive, not informed
     if ctx.recency_bias_risk:
         modifiers.append(
-            "RECENCY BIAS FLAG: High risk tolerance with <1yr experience and low sophistication "
-            "suggests recency bias from recent gains, not stable risk acceptance. "
-            "First real loss may trigger panic exit."
+            "RECENCY BIAS FLAG: High risk tolerance with <1yr experience suggests "
+            "recency bias, not stable risk acceptance."
         )
 
     final = _clamp(score)
@@ -523,15 +585,39 @@ class CategoryAssessment:
     behavioral_risk: CategoryResult
 
 
-def assess_all_categories(ctx: ProfileContext) -> CategoryAssessment:
-    """Run all 6 category assessors against the ProfileContext."""
+def assess_all_categories(ctx: ProfileContext, investor_state=None, narrative=None) -> CategoryAssessment:
+    """
+    Run all 6 category assessors against the ProfileContext.
+    v12: accepts investor_state (compound state) as primary input.
+    Reads compound_state — not raw flags.
+    narrative accepted for backward compat but investor_state takes precedence.
+    """
+    # Use investor_state if available, fall back to narrative for weight query
+    state_input = investor_state if investor_state is not None else narrative
+    weights = _query_state_weights(state_input)
+    weight_note = weights.get("reasoning", "")
+
+    income_result  = assess_income_stability(ctx)
+    em_result      = assess_emergency_preparedness(ctx)
+    debt_result    = assess_debt_burden(ctx)
+    dep_result     = assess_dependency_load(ctx)
+    cult_result    = assess_cultural_obligation(ctx, narrative_weight=weights["obligation_weight"])
+    behav_result   = assess_behavioral_risk(
+        ctx,
+        narrative_weight=weights["behavioral_weight"],
+        investor_state=investor_state,
+    )
+
+    if weight_note:
+        cult_result.modifiers.append(f"State weight calibration: {weight_note}")
+
     return CategoryAssessment(
-        income_stability=assess_income_stability(ctx),
-        emergency_preparedness=assess_emergency_preparedness(ctx),
-        debt_burden=assess_debt_burden(ctx),
-        dependency_load=assess_dependency_load(ctx),
-        cultural_obligation=assess_cultural_obligation(ctx),
-        behavioral_risk=assess_behavioral_risk(ctx),
+        income_stability=income_result,
+        emergency_preparedness=em_result,
+        debt_burden=debt_result,
+        dependency_load=dep_result,
+        cultural_obligation=cult_result,
+        behavioral_risk=behav_result,
     )
 
 

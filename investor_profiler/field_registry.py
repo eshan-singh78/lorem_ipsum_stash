@@ -46,6 +46,7 @@ RULE_OWNED_FIELDS: set[str] = {
 # LLM-owned: interpretive/semantic; rules cannot reliably extract these
 LLM_OWNED_FIELDS: set[str] = {
     "loss_reaction",
+    "loss_reaction_description",
     "risk_behavior",
     "decision_autonomy",
     "financial_knowledge_score",
@@ -73,6 +74,7 @@ ALL_KNOWN_FIELDS: set[str] = RULE_OWNED_FIELDS | LLM_OWNED_FIELDS | DERIVED_FIEL
 # LLM interpretive fields — always low confidence (semantic, not factual)
 _LLM_INTERPRETIVE: set[str] = {
     "loss_reaction",
+    "loss_reaction_description",
     "risk_behavior",
     "decision_autonomy",
     "near_term_obligation_level",

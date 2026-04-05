@@ -323,6 +323,12 @@ loss_reaction: How does this investor emotionally respond to portfolio losses?
   CRITICAL: "worried" alone → "cautious", NOT "panic"
   CRITICAL: panic signals override any aggressive language in the same text
 
+loss_reaction_description: A 1-2 sentence description of HOW the investor reacted to losses.
+  Capture nuance: was it a one-time panic or a pattern? Did they recover? What triggered it?
+  Example: "Panicked once during the 2020 crash but resumed investing after 3 months."
+  Example: "Consistently cautious — reduces SIP during downturns but never exits fully."
+  → null if no loss reaction information is available.
+
 risk_behavior: Overall risk-taking orientation.
   "low"    = avoids risk, prefers guaranteed returns, capital preservation
   "medium" = balanced, accepts some risk for moderate returns
@@ -348,6 +354,7 @@ Return ONLY a valid JSON object with exactly these keys:
   "financial_knowledge_score": integer_1_to_5_or_null,
   "decision_autonomy": true_or_false_or_null,
   "loss_reaction": "panic|cautious|neutral|aggressive|null",
+  "loss_reaction_description": "1-2 sentence description of how they reacted, or null",
   "risk_behavior": "low|medium|high|null",
   "near_term_obligation_level": "none|moderate|high",
   "obligation_type": "wedding|house|education|medical|family|other|null"
@@ -486,13 +493,15 @@ def apply_invariants(
     fields: dict[str, FieldValue],
 ) -> tuple[dict[str, FieldValue], list[dict]]:
     """
-    Enforce logical consistency after merge.
-    These are hard rules — no LLM involved.
+    Enforce structural consistency after merge.
+    v12: panic → risk_behavior=low removed (LLM reasons about this in narrative).
+    Only structural/data-integrity invariants remain.
 
     Invariants:
-      1. panic loss_reaction → risk_behavior must be "low"
-      2. experience_years < 1 → financial_knowledge_score capped at 2
-      3. obligation_type must be null when level is "none"
+      1. experience_years < 1 → financial_knowledge_score capped at 2
+         (factual: cannot have deep knowledge with <1yr experience)
+      2. obligation_type must be null when level is "none"
+         (structural: type without level is meaningless)
     """
     updated = dict(fields)
     log: list[dict] = []
@@ -506,14 +515,7 @@ def apply_invariants(
             "new_value": val, "reason": reason,
         })
 
-    # Invariant 1: panic → risk_behavior = low
-    lr = updated.get("loss_reaction")
-    rb = updated.get("risk_behavior")
-    if lr and lr.value == "panic" and rb and rb.value in ("medium", "high"):
-        _force("risk_behavior", "low",
-               f"panic loss_reaction → risk_behavior forced from '{rb.value}' to 'low'")
-
-    # Invariant 2: novice experience → cap knowledge score
+    # Invariant 1: novice experience → cap knowledge score (factual constraint)
     exp_fv = updated.get("experience_years")
     fks_fv = updated.get("financial_knowledge_score")
     if (exp_fv and exp_fv.value is not None and exp_fv.value < 1
@@ -521,11 +523,15 @@ def apply_invariants(
         _force("financial_knowledge_score", 2,
                f"experience={exp_fv.value}y < 1 → knowledge capped to 2")
 
-    # Invariant 3: obligation_type must be null when level is none
+    # Invariant 2: obligation_type must be null when level is none (structural)
     ntol = updated.get("near_term_obligation_level")
     ot   = updated.get("obligation_type")
     if ntol and ntol.value in ("none", None) and ot and ot.value is not None:
         _force("obligation_type", None, "obligation_type cleared — level is none")
+
+    # NOTE: panic → risk_behavior=low removed in v12.
+    # Whether panic indicates low risk capacity is a contextual judgment
+    # made by the narrative layer, not a hard code rule.
 
     return updated, log
 

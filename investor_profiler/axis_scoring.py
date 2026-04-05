@@ -1,28 +1,110 @@
 """
-Context-Driven Axis Scoring Engine — InvestorDNA v6
+Context-Driven Axis Scoring Engine — InvestorDNA v11
 
 Architecture:
-  CategoryAssessment + ProfileContext → AxisScores
+  CategoryAssessment + ProfileContext + NarrativeOutput → AxisScores
 
-CRITICAL DESIGN RULE:
-  No axis reads raw fields directly.
-  Every axis score is derived from category assessments.
-  Categories are derived from ProfileContext.
-  ProfileContext is derived from validated fields.
+v11 change: narrative is passed into scoring.
+Fixed constants (grief_penalty=15, experience bonuses, axis weights)
+are replaced with narrative-calibrated adjustments via LLM query.
 
-This enforces the InvestorDNA principle:
-  "Think like an advisor, not a calculator."
-
-Axis mapping (from InvestorDNA spec):
-  Axis 1 (Risk Appetite)  → behavioral_risk + emotional signals from context
-  Axis 2 (Cash Flow)      → income_stability + emergency_preparedness
-  Axis 3 (Obligations)    → debt_burden + dependency_load + cultural_obligation
-  Axis 4 (Context)        → experience + sophistication + autonomy (from ProfileContext)
+Design principle:
+  "Scores are influenced by understanding, not the other way around."
 """
 
+import json
+import re
+import requests
 from dataclasses import dataclass
 from context_categories import CategoryAssessment, CategoryResult
 from profile_context import ProfileContext
+
+OLLAMA_BASE_URL = "http://localhost:11434"
+LLM_MODEL       = "llama3.1:8b"
+
+_AXIS_CALIBRATION_PROMPT = """You are a financial advisor calibrating axis scoring for an investor.
+
+Given the narrative below, answer:
+
+1. How much should the investor's RISK SCORE be adjusted? (penalty or bonus, -30 to +30)
+   Consider: emotional state, grief, peer influence, reliability of stated preferences.
+
+2. How much should the OBLIGATION AXIS weight be adjusted? (multiplier 0.7 to 1.5)
+   Consider: how binding are their obligations relative to their income?
+
+3. How much should the SOPHISTICATION AXIS weight be adjusted? (multiplier 0.7 to 1.3)
+   Consider: does their experience reflect genuine understanding or just time?
+
+4. One sentence explaining your calibration.
+
+Return ONLY valid JSON:
+
+{{
+  "risk_adjustment": integer from -30 to +30,
+  "obligation_multiplier": float from 0.7 to 1.5,
+  "sophistication_multiplier": float from 0.7 to 1.3,
+  "reasoning": "one sentence"
+}}
+
+No markdown. JSON only.
+
+Narrative:
+Life situation: {life_summary}
+Psychological state: {psychological_analysis}
+Risk truth: {risk_truth}
+Reliability: {reliability_assessment}
+"""
+
+
+def _query_axis_calibration(investor_state) -> dict:
+    """
+    Ask LLM: given this investor state, how should axis scores be calibrated?
+    Reads compound_state — not raw flags or individual narrative fields.
+    """
+    defaults = {
+        "risk_adjustment": 0,
+        "obligation_multiplier": 1.0,
+        "sophistication_multiplier": 1.0,
+        "reasoning": "defaults used",
+    }
+    if investor_state is None:
+        return defaults
+
+    prompt = _AXIS_CALIBRATION_PROMPT.format(
+        life_summary=getattr(investor_state, "state_description", ""),
+        psychological_analysis=", ".join(getattr(investor_state, "dominant_factors", [])),
+        risk_truth=", ".join(getattr(investor_state, "state_implications", [])),
+        reliability_assessment=getattr(investor_state, "compound_state", ""),
+    )
+
+    payload = {
+        "model":   LLM_MODEL,
+        "prompt":  prompt,
+        "stream":  False,
+        "options": {"temperature": 0, "num_predict": 256},
+        "format":  "json",
+    }
+
+    for attempt in (1, 2):
+        try:
+            resp = requests.post(
+                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
+            )
+            resp.raise_for_status()
+            text = resp.json().get("response", "").strip()
+            m = re.search(r"\{.*\}", text, re.DOTALL)
+            if m:
+                raw = json.loads(m.group(0))
+                return {
+                    "risk_adjustment":          max(-30, min(30, int(raw.get("risk_adjustment", 0)))),
+                    "obligation_multiplier":    max(0.7, min(1.5, float(raw.get("obligation_multiplier", 1.0)))),
+                    "sophistication_multiplier": max(0.7, min(1.3, float(raw.get("sophistication_multiplier", 1.0)))),
+                    "reasoning":                raw.get("reasoning", ""),
+                }
+        except Exception:
+            pass
+
+    return defaults
 
 
 def _clamp(v: float, lo: int = 1, hi: int = 99) -> int:
@@ -60,7 +142,15 @@ class AxisScores:
 def score_axis1_risk(
     categories: CategoryAssessment,
     ctx: ProfileContext,
+    risk_adjustment: int = 0,
+    investor_state=None,
+    signals=None,
 ) -> tuple[int | None, list[str]]:
+    """
+    Axis 1: Risk Appetite.
+    v14: reads loss_response from signals.behavior (not ctx.loss_reaction from extraction LLM).
+    risk_adjustment: state-derived calibration (-30 to +30).
+    """
     br = categories.behavioral_risk
     reasons = []
 
@@ -71,38 +161,25 @@ def score_axis1_risk(
         )
         return None, reasons
 
-    # Behavioral risk score is a BURDEN score (high = more risk-seeking / volatile behavior)
-    # Axis 1 (Risk Appetite) is a POSITIVE score (high = more willing to take risk)
-    # Inversion: risk_appetite = 100 - behavioral_risk_burden
-    # BUT: panic/fear signals mean LOW risk appetite despite potentially high behavioral score
-    # We use the behavioral_risk score as a proxy for risk tolerance level
+    # v14: prefer signals.behavior.loss_response over ctx.loss_reaction
+    if signals is not None:
+        lr = signals.behavior.loss_response
+        reasons.append(f"Loss response from signal extraction: {lr}")
+    else:
+        lr = ctx.loss_reaction
 
-    lr = ctx.loss_reaction
-    rb = ctx.risk_behavior
-
-    # Start from behavioral risk score as base
+    rb   = ctx.risk_behavior
     base = br.score or 50
 
-    # Map behavioral risk burden → risk appetite
-    # High behavioral risk (risk-seeking) → high risk appetite
-    # Low behavioral risk (conservative) → low risk appetite
-    # Panic → very low risk appetite regardless
     if lr == "panic":
-        # Panic overrides everything — very low risk appetite
         score = _clamp(15 + (base * 0.1))
-        reasons.append(
-            f"Panic loss reaction detected — risk appetite severely suppressed (score: {score})"
-        )
+        reasons.append(f"Panic loss response — risk appetite severely suppressed (score: {score})")
     elif lr == "cautious":
         score = _clamp(25 + (base * 0.2))
-        reasons.append(
-            f"Cautious loss reaction — moderate-low risk appetite (score: {score})"
-        )
+        reasons.append(f"Cautious loss response — moderate-low risk appetite (score: {score})")
     elif lr == "aggressive":
         score = _clamp(50 + (base * 0.4))
-        reasons.append(
-            f"Aggressive loss reaction (buys on dips) — high risk appetite (score: {score})"
-        )
+        reasons.append(f"Aggressive loss response — high risk appetite (score: {score})")
     elif rb == "low":
         score = _clamp(20 + (base * 0.15))
         reasons.append(f"Low risk behavior — conservative risk appetite (score: {score})")
@@ -110,28 +187,35 @@ def score_axis1_risk(
         score = _clamp(55 + (base * 0.3))
         reasons.append(f"High risk behavior — elevated risk appetite (score: {score})")
     else:
-        # Neutral / medium — use behavioral score directly as moderate
         score = _clamp(35 + (base * 0.2))
         reasons.append(f"Moderate behavioral profile — balanced risk appetite (score: {score})")
 
-    # Grief state modifier: amplifies loss aversion, suppresses risk appetite
-    if ctx.grief_state:
-        grief_penalty = 15
-        score = _clamp(score - grief_penalty)
+    # Resilience modifier — from signals, never dropped
+    if signals is not None and signals.behavior.resilience_level == "high":
+        score = min(99, score + 5)
         reasons.append(
-            f"Grief state modifier: −{grief_penalty} pts. "
-            "Current score reflects grief-amplified loss aversion, not baseline personality. "
-            "Expected to increase over 6–18 months as grief processing occurs."
+            f"Resilience modifier: +5 (evidence: {signals.behavior.resilience_evidence or 'high resilience detected'})"
         )
 
-    # Recency bias: high apparent risk appetite from inexperience, not conviction
+    # Apply state-derived adjustment
+    if risk_adjustment != 0:
+        before = score
+        score  = _clamp(score + risk_adjustment)
+        direction = "reduced" if risk_adjustment < 0 else "increased"
+        compound = getattr(investor_state, "compound_state", "") if investor_state else ""
+        reasons.append(
+            f"State calibration ({compound!r}): risk score {direction} by "
+            f"{abs(risk_adjustment)} pts ({before} → {score})."
+        )
+    elif ctx.grief_state and investor_state is None:
+        score = _clamp(score - 15)
+        reasons.append("Grief state (fallback): risk score reduced by 15 pts.")
+
     if ctx.recency_bias_risk:
         reasons.append(
-            "RECENCY BIAS WARNING: High risk appetite score reflects inexperience with real losses, "
-            "not informed risk acceptance. Do NOT treat this as stable high risk tolerance."
+            "RECENCY BIAS WARNING: High risk appetite score reflects inexperience with real losses."
         )
 
-    # Append behavioral modifiers as context
     for mod in br.modifiers:
         reasons.append(f"Context: {mod}")
 
@@ -191,43 +275,47 @@ def score_axis2_cashflow(
 def score_axis3_obligations(
     categories: CategoryAssessment,
     ctx: ProfileContext,
+    obligation_multiplier: float = 1.0,
 ) -> tuple[int, list[str]]:
+    """
+    Axis 3: Financial Obligations.
+    obligation_multiplier: narrative-derived (0.7-1.5).
+    Replaces fixed weights 0.40/0.30/0.30 with narrative-calibrated combination.
+    """
     debt = categories.debt_burden
     dep  = categories.dependency_load
     cult = categories.cultural_obligation
     reasons = []
 
-    # Debt burden: formal EMI obligations (weight: 0.40)
     debt_score = debt.score if debt.score is not None else 5
-    reasons.append(
-        f"Debt burden: {debt.label} (score: {debt_score}) — {debt.reason}"
-    )
-
-    # Dependency load: people depending on investor (weight: 0.30)
-    dep_score = dep.score if dep.score is not None else 5
-    reasons.append(
-        f"Dependency load: {dep.label} (score: {dep_score}) — {dep.reason}"
-    )
-
-    # Cultural obligation: India-specific fixed obligations (weight: 0.30)
+    dep_score  = dep.score  if dep.score  is not None else 5
     cult_score = cult.score if cult.score is not None else 5
-    reasons.append(
-        f"Cultural obligation: {cult.label} (score: {cult_score}) — {cult.reason}"
-    )
 
-    # Weighted combination
+    reasons.append(f"Debt burden: {debt.label} (score: {debt_score}) — {debt.reason}")
+    reasons.append(f"Dependency load: {dep.label} (score: {dep_score}) — {dep.reason}")
+    reasons.append(f"Cultural obligation: {cult.label} (score: {cult_score}) — {cult.reason}")
+
+    # Base weighted combination (fixed structural weights)
     combined = (debt_score * 0.40) + (dep_score * 0.30) + (cult_score * 0.30)
 
-    # Context modifiers
+    # Apply narrative-derived multiplier
+    if obligation_multiplier != 1.0:
+        before   = combined
+        combined = combined * obligation_multiplier
+        reasons.append(
+            f"Narrative obligation multiplier: {obligation_multiplier:.2f} "
+            f"({before:.1f} → {combined:.1f}) — narrative indicates "
+            f"{'higher' if obligation_multiplier > 1.0 else 'lower'} binding constraint."
+        )
+
     all_modifiers = debt.modifiers + dep.modifiers + cult.modifiers
     for mod in all_modifiers:
         reasons.append(f"Modifier: {mod}")
 
-    # Emerging constraint flag
     if ctx.emerging_constraint:
         reasons.append(
             "EMERGING CONSTRAINT: Current obligations are low but future commitments are high. "
-            "Classify as Emerging Constraint Investor — do not recommend illiquid products."
+            "Do not recommend illiquid products."
         )
 
     return _clamp(combined), reasons
@@ -244,40 +332,55 @@ def score_axis3_obligations(
 def score_axis4_context(
     categories: CategoryAssessment,
     ctx: ProfileContext,
+    sophistication_multiplier: float = 1.0,
+    investor_state=None,
 ) -> tuple[int, list[str]]:
+    """
+    Axis 4: Investor Context / Sophistication.
+    sophistication_multiplier: state-derived (0.7-1.3).
+    Reads compound_state for peer/fragmentation signals, not raw flags.
+    """
     score = 30
     reasons = []
 
-    # Experience years
     exp = ctx.experience_years
     if exp is not None:
         if exp >= 10:
-            score += 30
-            reasons.append(f"10+ years investment experience (+30)")
+            bonus = int(round(30 * sophistication_multiplier))
+            score += bonus
+            reasons.append(f"10+ years investment experience (+{bonus})")
         elif exp >= 5:
-            score += 20
-            reasons.append(f"{exp:.1f} years experience (+20)")
+            bonus = int(round(20 * sophistication_multiplier))
+            score += bonus
+            reasons.append(f"{exp:.1f} years experience (+{bonus})")
         elif exp >= 2:
-            score += 10
-            reasons.append(f"{exp:.1f} years experience (+10)")
+            bonus = int(round(10 * sophistication_multiplier))
+            score += bonus
+            reasons.append(f"{exp:.1f} years experience (+{bonus})")
         elif exp >= 1:
-            score += 5
-            reasons.append(f"{exp:.1f} years experience (+5)")
+            bonus = int(round(5 * sophistication_multiplier))
+            score += bonus
+            reasons.append(f"{exp:.1f} years experience (+{bonus})")
         else:
-            reasons.append(f"<1 year experience — novice investor")
+            reasons.append("<1 year experience — novice investor")
     else:
         reasons.append("Experience not reported")
 
-    # Financial knowledge score
     fks = ctx.financial_knowledge_score
     if fks is not None:
-        bonus = (fks - 1) * 5
+        bonus = int(round((fks - 1) * 5 * sophistication_multiplier))
         score += bonus
         reasons.append(f"Financial knowledge score: {fks}/5 (+{bonus})")
     else:
         reasons.append("Financial knowledge not assessed")
 
-    # Decision autonomy
+    if sophistication_multiplier != 1.0:
+        compound = getattr(investor_state, "compound_state", "") if investor_state else ""
+        reasons.append(
+            f"State sophistication multiplier: {sophistication_multiplier:.2f} "
+            f"(state: {compound!r})"
+        )
+
     da = ctx.decision_autonomy
     if da is True:
         score += 10
@@ -286,28 +389,25 @@ def score_axis4_context(
         score -= 5
         reasons.append("Peer/family-influenced decisions (−5)")
 
-    # City tier modifier (proxy for financial ecosystem access)
     if ctx.city_tier == "metro":
         score += 5
-        reasons.append("Metro city — better access to financial products and advice (+5)")
+        reasons.append("Metro city — better access to financial products (+5)")
     elif ctx.city_tier == "tier2":
         reasons.append("Tier 2 city — standard access")
 
-    # Peer-driven flag: reduces effective sophistication
-    if ctx.peer_driven:
+    # Read peer/fragmentation from compound_state, not raw flags
+    compound = getattr(investor_state, "compound_state", "").lower() if investor_state else ""
+    if compound and any(w in compound for w in ("peer", "speculator", "influenced", "herd")):
         score = max(1, score - 8)
-        reasons.append(
-            "Peer-driven investment decisions reduce effective sophistication score (−8). "
-            "Investor may not have internalized the reasoning behind their portfolio."
-        )
+        reasons.append(f"Compound state '{compound}' indicates peer-driven decisions (−8)")
+    elif ctx.peer_driven and not compound:
+        score = max(1, score - 8)
+        reasons.append("Peer-driven decisions reduce effective sophistication (−8) [fallback flag]")
 
-    # Fragmentation risk: high sophistication but fragmented picture
-    if ctx.fragmentation_risk:
-        reasons.append(
-            "FRAGMENTATION RISK: Multiple advisors/platforms detected — "
-            "no single advisor has the complete financial picture. "
-            "This is the advisor's key value-add opportunity."
-        )
+    if compound and any(w in compound for w in ("fragmented", "multiple advisor")):
+        reasons.append(f"Compound state '{compound}' — fragmentation risk detected")
+    elif ctx.fragmentation_risk and not compound:
+        reasons.append("FRAGMENTATION RISK: Multiple advisors/platforms [fallback flag]")
 
     return _clamp(score), reasons
 
@@ -334,17 +434,38 @@ def compute_financial_capacity(cashflow: int, obligation: int) -> int:
 def compute_axis_scores(
     categories: CategoryAssessment,
     ctx: ProfileContext,
+    narrative=None,
+    investor_state=None,
+    signals=None,
 ) -> AxisScores:
     """
     Score all 4 axes from category assessments and profile context.
-    No raw field access — everything flows through categories and context.
+    v14: signals parameter routes loss_response from signal_extraction (not extraction LLM).
+    investor_state is primary calibration input.
     """
-    risk_score,    risk_reasons    = score_axis1_risk(categories, ctx)
+    state_input = investor_state if investor_state is not None else narrative
+    calib = _query_axis_calibration(state_input)
+
+    risk_score,    risk_reasons    = score_axis1_risk(
+        categories, ctx,
+        risk_adjustment=calib["risk_adjustment"],
+        investor_state=investor_state,
+        signals=signals,
+    )
     cashflow_score, cf_reasons     = score_axis2_cashflow(categories, ctx)
-    oblig_score,   oblig_reasons   = score_axis3_obligations(categories, ctx)
-    context_score, context_reasons = score_axis4_context(categories, ctx)
+    oblig_score,   oblig_reasons   = score_axis3_obligations(
+        categories, ctx, obligation_multiplier=calib["obligation_multiplier"]
+    )
+    context_score, context_reasons = score_axis4_context(
+        categories, ctx,
+        sophistication_multiplier=calib["sophistication_multiplier"],
+        investor_state=investor_state,
+    )
 
     capacity = compute_financial_capacity(cashflow_score, oblig_score)
+
+    if calib.get("reasoning"):
+        risk_reasons.append(f"Axis calibration: {calib['reasoning']}")
 
     return AxisScores(
         risk=risk_score,

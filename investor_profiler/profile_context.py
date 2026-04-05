@@ -1,59 +1,58 @@
 """
-Profile Context Layer — InvestorDNA v6
-Transforms validated fields + raw text into a structured context object.
+Profile Context Layer — InvestorDNA v13
+Transforms validated fields + SignalOutput into a structured ProfileContext.
 
 Architecture:
-  validated_fields + raw_text → ProfileContext
+  validated_fields + SignalOutput → ProfileContext
 
-The ProfileContext is the single source of truth for all downstream reasoning.
-No axis or category scorer should ever read raw fields directly.
+v13 change: ALL regex pattern matching removed.
+Profile context is built entirely from SignalOutput (LLM-extracted signals).
+No _DEATH_PATTERNS, no _FEAR_PATTERNS, no cultural regex.
 
-Context captures:
-  - demographics: age, income, city tier, employment
-  - life_events: death, job change, marriage, responsibility shift
-  - financial_snapshot: assets, debts, savings, insurance
-  - cultural_context: family role, hidden obligations, religious commitments
-  - behavioral_signals: fear, peer influence, decision patterns, anxiety markers
+The ProfileContext is the single source of truth for all downstream scoring.
+No axis or category scorer reads raw fields or raw text directly.
 """
 
-import re
 from dataclasses import dataclass, field
-from typing import Any
+from signal_extraction import (
+    SignalOutput, LifeEventSignal, ContradictionSignal,
+    BehaviorSignal, DecisionStyleSignal, ResponsibilitySignal,
+)
 
 
 # ---------------------------------------------------------------------------
-# Context data structures
+# Context data structures — unchanged interface for downstream compatibility
 # ---------------------------------------------------------------------------
 
 @dataclass
 class LifeEvent:
-    event_type: str          # "death", "job_change", "marriage", "responsibility_shift", "crisis"
+    event_type: str
     description: str
-    recency: str             # "recent" | "past" | "unknown"
-    emotional_weight: str    # "high" | "medium" | "low"
+    recency: str        # "recent" | "past" | "unknown"
+    emotional_weight: str  # "high" | "medium" | "low"
 
 
 @dataclass
 class CulturalSignal:
-    signal_type: str         # "family_role", "hidden_obligation", "religious", "social_pressure"
+    signal_type: str       # "family_role" | "hidden_obligation" | "religious" | "social_pressure"
     description: str
-    negotiability: str       # "fixed" | "flexible" | "unknown"
+    negotiability: str     # "fixed" | "flexible" | "unknown"
 
 
 @dataclass
 class BehavioralSignal:
-    signal_type: str         # "fear", "peer_influence", "anxiety", "overconfidence", "analytical"
+    signal_type: str       # "fear" | "peer_influence" | "anxiety" | "overconfidence" | "analytical" | "resilience"
     description: str
-    strength: str            # "strong" | "moderate" | "weak"
+    strength: str          # "strong" | "moderate" | "weak"
 
 
 @dataclass
 class ProfileContext:
     # Core demographics
-    income_type: str                    # "salaried" | "business" | "gig" | "unknown"
+    income_type: str
     monthly_income: float | None
-    city_tier: str                      # "metro" | "tier2" | "tier3" | "unknown"
-    employment_stability: str           # "stable" | "moderate" | "volatile" | "unknown"
+    city_tier: str                  # "metro" | "tier2" | "tier3" | "unknown"
+    employment_stability: str       # "stable" | "moderate" | "volatile" | "unknown"
 
     # Financial snapshot
     emergency_months: float | None
@@ -68,11 +67,11 @@ class ProfileContext:
     decision_autonomy: bool | None
 
     # Behavioral
-    loss_reaction: str | None           # "panic" | "cautious" | "neutral" | "aggressive"
-    risk_behavior: str | None           # "low" | "medium" | "high"
+    loss_reaction: str | None
+    risk_behavior: str | None
 
     # Obligation
-    near_term_obligation_level: str     # "none" | "moderate" | "high"
+    near_term_obligation_level: str
     obligation_type: str | None
     future_obligation_score: float
 
@@ -81,7 +80,7 @@ class ProfileContext:
     cultural_signals: list[CulturalSignal] = field(default_factory=list)
     behavioral_signals: list[BehavioralSignal] = field(default_factory=list)
 
-    # Derived flags (set during context building)
+    # Derived flags
     grief_state: bool = False
     peer_driven: bool = False
     hidden_obligation_detected: bool = False
@@ -89,328 +88,172 @@ class ProfileContext:
     recency_bias_risk: bool = False
     emerging_constraint: bool = False
 
+    # v13: resilience and contradiction signals — preserved, never dropped
+    resilience_level: str = "medium"        # low | medium | high
+    resilience_evidence: str = ""
+    contradictions: list = field(default_factory=list)  # list[ContradictionSignal]
+
 
 # ---------------------------------------------------------------------------
-# Life event detection from raw text
+# Build from signals — no regex
 # ---------------------------------------------------------------------------
 
-_DEATH_PATTERNS = [
-    r"(?:father|mother|parent|spouse|husband|wife|sibling)\s+(?:passed|died|death|expired|no more)",
-    r"(?:lost|losing)\s+(?:my|his|her|their)\s+(?:father|mother|parent|spouse)",
-    r"(?:death|demise|passing)\s+of\s+(?:father|mother|parent|spouse)",
-    r"(?:recently\s+)?(?:bereaved|widowed)",
-]
-
-_JOB_CHANGE_PATTERNS = [
-    r"(?:recently\s+)?(?:changed|switched|left|quit|resigned from|lost)\s+(?:job|work|employment)",
-    r"(?:new\s+job|new\s+role|joined|started\s+working\s+at)",
-    r"(?:laid off|retrenchment|redundancy|fired)",
-]
-
-_MARRIAGE_PATTERNS = [
-    r"(?:recently\s+)?(?:married|got\s+married|wedding\s+recently)",
-    r"(?:newly\s+wed|just\s+married)",
-]
-
-_RESPONSIBILITY_SHIFT_PATTERNS = [
-    r"(?:eldest\s+son|only\s+son|primary\s+earner|sole\s+earner|breadwinner)",
-    r"(?:took\s+over|taking\s+over|responsible\s+for|now\s+responsible)",
-    r"(?:entire\s+(?:financial\s+)?responsibility|all\s+(?:financial\s+)?responsibility)",
-]
-
-_CRISIS_PATTERNS = [
-    r"(?:financial\s+crisis|debt\s+trap|bankruptcy|insolvent)",
-    r"(?:medical\s+emergency|hospital\s+bills|medical\s+debt)",
-    r"(?:covid|pandemic)\s+(?:hit|affected|impacted|crisis)",
-]
+def _impact_to_weight(impact: str) -> str:
+    return {"high": "high", "medium": "medium", "low": "low"}.get(impact, "medium")
 
 
-def _detect_life_events(text: str) -> list[LifeEvent]:
-    t = text.lower()
-    events: list[LifeEvent] = []
-
-    for pat in _DEATH_PATTERNS:
-        if re.search(pat, t):
-            recency = "recent" if any(w in t for w in ["recently", "just", "last year", "this year", "2020", "2021", "2022", "2023", "2024"]) else "past"
-            events.append(LifeEvent(
-                event_type="death",
-                description="Loss of close family member detected",
-                recency=recency,
-                emotional_weight="high",
-            ))
-            break
-
-    for pat in _JOB_CHANGE_PATTERNS:
-        if re.search(pat, t):
-            events.append(LifeEvent(
-                event_type="job_change",
-                description="Recent employment change detected",
-                recency="recent",
-                emotional_weight="medium",
-            ))
-            break
-
-    for pat in _MARRIAGE_PATTERNS:
-        if re.search(pat, t):
-            events.append(LifeEvent(
-                event_type="marriage",
-                description="Recent marriage detected",
-                recency="recent",
-                emotional_weight="medium",
-            ))
-            break
-
-    for pat in _RESPONSIBILITY_SHIFT_PATTERNS:
-        if re.search(pat, t):
-            events.append(LifeEvent(
-                event_type="responsibility_shift",
-                description="Sudden increase in financial responsibility detected",
-                recency="recent",
-                emotional_weight="high",
-            ))
-            break
-
-    for pat in _CRISIS_PATTERNS:
-        if re.search(pat, t):
-            events.append(LifeEvent(
-                event_type="crisis",
-                description="Financial or medical crisis detected",
-                recency="recent",
-                emotional_weight="high",
-            ))
-            break
-
+def _life_events_from_signals(signals: SignalOutput) -> list[LifeEvent]:
+    events = []
+    for ev in signals.life_events:
+        events.append(LifeEvent(
+            event_type=ev.type,
+            description=ev.description,
+            recency=ev.recency,
+            emotional_weight=_impact_to_weight(ev.impact),
+        ))
     return events
 
 
-# ---------------------------------------------------------------------------
-# Cultural signal detection
-# ---------------------------------------------------------------------------
+def _cultural_signals_from_signals(signals: SignalOutput) -> list[CulturalSignal]:
+    cultural = []
 
-_FAMILY_ROLE_PATTERNS = {
-    "eldest_son": [r"eldest\s+son", r"older\s+son", r"first\s+son"],
-    "joint_family": [r"joint\s+family", r"living\s+with\s+(?:parents|family)", r"parents\s+at\s+home"],
-    "sole_earner": [r"sole\s+earner", r"only\s+earner", r"primary\s+earner", r"breadwinner"],
-    "patriarch": [r"head\s+of\s+(?:the\s+)?family", r"family\s+head"],
-}
+    # Family role from responsibility
+    resp = signals.responsibility
+    if resp.role == "primary":
+        cultural.append(CulturalSignal(
+            signal_type="family_role",
+            description=f"Primary financial provider — {resp.dependents_description or 'family dependent on this investor'}",
+            negotiability="fixed",
+        ))
 
-_HIDDEN_OBLIGATION_PATTERNS = [
-    r"(?:secretly|secretly\s+saving|saving\s+secretly|parents\s+(?:don't|do\s+not)\s+know)",
-    r"(?:hidden|undisclosed|unspoken)\s+(?:savings?|obligation|commitment)",
-    r"(?:wedding|marriage)\s+(?:savings?|fund|corpus|money)",
-    r"(?:dowry|dahej)",
-    r"(?:earmarked|set\s+aside|keeping\s+aside)\s+for",
-]
+    # Cultural obligations from responsibility
+    for obligation in resp.cultural_obligations:
+        if obligation:
+            # Classify the obligation type
+            ob_lower = obligation.lower()
+            if any(w in ob_lower for w in ["religious", "temple", "mosque", "church", "zakat", "tithe", "daan"]):
+                cultural.append(CulturalSignal(
+                    signal_type="religious",
+                    description=obligation,
+                    negotiability="fixed",
+                ))
+            elif any(w in ob_lower for w in ["hidden", "secret", "wedding", "marriage", "dowry"]):
+                cultural.append(CulturalSignal(
+                    signal_type="hidden_obligation",
+                    description=obligation,
+                    negotiability="fixed",
+                ))
+            elif any(w in ob_lower for w in ["social", "community", "expectation", "reputation"]):
+                cultural.append(CulturalSignal(
+                    signal_type="social_pressure",
+                    description=obligation,
+                    negotiability="fixed",
+                ))
+            else:
+                cultural.append(CulturalSignal(
+                    signal_type="family_role",
+                    description=obligation,
+                    negotiability="fixed",
+                ))
 
-_RELIGIOUS_PATTERNS = [
-    r"(?:religious|dharmic|spiritual)\s+(?:giving|donation|commitment|obligation)",
-    r"(?:temple|mosque|church|gurudwara)\s+(?:donation|giving|contribution)",
-    r"(?:charity|charitable)\s+(?:giving|donation)",
-    r"(?:zakat|tithe|daan|dakshina)",
-]
+    # Hidden obligations from financial state
+    if signals.financial_state.hidden_obligations:
+        cultural.append(CulturalSignal(
+            signal_type="hidden_obligation",
+            description=signals.financial_state.hidden_obligations,
+            negotiability="fixed",
+        ))
 
-_SOCIAL_PRESSURE_PATTERNS = [
-    r"(?:social\s+expectation|community\s+expectation|family\s+expectation)",
-    r"(?:shame|embarrassment|face|izzat|reputation)\s+(?:if|when|about)",
-    r"(?:what\s+will\s+people\s+say|log\s+kya\s+kahenge)",
-    r"(?:community\s+standard|society\s+expects|expected\s+to)",
-]
-
-
-def _detect_cultural_signals(text: str) -> list[CulturalSignal]:
-    t = text.lower()
-    signals: list[CulturalSignal] = []
-
-    for role, patterns in _FAMILY_ROLE_PATTERNS.items():
-        if any(re.search(p, t) for p in patterns):
-            signals.append(CulturalSignal(
-                signal_type="family_role",
-                description=f"Family role: {role.replace('_', ' ')}",
-                negotiability="fixed",
-            ))
-
-    for pat in _HIDDEN_OBLIGATION_PATTERNS:
-        if re.search(pat, t):
-            signals.append(CulturalSignal(
-                signal_type="hidden_obligation",
-                description="Hidden or unspoken financial obligation detected",
-                negotiability="fixed",
-            ))
-            break
-
-    for pat in _RELIGIOUS_PATTERNS:
-        if re.search(pat, t):
-            signals.append(CulturalSignal(
-                signal_type="religious",
-                description="Religious or charitable giving commitment detected",
-                negotiability="fixed",
-            ))
-            break
-
-    for pat in _SOCIAL_PRESSURE_PATTERNS:
-        if re.search(pat, t):
-            signals.append(CulturalSignal(
-                signal_type="social_pressure",
-                description="Social or community financial pressure detected",
-                negotiability="fixed",
-            ))
-            break
-
-    return signals
+    return cultural
 
 
-# ---------------------------------------------------------------------------
-# Behavioral signal detection
-# ---------------------------------------------------------------------------
+def _behavioral_signals_from_signals(signals: SignalOutput) -> list[BehavioralSignal]:
+    behavioral = []
+    beh = signals.behavior
+    ds  = signals.decision_style
 
-_FEAR_PATTERNS = [
-    r"(?:can't\s+sleep|cannot\s+sleep|sleepless|sleepless\s+nights)",
-    r"(?:scared|terrified|frightened)\s+(?:of|about)\s+(?:loss|losing|market)",
-    r"(?:panic|panicked|panicking)\s+(?:sell|sold|selling|exit)",
-    r"(?:stopped\s+investing|pulled\s+out|withdrew\s+all|exit\s+market)",
-]
+    # Loss response → fear or resilience signal
+    if beh.loss_response == "panic":
+        behavioral.append(BehavioralSignal(
+            signal_type="fear",
+            description=beh.loss_response_detail or "Panic response to portfolio losses",
+            strength="strong",
+        ))
+    elif beh.loss_response == "cautious":
+        behavioral.append(BehavioralSignal(
+            signal_type="anxiety",
+            description=beh.loss_response_detail or "Cautious response to losses",
+            strength="moderate",
+        ))
 
-_ANXIETY_PATTERNS = [
-    r"(?:checks?\s+(?:nav|price|portfolio|market))\s+(?:daily|every\s+day|multiple\s+times|constantly|obsessively)",
-    r"(?:worried|anxious|nervous|stressed)\s+(?:about|when|if)\s+(?:market|loss|portfolio|investment)",
-    r"(?:considered\s+stopping|thinking\s+of\s+stopping|wanted\s+to\s+stop)\s+(?:sip|investing)",
-]
+    # Resilience — always captured, never dropped
+    if beh.resilience_level == "high":
+        behavioral.append(BehavioralSignal(
+            signal_type="resilience",
+            description=beh.resilience_evidence or "High resilience demonstrated",
+            strength="strong",
+        ))
+    elif beh.resilience_level == "medium":
+        behavioral.append(BehavioralSignal(
+            signal_type="resilience",
+            description=beh.resilience_evidence or "Moderate resilience",
+            strength="moderate",
+        ))
 
-_PEER_INFLUENCE_PATTERNS = [
-    r"(?:friend|colleague|relative|neighbour)\s+(?:told|suggested|recommended|showed|said)",
-    r"(?:because\s+(?:my\s+)?friend|after\s+seeing\s+friend|friend\s+(?:posted|shared|showed))",
-    r"(?:instagram|youtube|twitter|social\s+media)\s+(?:finfluencer|influencer|tip|advice)",
-    r"(?:tips?\s+from|following\s+(?:tips?|advice|others))",
-    r"(?:peer\s+(?:pressure|comparison|influence)|keeping\s+up\s+with)",
-]
+    # Peer influence
+    if ds.peer_influence in ("medium", "high"):
+        behavioral.append(BehavioralSignal(
+            signal_type="peer_influence",
+            description=ds.peer_influence_detail or "Investment decisions influenced by peers",
+            strength="strong" if ds.peer_influence == "high" else "moderate",
+        ))
 
-_OVERCONFIDENCE_PATTERNS = [
-    r"(?:always\s+(?:right|correct|profitable)|never\s+(?:wrong|lost))",
-    r"(?:confident\s+in\s+(?:my\s+)?(?:picks?|ability|analysis|stock))",
-    r"(?:beat\s+the\s+market|outperform|alpha\s+generation)",
-    r"(?:15[-–]20\s+trades?|active\s+(?:trader|trading))",
-]
+    # Analytical tendency
+    if ds.analytical_tendency in ("medium", "high"):
+        behavioral.append(BehavioralSignal(
+            signal_type="analytical",
+            description="Systematic, research-driven decision making detected",
+            strength="strong" if ds.analytical_tendency == "high" else "moderate",
+        ))
 
-_ANALYTICAL_PATTERNS = [
-    r"(?:researches?\s+(?:before|independently|thoroughly)|does\s+own\s+research)",
-    r"(?:spreadsheet|excel|model|analysis|calculated)",
-    r"(?:reverse.engineer|negotiated|systematic|prioritized\s+high.interest)",
-]
-
-
-def _detect_behavioral_signals(text: str) -> list[BehavioralSignal]:
-    t = text.lower()
-    signals: list[BehavioralSignal] = []
-
-    for pat in _FEAR_PATTERNS:
-        if re.search(pat, t):
-            signals.append(BehavioralSignal(
-                signal_type="fear",
-                description="Strong fear/panic response to market loss detected",
-                strength="strong",
-            ))
-            break
-
-    for pat in _ANXIETY_PATTERNS:
-        if re.search(pat, t):
-            signals.append(BehavioralSignal(
-                signal_type="anxiety",
-                description="Anxiety-driven monitoring behavior detected",
-                strength="moderate",
-            ))
-            break
-
-    for pat in _PEER_INFLUENCE_PATTERNS:
-        if re.search(pat, t):
-            signals.append(BehavioralSignal(
-                signal_type="peer_influence",
-                description="Investment decisions influenced by peers or social media",
-                strength="strong",
-            ))
-            break
-
-    for pat in _OVERCONFIDENCE_PATTERNS:
-        if re.search(pat, t):
-            signals.append(BehavioralSignal(
-                signal_type="overconfidence",
-                description="Overconfidence in investment ability detected",
-                strength="moderate",
-            ))
-            break
-
-    for pat in _ANALYTICAL_PATTERNS:
-        if re.search(pat, t):
-            signals.append(BehavioralSignal(
-                signal_type="analytical",
-                description="Systematic, research-driven decision making detected",
-                strength="strong",
-            ))
-            break
-
-    return signals
+    return behavioral
 
 
-# ---------------------------------------------------------------------------
-# City tier inference
-# ---------------------------------------------------------------------------
-
-_METRO_CITIES = {
-    "mumbai", "delhi", "bangalore", "bengaluru", "hyderabad",
-    "chennai", "kolkata", "pune", "noida", "gurgaon", "gurugram",
-    "ahmedabad", "navi mumbai", "thane",
-}
-_TIER2_CITIES = {
-    "surat", "indore", "jaipur", "lucknow", "kanpur", "nagpur",
-    "bhopal", "visakhapatnam", "patna", "vadodara", "coimbatore",
-    "agra", "nashik", "faridabad", "meerut", "rajkot", "varanasi",
-    "amritsar", "allahabad", "prayagraj", "ranchi", "howrah",
-    "jabalpur", "gwalior", "vijayawada", "jodhpur", "madurai",
-    "raipur", "kota", "chandigarh", "guwahati", "solapur",
-}
-
-
-def _infer_city_tier(text: str) -> str:
-    t = text.lower()
-    for city in _METRO_CITIES:
+def _infer_city_tier(raw_text: str) -> str:
+    """Minimal city tier inference — kept as a lightweight lookup, not behavioral regex."""
+    t = raw_text.lower()
+    metros = {"mumbai", "delhi", "bangalore", "bengaluru", "hyderabad", "chennai",
+              "kolkata", "pune", "noida", "gurgaon", "gurugram", "ahmedabad"}
+    tier2s = {"surat", "indore", "jaipur", "lucknow", "nagpur", "bhopal",
+              "visakhapatnam", "patna", "vadodara", "coimbatore", "chandigarh"}
+    for city in metros:
         if city in t:
             return "metro"
-    for city in _TIER2_CITIES:
+    for city in tier2s:
         if city in t:
             return "tier2"
-    if any(w in t for w in ["tier 1", "tier-1", "metro city", "metropolitan"]):
+    if any(w in t for w in ["metro city", "metropolitan", "tier 1", "tier-1"]):
         return "metro"
-    if any(w in t for w in ["tier 2", "tier-2", "tier 3", "tier-3", "small town", "village"]):
+    if any(w in t for w in ["tier 2", "tier-2", "tier 3", "tier-3", "small town"]):
         return "tier2"
     return "unknown"
 
 
-# ---------------------------------------------------------------------------
-# Employment stability inference
-# ---------------------------------------------------------------------------
-
-def _infer_employment_stability(income_type: str, text: str) -> str:
-    t = text.lower()
+def _infer_employment_stability(income_type: str, signals: SignalOutput) -> str:
     if income_type == "salaried":
-        if any(w in t for w in ["government", "govt", "psu", "public sector", "bank employee"]):
-            return "stable"
         return "stable"
     elif income_type == "business":
-        if any(w in t for w in ["cyclical", "seasonal", "irregular", "volatile"]):
-            return "moderate"
         return "moderate"
     elif income_type == "gig":
         return "volatile"
     return "unknown"
 
 
-# ---------------------------------------------------------------------------
-# Derived flag computation
-# ---------------------------------------------------------------------------
-
 def _compute_flags(
     life_events: list[LifeEvent],
     cultural_signals: list[CulturalSignal],
     behavioral_signals: list[BehavioralSignal],
+    signals: SignalOutput,
     fields: dict,
     future_obligation_score: float,
 ) -> dict[str, bool]:
@@ -423,15 +266,14 @@ def _compute_flags(
         "emerging_constraint": False,
     }
 
-    # Grief state: recent death + high emotional weight
+    # Grief: death event with recent recency
     for ev in life_events:
         if ev.event_type == "death" and ev.recency == "recent":
             flags["grief_state"] = True
 
-    # Peer driven: peer influence signal OR decision_autonomy=False
-    for sig in behavioral_signals:
-        if sig.signal_type == "peer_influence":
-            flags["peer_driven"] = True
+    # Peer driven: from signal, not regex
+    if signals.decision_style.peer_influence in ("medium", "high"):
+        flags["peer_driven"] = True
     if fields.get("decision_autonomy") is False:
         flags["peer_driven"] = True
 
@@ -439,12 +281,10 @@ def _compute_flags(
     for sig in cultural_signals:
         if sig.signal_type == "hidden_obligation":
             flags["hidden_obligation_detected"] = True
+    if signals.financial_state.hidden_obligations:
+        flags["hidden_obligation_detected"] = True
 
-    # Fragmentation risk: multiple advisors / multiple platforms mentioned
-    # (detected via text patterns in context building)
-    flags["fragmentation_risk"] = fields.get("_fragmentation_risk", False)
-
-    # Recency bias: low experience + crypto/recent bull run gains
+    # Recency bias: low experience + high risk behavior
     exp = fields.get("experience_years")
     fks = fields.get("financial_knowledge_score")
     rb  = fields.get("risk_behavior")
@@ -454,30 +294,12 @@ def _compute_flags(
         and (fks is None or fks <= 2)
     )
 
-    # Emerging constraint: current obligation low but future high
+    # Emerging constraint: low current obligations but high future
     emi_ratio = fields.get("emi_ratio")
     current_low = (emi_ratio is None or emi_ratio < 20) and (fields.get("dependents") or 0) < 2
     flags["emerging_constraint"] = current_low and future_obligation_score >= 10
 
     return flags
-
-
-# ---------------------------------------------------------------------------
-# Fragmentation risk detection
-# ---------------------------------------------------------------------------
-
-_FRAGMENTATION_PATTERNS = [
-    r"(?:multiple\s+(?:advisors?|mfds?|brokers?|platforms?))",
-    r"(?:two\s+(?:different|separate)\s+(?:mfds?|advisors?|brokers?))",
-    r"(?:three\s+(?:different|separate)\s+(?:financial|advisors?|professionals?))",
-    r"(?:none\s+(?:aware|knows?)\s+(?:of\s+)?(?:the\s+)?(?:complete|full|other|each\s+other))",
-    r"(?:different\s+(?:mfds?|advisors?|brokers?|platforms?))",
-]
-
-
-def _detect_fragmentation(text: str) -> bool:
-    t = text.lower()
-    return any(re.search(p, t) for p in _FRAGMENTATION_PATTERNS)
 
 
 # ---------------------------------------------------------------------------
@@ -488,79 +310,80 @@ def build_profile_context(
     validated_fields: dict,
     raw_text: str,
     future_obligation_score: float = 0.0,
-) -> ProfileContext:
+    signals: SignalOutput | None = None,
+) -> "ProfileContext":
     """
-    Build a rich ProfileContext from validated fields + raw text.
+    Build ProfileContext from validated fields + SignalOutput.
 
-    This is the ONLY place that reads validated_fields.
-    All downstream reasoning reads from ProfileContext.
+    v13: signals parameter is the primary source for all behavioral/contextual data.
+    raw_text is used only for city tier inference (lightweight lookup).
+    If signals is None, context is built from fields only (degraded mode).
     """
-    f = validated_fields  # shorthand
+    f = validated_fields
 
-    # Detect rich context from raw text
-    life_events       = _detect_life_events(raw_text)
-    cultural_signals  = _detect_cultural_signals(raw_text)
-    behavioral_signals = _detect_behavioral_signals(raw_text)
-    city_tier         = _infer_city_tier(raw_text)
-    fragmentation     = _detect_fragmentation(raw_text)
+    if signals is not None:
+        life_events        = _life_events_from_signals(signals)
+        cultural_signals   = _cultural_signals_from_signals(signals)
+        behavioral_signals = _behavioral_signals_from_signals(signals)
+        resilience_level   = signals.behavior.resilience_level
+        resilience_evidence = signals.behavior.resilience_evidence
+        contradictions     = signals.contradictions
+    else:
+        # Degraded mode: no signals available
+        life_events        = []
+        cultural_signals   = []
+        behavioral_signals = []
+        resilience_level   = "medium"
+        resilience_evidence = ""
+        contradictions     = []
 
+    city_tier = _infer_city_tier(raw_text)
     income_type = f.get("income_type", "unknown") or "unknown"
-    employment_stability = _infer_employment_stability(income_type, raw_text)
-
-    # Inject fragmentation flag into fields for flag computation
-    fields_with_flags = dict(f)
-    fields_with_flags["_fragmentation_risk"] = fragmentation
+    employment_stability = _infer_employment_stability(income_type, signals) if signals else "unknown"
 
     flags = _compute_flags(
         life_events, cultural_signals, behavioral_signals,
-        fields_with_flags, future_obligation_score,
-    )
+        signals, f, future_obligation_score,
+    ) if signals else {
+        "grief_state": False, "peer_driven": False,
+        "hidden_obligation_detected": False, "fragmentation_risk": False,
+        "recency_bias_risk": False, "emerging_constraint": False,
+    }
 
     return ProfileContext(
-        # Demographics
         income_type=income_type,
         monthly_income=f.get("monthly_income"),
         city_tier=city_tier,
         employment_stability=employment_stability,
-
-        # Financial snapshot
         emergency_months=f.get("emergency_months"),
         emi_amount=f.get("emi_amount"),
         emi_ratio=f.get("emi_ratio"),
         dependents=f.get("dependents"),
-        has_insurance=None,  # not yet extracted — future field
-
-        # Experience & sophistication
+        has_insurance=None,
         experience_years=f.get("experience_years"),
         financial_knowledge_score=f.get("financial_knowledge_score"),
         decision_autonomy=f.get("decision_autonomy"),
-
-        # Behavioral
         loss_reaction=f.get("loss_reaction"),
         risk_behavior=f.get("risk_behavior"),
-
-        # Obligation
         near_term_obligation_level=f.get("near_term_obligation_level") or "none",
         obligation_type=f.get("obligation_type"),
         future_obligation_score=future_obligation_score,
-
-        # Rich context
         life_events=life_events,
         cultural_signals=cultural_signals,
         behavioral_signals=behavioral_signals,
-
-        # Derived flags
         grief_state=flags["grief_state"],
         peer_driven=flags["peer_driven"],
         hidden_obligation_detected=flags["hidden_obligation_detected"],
         fragmentation_risk=flags["fragmentation_risk"],
         recency_bias_risk=flags["recency_bias_risk"],
         emerging_constraint=flags["emerging_constraint"],
+        resilience_level=resilience_level,
+        resilience_evidence=resilience_evidence,
+        contradictions=contradictions,
     )
 
 
 def context_to_dict(ctx: ProfileContext) -> dict:
-    """Serialize ProfileContext to a JSON-safe dict for output."""
     return {
         "demographics": {
             "income_type": ctx.income_type,
@@ -582,6 +405,8 @@ def context_to_dict(ctx: ProfileContext) -> dict:
         "behavioral": {
             "loss_reaction": ctx.loss_reaction,
             "risk_behavior": ctx.risk_behavior,
+            "resilience_level": ctx.resilience_level,
+            "resilience_evidence": ctx.resilience_evidence,
         },
         "obligation": {
             "near_term_obligation_level": ctx.near_term_obligation_level,
@@ -589,29 +414,23 @@ def context_to_dict(ctx: ProfileContext) -> dict:
             "future_obligation_score": ctx.future_obligation_score,
         },
         "life_events": [
-            {
-                "type": e.event_type,
-                "description": e.description,
-                "recency": e.recency,
-                "emotional_weight": e.emotional_weight,
-            }
+            {"type": e.event_type, "description": e.description,
+             "recency": e.recency, "emotional_weight": e.emotional_weight}
             for e in ctx.life_events
         ],
         "cultural_signals": [
-            {
-                "type": s.signal_type,
-                "description": s.description,
-                "negotiability": s.negotiability,
-            }
+            {"type": s.signal_type, "description": s.description,
+             "negotiability": s.negotiability}
             for s in ctx.cultural_signals
         ],
         "behavioral_signals": [
-            {
-                "type": s.signal_type,
-                "description": s.description,
-                "strength": s.strength,
-            }
+            {"type": s.signal_type, "description": s.description, "strength": s.strength}
             for s in ctx.behavioral_signals
+        ],
+        "contradictions": [
+            {"type": c.type, "dominant_trait": c.dominant_trait,
+             "suppressed_trait": c.suppressed_trait, "explanation": c.explanation}
+            for c in ctx.contradictions
         ],
         "flags": {
             "grief_state": ctx.grief_state,
