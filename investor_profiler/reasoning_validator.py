@@ -238,6 +238,48 @@ def _c6_decision_logic_depth(
         ))
 
 
+def _c7_dominant_trait_grounded(
+    trace: ReasoningTrace,
+    decision: DecisionOutput,
+    violations: list[TraceViolation],
+    warnings: list[str],
+) -> None:
+    """
+    C7: dominant_trait must be verbatim or substring-matched from:
+      - reasoning_trace.dominant_factors, OR
+      - a contradiction resolution dominant_trait in reasoning_trace.contradictions
+    Inventing abstract traits outside these sources is a blocking violation.
+    """
+    sc_dominant = (decision.state_context.dominant_trait or "").lower().strip()
+    if sc_dominant in ("unknown", ""):
+        return  # C2 already handles missing dominant_trait
+
+    # Build allowed pool: dominant_factors + contradiction dominant_traits
+    allowed_pool = [f.lower() for f in trace.dominant_factors]
+    allowed_pool += [c.dominant_trait.lower() for c in trace.contradictions if c.dominant_trait]
+
+    if not allowed_pool:
+        return  # C1/C2 will catch empty trace
+
+    # Check: dominant_trait must appear in or contain a token from the allowed pool
+    matched = any(
+        sc_dominant in source or source in sc_dominant
+        for source in allowed_pool
+    )
+    if not matched:
+        violations.append(TraceViolation(
+            check="C7_DOMINANT_TRAIT_GROUNDED",
+            description=(
+                f"state_context.dominant_trait='{sc_dominant}' is not derived from "
+                f"reasoning_trace.dominant_factors={trace.dominant_factors} "
+                f"or any contradiction resolution dominant_trait={[c.dominant_trait for c in trace.contradictions]}. "
+                "dominant_trait MUST be selected from these sources only — "
+                "inventing abstract traits is forbidden."
+            ),
+            severity="blocking",
+        ))
+
+
 # ---------------------------------------------------------------------------
 # Correction feedback builder
 # ---------------------------------------------------------------------------
@@ -263,6 +305,11 @@ def _build_correction_feedback(violations: list[TraceViolation]) -> str:
     lines.append("Ensure reasoning_trace.dominant_factors is non-empty.")
     lines.append("Ensure every contradiction is resolved in reasoning_trace.contradictions.")
     lines.append("Ensure current_allocation follows from the dominant_trait.")
+    lines.append(
+        "CRITICAL: state_context.dominant_trait MUST be copied verbatim from "
+        "reasoning_trace.dominant_factors[0] or a contradiction resolution dominant_trait. "
+        "Do NOT invent new abstract traits."
+    )
 
     return "\n".join(lines)
 
@@ -296,6 +343,7 @@ def validate_reasoning_trace(
     _c4_allocation_follows_dominant(trace, decision, violations, warnings)
     _c5_temporal_consistency(trace, decision, investor_state, violations, warnings)
     _c6_decision_logic_depth(trace, violations, warnings)
+    _c7_dominant_trait_grounded(trace, decision, violations, warnings)
 
     blocking = [v for v in violations if v.severity == "blocking"]
     is_valid = len(blocking) == 0

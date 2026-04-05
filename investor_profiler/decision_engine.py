@@ -40,36 +40,33 @@ DO NOT average conflicting signals. CHOOSE the dominant one and explain why.
 
 ━━━ MANDATORY REASONING STEPS ━━━
 
-STEP 1 — IDENTIFY ALL RELEVANT SIGNALS
-List every signal present: behavioral, financial, life events, knowledge.
-Do not skip any signal mentioned in the inputs.
+STEP 1 — IDENTIFY ACTUAL SIGNALS
+List every concrete signal present in the investor data: specific behaviors, specific financial facts, specific life events, specific knowledge gaps.
+Do NOT use generic labels. Reference actual data points.
 
-STEP 2 — SEPARATE DOMINANT vs SECONDARY FACTORS
-Apply the priority hierarchy above.
-Dominant factors = signals that will drive the final decision.
-Secondary factors = real but overridden by higher-priority signals.
+STEP 2 — APPLY PRIORITY AND CHOOSE DOMINANT FACTORS
+Apply the priority hierarchy. Name the 1-3 signals that will drive the final decision and explain exactly why they dominate over the others.
+dominant_factors MUST be specific signals from the investor data — not abstract labels.
 
 STEP 3 — DETECT AND RESOLVE CONTRADICTIONS
-For each contradiction: name both signals, choose the dominant one, explain why.
+For each contradiction: name both signals explicitly, choose the dominant one using the priority hierarchy, explain the trade-off.
 DO NOT average. DO NOT ignore. ALWAYS resolve.
 
 STEP 4 — INFER OVERALL STATE
-Based on dominant factors and resolved contradictions, describe the investor's actual state.
+Based on dominant factors and resolved contradictions, describe the investor's actual state in one sentence.
 This must be a direct consequence of steps 1-3.
 
-STEP 5 — DECIDE ALLOCATION
+STEP 5 — DECIDE ALLOCATION AND VERIFY CONSISTENCY
 current_allocation = what is appropriate RIGHT NOW given the inferred state.
 baseline_allocation = what is appropriate when the state normalizes.
-If state is temporary or transitional, current MUST differ from baseline.
+Check: does dominant_trait match current_allocation? If not — revise before outputting.
 
-STEP 6 — VERIFY CONSISTENCY
-Check: does dominant_trait match current_allocation?
-Check: does state_inference align with the signals?
-If not — revise before outputting.
-
-━━━ ADDITIONAL RULES ━━━
+━━━ CRITICAL RULES ━━━
+- dominant_trait in state_context MUST be selected ONLY from reasoning_trace.dominant_factors
+  OR from a contradiction resolution dominant_trait in reasoning_trace.contradictions.
+  It is STRICTLY FORBIDDEN to invent a new trait or paraphrase outside these sources.
 - allocation_mode must be "transitional" whenever current ≠ baseline
-- If dominant_trait is "panic", current_allocation must be conservative
+- If dominant_trait is "panic", current_allocation must be conservative (≤ 25%)
 - DO NOT use formulas or numeric thresholds
 - DO NOT output a single static allocation when a behavioral shift is detected
 
@@ -77,8 +74,8 @@ Return ONLY valid JSON with exactly this structure:
 
 {{
   "reasoning_trace": {{
-    "signals_considered": ["list every signal identified in step 1"],
-    "dominant_factors": ["factors that drive the decision — must not be empty"],
+    "signals_considered": ["list every concrete signal identified in step 1"],
+    "dominant_factors": ["1-3 specific signals that drive the decision — must not be empty"],
     "secondary_factors": ["real but overridden factors"],
     "contradictions": [
       {{
@@ -88,11 +85,11 @@ Return ONLY valid JSON with exactly this structure:
         "dominant_trait": "the signal that wins"
       }}
     ],
-    "state_inference": "one sentence: the investor's actual state derived from steps 1-3",
+    "state_inference": "one sentence: the investor's actual state derived from steps 1-4",
     "decision_logic": [
-      "step 1: ...",
-      "step 2: ...",
-      "step 3: ..."
+      "concrete justification 1 referencing actual signals",
+      "concrete justification 2 referencing actual trade-offs",
+      "concrete justification 3 referencing actual allocation rationale"
     ]
   }},
   "current_allocation": "equity range RIGHT NOW, e.g. '0%' or '5-15%' or '20-30%'",
@@ -100,7 +97,7 @@ Return ONLY valid JSON with exactly this structure:
   "allocation_mode": "static | transitional | conditional",
   "state_context": {{
     "compound_state": "one phrase describing investor's overall situation",
-    "dominant_trait": "must match reasoning_trace.dominant_factors[0]",
+    "dominant_trait": "MUST be copied verbatim from reasoning_trace.dominant_factors[0] or a contradiction resolution dominant_trait",
     "resilience_level": "low | medium | high",
     "state_stability": "stable | transitional | unstable"
   }},
@@ -118,7 +115,7 @@ Return ONLY valid JSON with exactly this structure:
   "archetype": "descriptive label derived from the reasoning trace",
   "strategy": "specific investment strategy in plain language",
   "confidence": "high | medium | low",
-  "reasoning": "5-7 sentences — must reference dominant_factors and contradiction resolutions",
+  "reasoning": "5-7 sentences — must reference dominant_factors and contradiction resolutions by name",
   "advisor_note": "the single most important thing the advisor must be careful about"
 }}
 
@@ -518,6 +515,33 @@ def _fallback_decision(retry_count: int = 0) -> DecisionOutput:
 # Main entry points
 # ---------------------------------------------------------------------------
 
+def _auto_fix_dominant_trait(decision: DecisionOutput) -> None:
+    """
+    Step 6: If dominant_trait is still not grounded in dominant_factors after all retries,
+    force it to dominant_factors[0]. Mutates decision in place.
+    """
+    sc_dominant = (decision.state_context.dominant_trait or "").lower().strip()
+    if sc_dominant in ("unknown", ""):
+        return
+
+    trace = decision.reasoning_trace
+    allowed_pool = [f.lower() for f in trace.dominant_factors]
+    allowed_pool += [c.dominant_trait.lower() for c in trace.contradictions if c.dominant_trait]
+
+    if not allowed_pool:
+        return
+
+    matched = any(sc_dominant in source or source in sc_dominant for source in allowed_pool)
+    if not matched and trace.dominant_factors:
+        original = decision.state_context.dominant_trait
+        decision.state_context.dominant_trait = trace.dominant_factors[0]
+        note = (
+            f"AUTO_FIX: dominant_trait='{original}' was not grounded — "
+            f"replaced with dominant_factors[0]='{trace.dominant_factors[0]}'."
+        )
+        decision.warning = ((decision.warning or "") + " | " + note).lstrip(" | ")
+
+
 def generate_decision(
     narrative,
     raw_text: str = "",
@@ -586,6 +610,9 @@ def generate_decision(
 
     decision = last_decision
     decision.retry_count = retry_count
+
+    # Step 6: Auto-map dominant_trait if still mismatched after all retries
+    _auto_fix_dominant_trait(decision)
 
     # Step 5: Hard enforcement — panic + >25% is force-corrected unconditionally
     decision = _hard_enforce(decision, state)
@@ -716,6 +743,9 @@ def _call_decision_llm(
         prompt += (
             f"\n\n⚠️ CORRECTION REQUIRED: A previous version of this recommendation "
             f"was inconsistent. Specifically:\n{correction_hint}\n"
+            f"REMINDER: dominant_trait MUST come from reasoning_trace.dominant_factors "
+            f"or a contradiction resolution dominant_trait. "
+            f"Do NOT invent new traits. Do NOT paraphrase outside these sources.\n"
             f"Ensure your recommendation addresses ALL of the above."
         )
 

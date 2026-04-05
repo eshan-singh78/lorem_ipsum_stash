@@ -384,6 +384,21 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     # Trace validation result for output (post-guardrail is the authoritative one)
     trace_validation = validate_reasoning_trace(decision, investor_state=investor_state, signals=signals)
 
+    # STEP 1 — HARD BLOCK: if any blocking violation exists, stop the pipeline
+    blocking_violations = [v for v in trace_validation.violations if v.severity == "blocking"]
+    if not trace_validation.is_valid and blocking_violations:
+        _logger.stop()
+        return {
+            "status": "invalid_reasoning",
+            "message": "Decision blocked due to reasoning inconsistency.",
+            "violations": [
+                {"check": v.check, "description": v.description, "severity": v.severity}
+                for v in blocking_violations
+            ],
+            "safe_allocation": "0-10%",
+            "correction_feedback": trace_validation.correction_feedback,
+        }
+
     # -----------------------------------------------------------------------
     # Stage 8: Scoring — categories + axis AFTER decision
     # investor_state drives calibration, not raw flags
