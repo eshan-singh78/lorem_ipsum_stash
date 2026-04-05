@@ -24,7 +24,6 @@ from decision_engine import DecisionOutput
 MeaningOutput = NarrativeOutput
 
 # JudgmentOutput removed in v14 — judgment_layer.py deleted
-JudgmentOutput = None
 
 
 # ---------------------------------------------------------------------------
@@ -301,7 +300,7 @@ def _compute_suitability(
     constraint: dict | None,
     ctx: ProfileContext,
     narrative: NarrativeOutput | None = None,
-    judgment: JudgmentOutput | None = None,
+    judgment=None,
     decision=None,
 ) -> dict:
     """
@@ -349,7 +348,7 @@ def _compute_suitability(
     )
 
     classification = _generate_suitability_narrative(
-        equity_ceiling, narrative, judgment, ctx, mismatch, constraint
+        equity_ceiling, narrative, ctx, mismatch, constraint, judgment
     )
 
     return {
@@ -379,10 +378,10 @@ def _parse_equity_ceiling(equity_range: str) -> int:
 def _generate_suitability_narrative(
     equity_ceiling: int,
     narrative: NarrativeOutput | None,
-    judgment: JudgmentOutput | None,
     ctx: ProfileContext,
     mismatch: dict | None,
     constraint: dict | None,
+    judgment=None,
 ) -> str:
     """
     Generate a fully synthesized suitability explanation.
@@ -516,7 +515,7 @@ def _generate_advisor_narrative(
     categories: CategoryAssessment,
     ctx: ProfileContext,
     narrative: NarrativeOutput | None = None,
-    judgment: JudgmentOutput | None = None,
+    judgment=None,
     decision=None,
 ) -> str:
     """
@@ -594,7 +593,7 @@ def _generate_investor_narrative(
     ctx: ProfileContext,
     suitability: dict,
     narrative: NarrativeOutput | None = None,
-    judgment: JudgmentOutput | None = None,
+    judgment=None,
 ) -> str:
     """
     Investor-facing narrative: empowering, not clinical.
