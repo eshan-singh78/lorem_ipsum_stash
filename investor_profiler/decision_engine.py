@@ -620,24 +620,29 @@ def generate_decision(
     # Step 7: Confidence calibration
     decision = _calibrate_confidence(decision, retry_count, last_violations)
 
-    # LLM consistency check (existing — runs after trace is valid)
-    is_consistent, inconsistency, hint = validate_reasoning(narrative, decision)
-    if not is_consistent and hint:
-        regenerated = _call_decision_llm(
-            narrative, raw_text, state,
-            signals=signals,
-            priority_order=priority_str,
-            correction_hint=hint,
-        )
-        if not regenerated.fallback_used:
-            regenerated.retry_count = retry_count + 1
-            regenerated.warning = (
-                f"Decision regenerated after consistency check. "
-                f"Original inconsistency: {inconsistency}"
+    # LLM consistency check — only run if trace is valid, otherwise pointless
+    blocking_after_retries = [v for v in last_violations if getattr(v, "severity", "") == "blocking"]
+    if not blocking_after_retries:
+        is_consistent, inconsistency, hint = validate_reasoning(narrative, decision)
+        if not is_consistent and hint:
+            regenerated = _call_decision_llm(
+                narrative, raw_text, state,
+                signals=signals,
+                priority_order=priority_str,
+                correction_hint=hint,
             )
-            regenerated = _hard_enforce(regenerated, state)
-            regenerated = _calibrate_confidence(regenerated, regenerated.retry_count, [])
-            return regenerated
+            if not regenerated.fallback_used:
+                # Validate the regenerated decision before accepting it
+                regen_trace = validate_reasoning_trace(regenerated, investor_state=state, signals=signals)
+                _auto_fix_dominant_trait(regenerated)
+                regenerated = _hard_enforce(regenerated, state)
+                regenerated = _calibrate_confidence(regenerated, retry_count + 1, regen_trace.violations)
+                regenerated.retry_count = retry_count + 1
+                regenerated.warning = (
+                    f"Decision regenerated after consistency check. "
+                    f"Original inconsistency: {inconsistency}"
+                )
+                return regenerated
 
     return decision
 

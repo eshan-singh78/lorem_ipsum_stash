@@ -97,6 +97,7 @@ from context_categories import assess_all_categories, categories_to_dict
 from axis_scoring import compute_axis_scores, axis_scores_to_dict
 from validation_layer import validate_scores_vs_decision, validation_to_dict
 from cross_axis import build_cross_axis_report, cross_axis_report_to_dict
+from report_layer import generate_report
 
 _KEY_FIELDS = [
     "income_type", "monthly_income", "emergency_months",
@@ -459,7 +460,7 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     if data_completeness < 40:
         final_decision = f"Low Confidence Profile — {final_decision}"
 
-    return {
+    pipeline_output = {
         "profile_context":   context_to_dict(profile_ctx),
         "signals":           signals_to_dict(signals),
         "narrative":         narrative_to_dict(narrative),
@@ -510,6 +511,8 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         },
         "extraction_warning": extraction_result.get("extraction_warning"),
     }
+
+    return generate_report(pipeline_output)
 
 
 def main():
