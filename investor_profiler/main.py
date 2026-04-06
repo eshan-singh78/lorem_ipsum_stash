@@ -107,6 +107,92 @@ _KEY_FIELDS = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Unified output wrapper — ALL exits go through this
+# ---------------------------------------------------------------------------
+
+def _wrap(
+    report: dict,
+    status: str = "success",
+    reason: str = "",
+    confidence: str = "high",
+    fallback_used: bool = False,
+) -> dict:
+    """
+    Wrap any report dict into the unified production schema:
+      { "status": ..., "report": {...}, "meta": {...} }
+    """
+    return {
+        "status": status,
+        "report": report,
+        "meta": {
+            "reason":        reason,
+            "confidence":    confidence,
+            "fallback_used": fallback_used,
+        },
+    }
+
+
+def _minimal_pipeline_payload(
+    reason: str,
+    paragraph: str = "",
+    signals=None,
+    narrative=None,
+    investor_state=None,
+    decision=None,
+    data_completeness: int = 0,
+    missing_fields: list | None = None,
+    future_obligation_score: float = 0.0,
+) -> dict:
+    """
+    Build the minimum pipeline_output dict needed by report_layer
+    when the full pipeline cannot complete.
+    """
+    from decision_engine import _fallback_decision, decision_to_dict
+    from signal_extraction import signals_to_dict
+    from narrative_layer import narrative_to_dict
+    from state_synthesis import state_to_dict
+
+    safe_decision = decision or _fallback_decision(retry_count=0)
+
+    return {
+        "status":             "partial",
+        "partial_reason":     reason,
+        "signals":            signals_to_dict(signals) if signals else {},
+        "narrative":          narrative_to_dict(narrative) if narrative else {},
+        "investor_state":     state_to_dict(investor_state) if investor_state else {},
+        "decision":           decision_to_dict(safe_decision),
+        "decision_confidence": "low",
+        "constraint_report":  {"guardrail_adjustments": [], "pre_guardrail_trace_valid": False,
+                               "post_guardrail_trace_valid": False, "hard_enforced": False,
+                               "hard_enforce_note": "", "warnings": [],
+                               "pre_guardrail_violations": [], "post_guardrail_violations": []},
+        "trace_validation":   {"is_valid": False, "violations": [], "warnings": [],
+                               "correction_feedback": "", "not_applicable": True},
+        "category_scores":    {},
+        "axis_scores":        {"risk": 0, "cashflow": 0, "obligation": 0,
+                               "context": 0, "financial_capacity": 0},
+        "validation":         {"scores_support_decision": False, "overall_alignment": "unknown",
+                               "mismatch_note": "", "warning": ""},
+        "cross_axis":         {"suitability": {"classification": "Insufficient data"},
+                               "suitability_insights": [], "advisor_narrative": "",
+                               "investor_narrative": "", "archetype": ""},
+        "profile_context":    {},
+        "final_decision":     "Insufficient data — fallback applied.",
+        "advisor_narrative":  "",
+        "investor_narrative": "",
+        "suitability_insights": [],
+        "confidence_score":   0,
+        "data_completeness":  data_completeness,
+        "extracted_data":     {},
+        "debug": {
+            "missing_fields":          missing_fields or [],
+            "future_obligation_score": future_obligation_score,
+            "blocking_violations":     [],
+        },
+    }
+
+
 def _narrative_fallback_state():
     """Minimal InvestorState-like object with safe defaults for narrative failure path."""
     from state_synthesis import InvestorState
@@ -171,17 +257,15 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     _logger.done()
 
     if extraction_result.get("non_english"):
-        return {
-            "profile_context":    None,
-            "category_scores":    None,
-            "axis_scores":        None,
-            "cross_axis":         None,
-            "final_decision":     "Error: Non-English Input",
-            "decision_reasoning": ["Input is not in English."],
-            "confidence_score":   0,
-            "data_completeness":  0,
-            "debug": {"missing_fields": _KEY_FIELDS},
-        }
+        _logger.stop()
+        payload = _minimal_pipeline_payload("non_english_input")
+        return _wrap(
+            generate_report(payload),
+            status="failed",
+            reason="non_english_input",
+            confidence="low",
+            fallback_used=True,
+        )
 
     fields: dict[str, FieldValue] = extraction_result["fields"]
     normalized_text: str          = extraction_result["normalized_text"]
@@ -226,28 +310,21 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     data_completeness, missing_fields = compute_data_completeness(fields)
 
     if is_all_null(fields):
-        return {
-            "profile_context":  None,
-            "narrative":        None,
-            "decision":         None,
-            "category_scores":  None,
-            "axis_scores":      None,
-            "validation":       None,
-            "cross_axis":       None,
-            "final_decision":   "Insufficient Data",
-            "confidence_score": 0,
-            "data_completeness": data_completeness,
-            "debug": {
-                "missing_fields":         missing_fields,
-                "rule_fields":            extraction_result.get("rule_fields", {}),
-                "llm_fields":             extraction_result.get("llm_fields", {}),
-                "merge_log":              extraction_result.get("merge_log", []),
-                "invariant_log":          extraction_result.get("invariant_log", []),
-                "derived_fields":         derivation_log,
-                "future_events_detected": future_events,
-                "extraction_warning":     extraction_result.get("extraction_warning"),
-            },
-        }
+        _logger.stop()
+        payload = _minimal_pipeline_payload(
+            "all_fields_null",
+            paragraph=paragraph,
+            data_completeness=data_completeness,
+            missing_fields=missing_fields,
+            future_obligation_score=future_obligation_score,
+        )
+        return _wrap(
+            generate_report(payload),
+            status="partial",
+            reason="all_fields_null",
+            confidence="low",
+            fallback_used=True,
+        )
 
     # -----------------------------------------------------------------------
     # Stage 4: Signal Extraction — single LLM call, ALL signals extracted once
@@ -262,12 +339,41 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     _logger.done()
 
     if not signals.signals_valid:
-        return {
-            "status": "error",
-            "message": "Unable to extract reliable signals from investor description.",
-            "recommendation": "Insufficient data for profiling — please provide more detail.",
-            "signals_warning": signals.warning,
-        }
+        # Signals failed — build a minimal fallback path and continue to report
+        if verbose:
+            print(f"  [!] Signal extraction failed — fallback path active. {signals.warning or ''}")
+        from decision_engine import _fallback_decision
+        from state_synthesis import InvestorState
+        _signal_fallback_state = InvestorState(
+            compound_state="unknown — signal extraction failed",
+            state_description="", dominant_factors=[], state_implications=[],
+            state_stability="stable", confidence="low", dominant_trait="unknown",
+            suppressed_traits=[], resilience_level="medium", resilience_evidence="",
+            shift_detected=False, baseline_behavior="", current_behavior="",
+            shift_permanence="unknown", raw={}, warning=signals.warning,
+        )
+        _signal_fallback_narrative = type("N", (), {
+            "narrative_valid": False, "life_summary": "", "financial_analysis": "",
+            "psychological_analysis": "", "contradictions": "", "risk_truth": "",
+            "reliability_assessment": "", "advisor_insight": "", "warning": signals.warning,
+        })()
+        payload = _minimal_pipeline_payload(
+            "signal_extraction_failed",
+            paragraph=paragraph,
+            signals=signals,
+            investor_state=_signal_fallback_state,
+            data_completeness=data_completeness,
+            missing_fields=missing_fields,
+            future_obligation_score=future_obligation_score,
+        )
+        _logger.stop()
+        return _wrap(
+            generate_report(payload),
+            status="partial",
+            reason="signal_extraction_failed",
+            confidence="low",
+            fallback_used=True,
+        )
 
     if verbose:
         print(f"  Life events:    {[e.type for e in signals.life_events]}")
@@ -289,19 +395,19 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     _logger.done()
 
     if not narrative.narrative_valid:
-        # Switch to conservative fallback mode — do not pass placeholder text downstream
+        # Narrative failed — use fallback state and decision, skip to constraint_engine
+        if verbose:
+            print(f"  [!] Narrative failed — fallback applied. {narrative.warning or ''}")
         from decision_engine import _fallback_decision
         decision = _fallback_decision(retry_count=0)
         decision.warning = f"Narrative generation failed — conservative fallback applied. {narrative.warning or ''}".strip()
         investor_state = _narrative_fallback_state()
-        # Build profile_ctx for scoring/cross_axis (still needed downstream)
         profile_ctx = build_profile_context(
             validated_fields=plain_validated,
             raw_text=paragraph,
             future_obligation_score=future_obligation_score,
             signals=signals,
         )
-        # Skip decision_engine and synthesize_state — go directly to constraint_engine
     else:
         if verbose:
             print(f"  Life summary:    {narrative.life_summary[:80]}...")
@@ -383,22 +489,34 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
             print(f"  HARD ENFORCE: {constraint_report.hard_enforce_note}")
 
     # Trace validation result for output (post-guardrail is the authoritative one)
+    # On fallback paths (narrative/decision failed), mark trace as not_applicable
+    # to suppress artificial C1/C2/C6 violations from an intentionally empty trace.
+    is_fallback_path = getattr(decision, "fallback_used", False)
     trace_validation = validate_reasoning_trace(decision, investor_state=investor_state, signals=signals)
 
-    # STEP 1 — HARD BLOCK: if any blocking violation exists, stop the pipeline
+    # If reasoning is invalid, inject a safe fallback decision and continue.
+    # The report layer ALWAYS runs — decision failure degrades confidence, not insight.
     blocking_violations = [v for v in trace_validation.violations if v.severity == "blocking"]
+    decision_confidence = "high"
     if not trace_validation.is_valid and blocking_violations:
-        _logger.stop()
-        return {
-            "status": "invalid_reasoning",
-            "message": "Decision blocked due to reasoning inconsistency.",
-            "violations": [
-                {"check": v.check, "description": v.description, "severity": v.severity}
-                for v in blocking_violations
-            ],
-            "safe_allocation": "0-10%",
-            "correction_feedback": trace_validation.correction_feedback,
-        }
+        from decision_engine import _fallback_decision
+        fallback = _fallback_decision(retry_count=getattr(decision, "retry_count", 0))
+        fallback.warning = (
+            "Fallback applied due to reasoning inconsistency. "
+            + (decision.warning or "")
+        ).strip()
+        fallback.guardrail_adjustments = getattr(decision, "guardrail_adjustments", [])
+        decision = fallback
+        decision_confidence = "low"
+        is_fallback_path = True
+        if verbose:
+            print(
+                f"\n[!] Reasoning validation failed "
+                f"({len(blocking_violations)} blocking violation(s)) — "
+                "safe fallback applied, pipeline continues."
+            )
+    elif is_fallback_path:
+        decision_confidence = "low"
 
     # -----------------------------------------------------------------------
     # Stage 8: Scoring — categories + axis AFTER decision
@@ -467,7 +585,8 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         "investor_state":    state_to_dict(investor_state),
         "decision":          decision_to_dict(decision),
         "constraint_report": constraint_report_to_dict(constraint_report),
-        "trace_validation":  trace_validation_to_dict(trace_validation),
+        "trace_validation":  {**trace_validation_to_dict(trace_validation),
+                              "not_applicable": is_fallback_path},
         "category_scores":   categories_to_dict(categories),
         "axis_scores": {
             "risk":               axis_scores.risk,
@@ -483,6 +602,7 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
         "investor_narrative": cross_axis.investor_narrative,
         "suitability_insights": cross_axis.suitability_insights,
         "confidence_score":  confidence_score,
+        "decision_confidence": decision_confidence,
         "data_completeness": data_completeness,
         "extracted_data":    fields_to_dict(fields),
         "debug": {
@@ -506,13 +626,23 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
             "guardrail_adjustments":  constraint_report_to_dict(constraint_report)["guardrail_adjustments"],
             "trace_validation":       trace_validation_to_dict(trace_validation),
             "constraint_report":      constraint_report_to_dict(constraint_report),
+            "blocking_violations":    [
+                {"check": v.check, "description": v.description, "severity": v.severity}
+                for v in blocking_violations
+            ],
             "state_synthesis_warning": investor_state.warning,
             "validation_warning":     validation.warning,
         },
         "extraction_warning": extraction_result.get("extraction_warning"),
     }
 
-    return generate_report(pipeline_output)
+    return _wrap(
+        generate_report(pipeline_output),
+        status="success" if decision_confidence == "high" else "partial",
+        reason="" if decision_confidence == "high" else "decision_fallback_applied",
+        confidence=decision_confidence,
+        fallback_used=is_fallback_path,
+    )
 
 
 def main():

@@ -142,7 +142,7 @@ def _risk_flag(pipeline: dict) -> str:
 # Section 1 — Executive Summary
 # ---------------------------------------------------------------------------
 
-def _executive_summary(pipeline: dict, risk_flag: str) -> str:
+def _executive_summary(pipeline: dict, risk_flag: str, decision_confidence: str = "high") -> str:
     archetype       = _str(_get(pipeline, "decision", "archetype"))
     compound_state  = _str(_get(pipeline, "investor_state", "compound_state"))
     dominant_trait  = _str(_get(pipeline, "decision", "state_context", "dominant_trait"))
@@ -196,6 +196,13 @@ def _executive_summary(pipeline: dict, risk_flag: str) -> str:
 
     if not parts:
         return "Insufficient data to generate an executive summary."
+
+    # Prepend a decision reliability note when fallback was applied
+    if decision_confidence == "low":
+        parts.insert(0,
+            "Note: the allocation decision could not be fully validated — "
+            "a conservative fallback has been applied; all other profile insights remain valid."
+        )
 
     # Cap at 3 sentences
     return " ".join(parts[:3])
@@ -754,13 +761,18 @@ def generate_report(pipeline_output: dict) -> dict:
     """
     Convert full pipeline output into a consulting-grade RIA-ready report.
     No LLM calls. No pipeline modification. Pure deterministic transformation.
+
+    Always generates a full report. Decision failure degrades confidence, not insight.
     """
+    # Only bail on truly unrecoverable upstream errors (non-english, all-null, signal failure)
+    # "invalid_reasoning" is no longer a hard stop — fallback decision is already injected upstream
     status = pipeline_output.get("status")
-    if status in ("invalid_reasoning", "error"):
+    if status == "error":
         return {
             "risk_flag":           "High",
+            "decision_confidence": "low",
             "executive_summary":   _sentence(
-                f"Report generation blocked — pipeline returned status '{status}'. "
+                f"Report generation blocked — pipeline returned an unrecoverable error. "
                 f"{pipeline_output.get('message', '')}"
             ),
             "key_risks": [{
@@ -784,11 +796,13 @@ def generate_report(pipeline_output: dict) -> dict:
             "full_profile":       pipeline_output,
         }
 
-    risk_flag = _risk_flag(pipeline_output)
+    risk_flag           = _risk_flag(pipeline_output)
+    decision_confidence = _str(pipeline_output.get("decision_confidence", "high")) or "high"
 
     report = {
         "risk_flag":           risk_flag,
-        "executive_summary":   _executive_summary(pipeline_output, risk_flag),
+        "decision_confidence": decision_confidence,
+        "executive_summary":   _executive_summary(pipeline_output, risk_flag, decision_confidence),
         "key_risks":           _key_risks(pipeline_output),
         "recommended_actions": _recommended_actions(pipeline_output),
         "do_not_recommend":    _do_not_recommend(pipeline_output),
