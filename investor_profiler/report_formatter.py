@@ -132,13 +132,38 @@ def _build_cover_page(report: dict, meta: dict, client_id: str | None) -> dict:
     }
 
 
-def _build_executive_summary(report: dict, meta: dict) -> str:
+def _infer_primary_objective(report: dict, full_profile: dict) -> str:
+    """Derive a single primary objective from the profile state."""
+    axis = _get(full_profile, "axis_scores", default={})
+    ctx  = _get(full_profile, "profile_context", default={})
+    flags = _get(ctx, "flags", default={})
+    fin   = _get(ctx, "financial_snapshot", default={})
+
+    capacity   = _num(_get(axis, "financial_capacity"), 50)
+    obligation = _num(_get(axis, "obligation"), 0)
+    cashflow   = _num(_get(axis, "cashflow"), 50)
+    em         = _num(fin.get("emergency_months"), 0)
+
+    if flags.get("grief_state"):
+        return "Preserve financial stability during a period of personal transition"
+    if capacity is not None and capacity < 25:
+        return "Build financial resilience before initiating any investment activity"
+    if em is not None and em < 3:
+        return "Establish an emergency fund as the immediate financial priority"
+    if obligation is not None and obligation > 70:
+        return "Reduce obligation burden to create investable surplus"
+    if cashflow is not None and cashflow < 35:
+        return "Stabilize income and cash flow before committing to investments"
+    if capacity is not None and capacity < 50:
+        return "Build financial stability before investing"
+    return "Grow wealth through a disciplined, risk-appropriate investment strategy"
+
+
+def _build_executive_summary(report: dict, meta: dict, full_profile: dict | None = None) -> str:
     raw = _get(report, "executive_summary")
     if not raw:
-        # Compose from available fields
         archetype = _get(report, "full_profile", "cross_axis", "archetype")
         decision  = _get(report, "full_profile", "final_decision")
-        confidence = meta.get("confidence", "low")
         parts = []
         if archetype and not _is_system_phrase(archetype):
             parts.append(f"Investor archetype: {archetype}.")
@@ -149,6 +174,12 @@ def _build_executive_summary(report: dict, meta: dict) -> str:
         raw = " ".join(parts)
 
     summary = _clean(raw)
+
+    # Prepend primary objective (guard against double-prepend)
+    fp = full_profile or _get(report, "full_profile", default={})
+    if not summary.lower().startswith("primary objective"):
+        objective = _infer_primary_objective(report, fp)
+        summary = f"Primary objective: {objective}. {summary}"
 
     if meta.get("fallback_used"):
         summary = (
@@ -514,7 +545,7 @@ def _build_strategy(report: dict, full_profile: dict, meta: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Action normalization helpers
+# Action normalization — dedup, prioritize, format
 # ---------------------------------------------------------------------------
 
 # Markers that disqualify a string from being an executable action
@@ -532,36 +563,106 @@ _ACTION_VERB_PREFIXES = (
     "park", "maintain", "ensure", "obtain", "get", "buy", "sell",
 )
 
-# Similarity threshold for merging near-duplicate actions
-def _action_key(text: str) -> str:
-    """Normalize to a merge key — strip amounts, punctuation, lowercase."""
-    t = text.lower()
-    t = re.sub(r"rs\.?\s*[\d,]+(/month)?", "", t)   # strip rupee amounts
-    t = re.sub(r"\d+\s*%", "", t)                    # strip percentages
-    t = re.sub(r"\d+[\s-]*months?", "", t)           # strip month counts
-    t = re.sub(r"[^\w\s]", "", t)                    # strip punctuation
-    t = re.sub(r"\s+", " ", t).strip()
-    return t
+# Semantic intent clusters — actions sharing a cluster key are near-duplicates.
+# The first match wins; subsequent matches in the same cluster are dropped.
+_ACTION_INTENT_CLUSTERS = [
+    ("emergency_fund",   ["emergency fund", "contingency fund", "liquid reserve", "3 month", "6 month"]),
+    ("sip_start",        ["start sip", "start a sip", "begin sip", "initiate sip", "set up sip"]),
+    ("debt_reduce",      ["reduce debt", "prepay", "pay off", "clear debt", "repay"]),
+    ("insurance",        ["insurance", "health cover", "life cover", "term plan"]),
+    ("equity_invest",    ["equity", "mutual fund", "flexi-cap", "index fund", "large-cap"]),
+    ("liquid_park",      ["liquid fund", "park funds", "park in liquid"]),
+    ("budget_review",    ["budget", "expense review", "track expense"]),
+    ("advisor_consult",  ["consult advisor", "meet advisor", "advisor review"]),
+]
+
+# Time-horizon classification rules — checked in order, first match wins
+_ACTION_HORIZON_RULES = [
+    # Immediate (0–30 days): urgent financial safety actions
+    ("immediate", [
+        "emergency fund", "contingency", "liquid reserve",
+        "insurance", "health cover", "term plan",
+        "park funds", "liquid fund",
+        "stop sip", "pause", "halt",
+    ]),
+    # Near-term (1–3 months): structural fixes
+    ("near_term", [
+        "reduce debt", "prepay", "pay off", "repay",
+        "start sip", "begin sip", "set up sip",
+        "budget", "track expense",
+        "open account", "nominee",
+    ]),
+    # Medium-term (3–6 months): growth / optimization
+    ("medium_term", [
+        "equity", "mutual fund", "flexi-cap", "index fund",
+        "increase sip", "step up",
+        "review portfolio", "rebalance",
+        "consult advisor",
+    ]),
+]
+
+# Canonical verb normalization — maps common synonyms to a single preferred verb
+_VERB_NORMALIZATIONS = [
+    (r"^(create|establish|set up|build up|maintain)\s+(an?\s+)?emergency fund",
+     "Build an emergency fund"),
+    (r"^(create|establish|set up)\s+(an?\s+)?sip",
+     "Start a SIP"),
+    (r"^(pay off|clear|repay)\s+(the\s+)?debt",
+     "Reduce debt"),
+    (r"^(get|purchase|take)\s+(an?\s+)?(health|life|term)\s+(insurance|cover|plan)",
+     "Obtain health/life insurance"),
+]
 
 
-def _build_actions(report: dict) -> list[str]:
+def _normalize_action_verb(text: str) -> str:
+    """Apply canonical verb normalization to an action string."""
+    for pattern, replacement in _VERB_NORMALIZATIONS:
+        new = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+        if new != text:
+            return new
+    # Ensure first letter is uppercase
+    return text[0].upper() + text[1:] if text else text
+
+
+def _action_intent_cluster(text: str) -> str | None:
+    """Return the intent cluster key for an action, or None if no match."""
+    lower = text.lower()
+    for cluster_key, keywords in _ACTION_INTENT_CLUSTERS:
+        if any(kw in lower for kw in keywords):
+            return cluster_key
+    return None
+
+
+def _action_horizon(text: str) -> str:
+    """Classify action into time horizon bucket."""
+    lower = text.lower()
+    for horizon, keywords in _ACTION_HORIZON_RULES:
+        if any(kw in lower for kw in keywords):
+            return horizon
+    return "near_term"  # default
+
+
+def _build_actions(report: dict) -> dict:
+    """
+    Build a structured action plan with three time-horizon buckets.
+
+    Returns:
+        {
+            "immediate":   [...],   # 0–30 days
+            "near_term":   [...],   # 1–3 months
+            "medium_term": [...],   # 3–6 months
+        }
+    """
     raw = _lst(report, "recommended_actions")
-    actions = []
+    candidates = []
 
     for item in raw:
         text = _clean(str(item)).strip()
-        if not text:
+        if not text or _is_system_phrase(text):
             continue
-        if _is_system_phrase(text):
-            continue
-
         lower = text.lower()
-
-        # Remove non-action meta statements
         if any(m in lower for m in _NON_ACTION_MARKERS):
             continue
-
-        # Must start with an action verb or contain measurable language
         starts_with_verb = lower.startswith(_ACTION_VERB_PREFIXES)
         has_measurable   = any(w in lower for w in [
             "%", "month", "fund", "sip", "emi", "insurance",
@@ -569,19 +670,32 @@ def _build_actions(report: dict) -> list[str]:
         ])
         if not starts_with_verb and not has_measurable:
             continue
+        candidates.append(_normalize_action_verb(text))
 
-        actions.append(text)
-
-    # Deduplicate by merge key — keep first occurrence
+    # Semantic dedup — one action per intent cluster
+    seen_clusters: set[str] = set()
     seen_keys: set[str] = set()
     deduped = []
-    for a in actions:
-        key = _action_key(a)
-        if key not in seen_keys:
-            seen_keys.add(key)
-            deduped.append(a)
+    for action in candidates:
+        cluster = _action_intent_cluster(action)
+        # Strip amounts/numbers for key comparison
+        key = re.sub(r"rs\.?\s*[\d,]+(/month)?|\d+\s*%|\d+[\s-]*months?|[^\w\s]", "", action.lower())
+        key = re.sub(r"\s+", " ", key).strip()
+        if cluster and cluster in seen_clusters:
+            continue
+        if key in seen_keys:
+            continue
+        if cluster:
+            seen_clusters.add(cluster)
+        seen_keys.add(key)
+        deduped.append(action)
 
-    return deduped
+    # Bucket by time horizon
+    buckets: dict[str, list[str]] = {"immediate": [], "near_term": [], "medium_term": []}
+    for action in deduped:
+        buckets[_action_horizon(action)].append(action)
+
+    return buckets
 
 
 # ---------------------------------------------------------------------------
@@ -772,16 +886,49 @@ def build_pdf_payload(pipeline_output: dict, client_id: str | None = None) -> di
             "suitability_insights": report.get("suitability_insights", []),
         }
 
+    risks    = _build_risk_bias(report, full_profile)
+    insights = _build_suitability_insights(full_profile, report)
+    actions  = _build_actions(report)
+
+    # Cross-section redundancy filter:
+    # Remove from insights any item whose meaning already appears in risks,
+    # and vice versa. Use 2-word prefix key for fuzzy matching.
+    def _prefix_key(text: str) -> str:
+        words = re.sub(r"[^\w\s]", "", text.lower()).split()
+        return " ".join(words[:2])
+
+    risk_keys    = {_prefix_key(r) for r in risks["key_risks"]}
+    insight_keys = {_prefix_key(i) for i in insights}
+
+    # Drop insights that duplicate a risk
+    insights = [i for i in insights
+                if not any(ik.startswith(rk) or rk.startswith(ik)
+                           for ik in [_prefix_key(i)] for rk in risk_keys)]
+
+    # Drop risks that duplicate an insight (shouldn't happen after filtering, but safety net)
+    clean_risks = [r for r in risks["key_risks"]
+                   if not any(rk.startswith(ik) or ik.startswith(rk)
+                              for rk in [_prefix_key(r)] for ik in insight_keys)]
+    risks = {**risks, "key_risks": clean_risks}
+
+    # Flatten all action texts for cross-section check
+    all_action_texts = [
+        a.lower() for bucket in actions.values() for a in bucket
+    ]
+    # Remove insights that are already expressed as actions
+    insights = [i for i in insights
+                if not any(_prefix_key(i) in a for a in all_action_texts)]
+
     return {
         "cover_page":           _build_cover_page(report, meta, client_id),
-        "executive_summary":    _build_executive_summary(report, meta),
+        "executive_summary":    _build_executive_summary(report, meta, full_profile),
         "profile_context":      _build_profile_context(full_profile),
         "axis_assessment":      _build_axis_assessment(full_profile),
         "suitability":          _build_suitability(full_profile),
-        "suitability_insights": _build_suitability_insights(full_profile, report),
-        "risk_bias":            _build_risk_bias(report, full_profile),
+        "suitability_insights": insights,
+        "risk_bias":            risks,
         "strategy":             _build_strategy(report, full_profile, meta),
-        "actions":              _build_actions(report),
+        "actions":              actions,
         "restrictions":         _build_restrictions(report),
         "assumptions":          _build_assumptions(report, full_profile, meta),
         "disclosures":          _build_disclosures(),
@@ -1465,10 +1612,31 @@ def render_pdf(payload: dict, output_path: str = "investor_report.pdf") -> str:
     gap()
 
     # -----------------------------------------------------------------------
-    # ACTION PLAN
+    # ACTION PLAN  (bucketed by time horizon)
     # -----------------------------------------------------------------------
     h2("Action Plan")
-    bullets(payload.get("actions", []), fallback="No specific actions identified.")
+    actions = payload.get("actions", {})
+    if isinstance(actions, dict):
+        immediate   = actions.get("immediate", [])
+        near_term   = actions.get("near_term", [])
+        medium_term = actions.get("medium_term", [])
+        has_any = immediate or near_term or medium_term
+        if not has_any:
+            bullets([], fallback="No specific actions identified.")
+        else:
+            if immediate:
+                h3("Immediate (0–30 days)")
+                bullets(immediate)
+            if near_term:
+                h3("Near-term (1–3 months)")
+                bullets(near_term)
+            if medium_term:
+                h3("Medium-term (3–6 months)")
+                bullets(medium_term)
+    else:
+        # Fallback for flat list (backward compat)
+        bullets(actions if isinstance(actions, list) else [],
+                fallback="No specific actions identified.")
     gap()
 
     # -----------------------------------------------------------------------
