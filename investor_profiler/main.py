@@ -98,6 +98,7 @@ from axis_scoring import compute_axis_scores, axis_scores_to_dict
 from validation_layer import validate_scores_vs_decision, validation_to_dict
 from cross_axis import build_cross_axis_report, cross_axis_report_to_dict
 from report_layer import generate_report
+from report_formatter import build_pdf_payload, render_pdf
 
 _KEY_FIELDS = [
     "income_type", "monthly_income", "emergency_months",
@@ -647,9 +648,11 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="InvestorDNA Profiling Engine v7")
-    parser.add_argument("--paragraph", "-p", type=str, help="Investor description")
-    parser.add_argument("--file",      "-f", type=str, help="Path to text file")
-    parser.add_argument("--verbose",   "-v", action="store_true")
+    parser.add_argument("--paragraph",    "-p", type=str, help="Investor description")
+    parser.add_argument("--file",         "-f", type=str, help="Path to text file")
+    parser.add_argument("--verbose",      "-v", action="store_true")
+    parser.add_argument("--generate-pdf", action="store_true", help="Generate PDF report")
+    parser.add_argument("--pdf-name",     type=str, default=None, help="Custom PDF filename")
     args = parser.parse_args()
 
     if args.file:
@@ -676,6 +679,15 @@ def main():
     print("INVESTORDNA PROFILE OUTPUT v7")
     print("=" * 60)
     print(json.dumps(result, indent=2, default=str))
+
+    if args.generate_pdf:
+        try:
+            payload  = build_pdf_payload(result)
+            filename = args.pdf_name or f"investor_report_{int(time.time())}.pdf"
+            render_pdf(payload, filename)
+            print(f"\n📄 PDF generated: {filename}")
+        except Exception as e:
+            print(f"\n❌ PDF generation failed: {e}")
 
 
 if __name__ == "__main__":
