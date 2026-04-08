@@ -337,46 +337,138 @@ def _build_suitability(full_profile: dict) -> dict:
     }
 
 
+# ---------------------------------------------------------------------------
+# Risk filter — only factual financial risks, no advisory/meta statements
+# ---------------------------------------------------------------------------
+
+# Patterns that indicate a genuine financial risk statement
+_RISK_ALLOW_PATTERNS = [
+    r"\black of\b",
+    r"\bno \w+\b",
+    r"\binsufficient\b",
+    r"\binstability\b",
+    r"\bexposure to\b",
+    r"\bhigh \w+ burden\b",
+    r"\blow \w+ (fund|reserve|savings|capacity)\b",
+    r"\birregular\b",
+    r"\bvolatile\b",
+    r"\buninsured\b",
+    r"\bno emergency\b",
+    r"\bno savings\b",
+    r"\bno insurance\b",
+    r"\bdebt burden\b",
+    r"\bemi burden\b",
+    r"\bnear.term obligation\b",
+]
+
+# Patterns that mark advisory insights, not risks — must be excluded from risks section
+_RISK_EXCLUDE_PATTERNS = [
+    r"\bprioritize\b",
+    r"\brecommend\b",
+    r"\bapproach\b",
+    r"\beducation.first\b",
+    r"\bprofile reliability\b",
+    r"\btreat.*provisional\b",
+    r"\bconsolidate\b",
+    r"\bdo not push\b",
+    r"\bgradual\b",
+    r"\bsuitable for\b",
+    r"\bdecision confidence\b",
+    r"\bconfidence is low\b",
+    r"\bprovision\b",
+]
+
+# Language normalization for known bad phrases
+_RISK_LANGUAGE_MAP = [
+    (r"profile reliability is low",
+     "Data completeness is limited — verify before execution"),
+    (r"reliability.*low",
+     "Data completeness is limited — verify before execution"),
+    (r"stated risk preference does not reflect",
+     "Stated risk preference may not reflect actual financial capacity"),
+]
+
+
+def _is_valid_risk(text: str) -> bool:
+    """Return True only if text is a factual financial risk statement."""
+    t = text.lower()
+    # Must not be an advisory/meta statement
+    if any(re.search(p, t) for p in _RISK_EXCLUDE_PATTERNS):
+        return False
+    # Must match at least one risk pattern
+    return any(re.search(p, t) for p in _RISK_ALLOW_PATTERNS)
+
+
+def _normalize_risk_language(text: str) -> str:
+    for pattern, replacement in _RISK_LANGUAGE_MAP:
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+    return text
+
+
 def _build_risk_bias(report: dict, full_profile: dict) -> dict:
-    # Risks
+    ctx  = _get(full_profile, "profile_context", default={})
+    fin  = _get(ctx, "financial_snapshot", default={})
+    demo = _get(ctx, "demographics", default={})
+
+    # --- Key risks: factual financial risks only ---
     raw_risks = _lst(report, "key_risks")
-    risks = _clean_list(raw_risks)
+    risks = []
+    for item in raw_risks:
+        text = _normalize_risk_language(_clean(str(item)))
+        if text and _is_valid_risk(text):
+            risks.append(text)
 
+    # Deduplicate (case-insensitive)
+    seen = set()
+    deduped = []
+    for r in risks:
+        key = r.lower()
+        if key not in seen:
+            seen.add(key)
+            deduped.append(r)
+    risks = deduped
+
+    # Fallback: derive from profile data when no valid risks found
     if not risks:
-        # Generate fallback risks from profile signals
-        ctx = _get(full_profile, "profile_context", default={})
-        fin = _get(ctx, "financial_snapshot", default={})
-        demo = _get(ctx, "demographics", default={})
-        fallback_risks = []
-        if not _num(fin.get("emergency_months")) or _num(fin.get("emergency_months"), 0) < 3:
-            fallback_risks.append("Insufficient emergency fund — financial vulnerability to unexpected events")
+        em = _num(fin.get("emergency_months"), 0)
+        if em < 3:
+            risks.append("Insufficient emergency fund — less than 3 months of expenses covered")
         if demo.get("income_type") in ("gig", "business", "freelance"):
-            fallback_risks.append("Income instability — irregular cash flow limits consistent investment capacity")
-        obligation = _get(full_profile, "axis_scores", "obligation")
-        if _num(obligation, 0) > 60:
-            fallback_risks.append("High obligation burden — future financial commitments may limit investable surplus")
-        if not fallback_risks:
-            fallback_risks.append("Insufficient data to enumerate specific risks — advisor review required")
-        risks = fallback_risks
+            risks.append("Income instability — irregular cash flow limits consistent investment capacity")
+        obligation = _num(_get(full_profile, "axis_scores", "obligation"), 0)
+        if obligation > 60:
+            risks.append("High obligation burden — future financial commitments may limit investable surplus")
+        emi_ratio = _num(fin.get("emi_ratio"), 0)
+        if emi_ratio > 40:
+            risks.append("High EMI burden — debt servicing exceeds 40% of income")
+        if not risks:
+            risks.append("Insufficient data to enumerate specific risks — advisor review required")
 
-    # Bias
+    # --- Bias summary ---
     raw_bias = _get(report, "bias_summary")
-    bias = _clean(raw_bias) if raw_bias and not _is_system_phrase(raw_bias) else ""
+    bias = _normalize_risk_language(_clean(raw_bias)) \
+        if raw_bias and not _is_system_phrase(raw_bias) else ""
 
-    # Behavioral flags from profile
-    flags = _get(full_profile, "profile_context", "flags", default={})
+    # --- Behavioral bias flags ---
+    flags = _get(ctx, "flags", default={})
     bias_flags = []
     if flags.get("recency_bias_risk"):
-        bias_flags.append("Recency bias detected — recent market performance may be distorting risk perception")
+        bias_flags.append(
+            "Recency bias — recent market performance may be distorting risk perception"
+        )
     if flags.get("peer_driven"):
-        bias_flags.append("Peer-influenced decision making — investment choices may not reflect personal risk capacity")
+        bias_flags.append(
+            "Peer-influenced decisions — choices may not reflect personal risk capacity"
+        )
     if flags.get("grief_state"):
-        bias_flags.append("Grief state — current risk aversion may be temporary and not reflective of baseline behavior")
+        bias_flags.append(
+            "Grief state — current risk aversion may be temporary, not baseline behavior"
+        )
 
     return {
-        "key_risks":   risks,
+        "key_risks":    risks,
         "bias_summary": bias or "No specific behavioral bias identified.",
-        "bias_flags":  bias_flags,
+        "bias_flags":   bias_flags,
     }
 
 
@@ -421,26 +513,153 @@ def _build_strategy(report: dict, full_profile: dict, meta: dict) -> dict:
     return result
 
 
+# ---------------------------------------------------------------------------
+# Action normalization helpers
+# ---------------------------------------------------------------------------
+
+# Markers that disqualify a string from being an executable action
+_NON_ACTION_MARKERS = [
+    "note:", "disclaimer", "subject to", "this report", "generated by",
+    "ai-based", "not for client", "advisor review", "manual validation",
+    "requires verification", "data limitation",
+]
+
+# Verb prefixes that confirm something is an executable action
+_ACTION_VERB_PREFIXES = (
+    "build", "start", "open", "invest", "reduce", "prepay", "purchase",
+    "review", "consolidate", "increase", "decrease", "allocate", "set up",
+    "create", "establish", "transfer", "close", "switch", "add", "remove",
+    "park", "maintain", "ensure", "obtain", "get", "buy", "sell",
+)
+
+# Similarity threshold for merging near-duplicate actions
+def _action_key(text: str) -> str:
+    """Normalize to a merge key — strip amounts, punctuation, lowercase."""
+    t = text.lower()
+    t = re.sub(r"rs\.?\s*[\d,]+(/month)?", "", t)   # strip rupee amounts
+    t = re.sub(r"\d+\s*%", "", t)                    # strip percentages
+    t = re.sub(r"\d+[\s-]*months?", "", t)           # strip month counts
+    t = re.sub(r"[^\w\s]", "", t)                    # strip punctuation
+    t = re.sub(r"\s+", " ", t).strip()
+    return t
+
+
 def _build_actions(report: dict) -> list[str]:
     raw = _lst(report, "recommended_actions")
     actions = []
+
     for item in raw:
-        text = _clean(str(item))
-        # Keep only executable steps — filter out meta/system statements
+        text = _clean(str(item)).strip()
         if not text:
             continue
         if _is_system_phrase(text):
             continue
-        # Must look like an action (starts with verb or contains actionable language)
+
         lower = text.lower()
-        non_action_markers = [
-            "note:", "disclaimer", "subject to", "this report",
-            "generated by", "ai-based", "not for client",
-        ]
-        if any(m in lower for m in non_action_markers):
+
+        # Remove non-action meta statements
+        if any(m in lower for m in _NON_ACTION_MARKERS):
             continue
+
+        # Must start with an action verb or contain measurable language
+        starts_with_verb = lower.startswith(_ACTION_VERB_PREFIXES)
+        has_measurable   = any(w in lower for w in [
+            "%", "month", "fund", "sip", "emi", "insurance",
+            "₹", "rs", "amount", "step",
+        ])
+        if not starts_with_verb and not has_measurable:
+            continue
+
         actions.append(text)
-    return actions
+
+    # Deduplicate by merge key — keep first occurrence
+    seen_keys: set[str] = set()
+    deduped = []
+    for a in actions:
+        key = _action_key(a)
+        if key not in seen_keys:
+            seen_keys.add(key)
+            deduped.append(a)
+
+    return deduped
+
+
+# ---------------------------------------------------------------------------
+# Suitability insights — advisory guidance, separated from risks
+# ---------------------------------------------------------------------------
+
+# Patterns that belong in insights (advisory/guidance), not risks
+_INSIGHT_PATTERNS = [
+    r"\bprioritize\b",
+    r"\beducation.first\b",
+    r"\bconsolidate\b",
+    r"\bdo not\b",
+    r"\bavoid\b",
+    r"\bsuitable for\b",
+    r"\breassess\b",
+    r"\bgradual\b",
+    r"\bconfidence.*low\b",
+    r"\bprovisional\b",
+    r"\bliquidity\b",
+    r"\block.in\b",
+    r"\bcomplex instrument\b",
+    r"\bfragment\b",
+]
+
+_INSIGHT_LANGUAGE_MAP = [
+    (r"profile reliability is low",
+     "Data completeness is limited — verify before execution"),
+    (r"reliability.*low",
+     "Data completeness is limited — verify before execution"),
+    (r"treat.*provisional",
+     "Treat recommendation as provisional — additional data required"),
+    (r"decision confidence is low.*",
+     "Data completeness is limited — verify before execution"),
+]
+
+
+def _normalize_insight_language(text: str) -> str:
+    """Apply language normalization — stop after first match to avoid chained replacements."""
+    for pattern, replacement in _INSIGHT_LANGUAGE_MAP:
+        new_text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+        if new_text != text:
+            return new_text.strip()
+    return text
+
+
+def _build_suitability_insights(full_profile: dict, report: dict) -> list[str]:
+    """
+    Collect advisory guidance items — things that belong in insights, not risks.
+    Sources: suitability_insights from cross_axis + filtered items from key_risks.
+    """
+    raw_insights = _lst(full_profile, "suitability_insights")
+
+    # Also pull any items from key_risks that are actually advisory guidance
+    raw_risks = _lst(report, "key_risks")
+    for item in raw_risks:
+        text = _clean(str(item))
+        lower = text.lower()
+        if any(re.search(p, lower) for p in _INSIGHT_PATTERNS):
+            raw_insights.append(text)
+
+    # Clean, normalize, deduplicate
+    # Use 2-word prefix key so near-synonyms like "Education-first approach recommended"
+    # and "Education-first approach required" collapse to the same entry.
+    seen_keys: list[str] = []
+    insights = []
+    for item in raw_insights:
+        text = _normalize_insight_language(_clean(str(item)))
+        if not text or _is_system_phrase(text):
+            continue
+        words = re.sub(r"[^\w\s]", "", text.lower()).split()
+        key = " ".join(words[:2])
+        # Skip if any existing key starts with this key or vice versa
+        if any(k.startswith(key) or key.startswith(k) for k in seen_keys):
+            continue
+        seen_keys.append(key)
+        insights.append(text)
+
+    return insights
 
 
 def _build_restrictions(report: dict) -> list[str]:
@@ -554,18 +773,19 @@ def build_pdf_payload(pipeline_output: dict, client_id: str | None = None) -> di
         }
 
     return {
-        "cover_page":        _build_cover_page(report, meta, client_id),
-        "executive_summary": _build_executive_summary(report, meta),
-        "profile_context":   _build_profile_context(full_profile),
-        "axis_assessment":   _build_axis_assessment(full_profile),
-        "suitability":       _build_suitability(full_profile),
-        "risk_bias":         _build_risk_bias(report, full_profile),
-        "strategy":          _build_strategy(report, full_profile, meta),
-        "actions":           _build_actions(report),
-        "restrictions":      _build_restrictions(report),
-        "assumptions":       _build_assumptions(report, full_profile, meta),
-        "disclosures":       _build_disclosures(),
-        "appendix":          _build_appendix(full_profile),
+        "cover_page":           _build_cover_page(report, meta, client_id),
+        "executive_summary":    _build_executive_summary(report, meta),
+        "profile_context":      _build_profile_context(full_profile),
+        "axis_assessment":      _build_axis_assessment(full_profile),
+        "suitability":          _build_suitability(full_profile),
+        "suitability_insights": _build_suitability_insights(full_profile, report),
+        "risk_bias":            _build_risk_bias(report, full_profile),
+        "strategy":             _build_strategy(report, full_profile, meta),
+        "actions":              _build_actions(report),
+        "restrictions":         _build_restrictions(report),
+        "assumptions":          _build_assumptions(report, full_profile, meta),
+        "disclosures":          _build_disclosures(),
+        "appendix":             _build_appendix(full_profile),
     }
 
 
@@ -1195,15 +1415,19 @@ def render_pdf(payload: dict, output_path: str = "investor_report.pdf") -> str:
         h3(f"Binding Constraint: {bc['type'].replace('_', ' ').title()}")
         p(bc.get("description", ""))
         bullets(bc.get("actions", []))
-
-    insights = suit.get("suitability_insights", [])
-    if insights:
-        h3("Suitability Insights")
-        bullets(insights)
     gap()
 
     # -----------------------------------------------------------------------
-    # RISK & BIAS ANALYSIS
+    # SUITABILITY INSIGHTS  (advisory guidance — separate from risks)
+    # -----------------------------------------------------------------------
+    suit_insights = payload.get("suitability_insights", [])
+    if suit_insights:
+        h2("Suitability Insights")
+        bullets(suit_insights)
+        gap()
+
+    # -----------------------------------------------------------------------
+    # RISK & BIAS ANALYSIS  (factual financial risks only)
     # -----------------------------------------------------------------------
     h2("Risk & Bias Analysis")
     h3("Key Risks")
