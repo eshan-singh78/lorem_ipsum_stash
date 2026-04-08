@@ -912,10 +912,7 @@ def _build_html(payload: dict) -> str:
 
 def render_pdf(payload: dict, output_path: str = "investor_report.pdf") -> str:
     """
-    Render PDF payload → PDF file.
-
-    Tries weasyprint first (HTML → PDF, recommended).
-    Falls back to reportlab if weasyprint is not installed.
+    Render PDF payload → PDF file using reportlab (pure Python, no system deps).
 
     Args:
         payload:     Output from build_pdf_payload()
@@ -925,125 +922,391 @@ def render_pdf(payload: dict, output_path: str = "investor_report.pdf") -> str:
         Absolute path to the generated PDF.
     """
     import os
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import mm
+    from reportlab.lib.enums import TA_LEFT, TA_CENTER
+    from reportlab.lib import colors
+    from reportlab.platypus import (
+        SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+        HRFlowable, KeepTogether,
+    )
 
-    html_content = _build_html(payload)
+    # -----------------------------------------------------------------------
+    # Document setup
+    # -----------------------------------------------------------------------
+    doc = SimpleDocTemplate(
+        output_path, pagesize=A4,
+        leftMargin=22*mm, rightMargin=22*mm,
+        topMargin=20*mm, bottomMargin=20*mm,
+        title="Investor Suitability Profile",
+        author="InvestorDNA v1",
+    )
 
-    # --- Option 1: weasyprint (recommended) ---
-    try:
-        from weasyprint import HTML
-        HTML(string=html_content).write_pdf(output_path)
-        return os.path.abspath(output_path)
-    except ImportError:
-        pass  # fall through to reportlab
+    # -----------------------------------------------------------------------
+    # Style definitions
+    # -----------------------------------------------------------------------
+    base = getSampleStyleSheet()
 
-    # --- Option 2: reportlab (plain text fallback) ---
-    try:
-        from reportlab.lib.pagesizes import A4
-        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.lib.units import mm
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-        from reportlab.lib import colors
+    S = {
+        "h1": ParagraphStyle("h1", parent=base["Heading1"],
+                             fontSize=18, textColor=colors.HexColor("#003366"),
+                             spaceAfter=4, spaceBefore=0),
+        "h2": ParagraphStyle("h2", parent=base["Heading2"],
+                             fontSize=13, textColor=colors.HexColor("#003366"),
+                             spaceBefore=14, spaceAfter=4),
+        "h3": ParagraphStyle("h3", parent=base["Heading3"],
+                             fontSize=11, textColor=colors.HexColor("#444444"),
+                             spaceBefore=8, spaceAfter=2),
+        "body": ParagraphStyle("body", parent=base["Normal"],
+                               fontSize=9.5, leading=14, spaceAfter=4),
+        "bullet": ParagraphStyle("bullet", parent=base["Normal"],
+                                 fontSize=9.5, leading=14, spaceAfter=2,
+                                 leftIndent=12, bulletIndent=0),
+        "warn": ParagraphStyle("warn", parent=base["Normal"],
+                               fontSize=9.5, leading=14, spaceAfter=4,
+                               backColor=colors.HexColor("#fff3cd"),
+                               borderColor=colors.HexColor("#ffc107"),
+                               borderWidth=1, borderPadding=6),
+        "small": ParagraphStyle("small", parent=base["Normal"],
+                                fontSize=8, textColor=colors.HexColor("#666666"),
+                                leading=11, spaceAfter=4),
+        "meta": ParagraphStyle("meta", parent=base["Normal"],
+                               fontSize=9, textColor=colors.HexColor("#333333"),
+                               leading=13),
+    }
 
-        doc = SimpleDocTemplate(output_path, pagesize=A4,
-                                leftMargin=20*mm, rightMargin=20*mm,
-                                topMargin=20*mm, bottomMargin=20*mm)
-        styles = getSampleStyleSheet()
-        story  = []
+    # -----------------------------------------------------------------------
+    # Builder helpers
+    # -----------------------------------------------------------------------
+    story = []
 
-        def _h1(text):
-            story.append(Paragraph(text, styles["Heading1"]))
-            story.append(Spacer(1, 4*mm))
+    def h1(text):
+        story.append(Paragraph(text, S["h1"]))
+        story.append(HRFlowable(width="100%", thickness=2,
+                                color=colors.HexColor("#003366"), spaceAfter=6))
 
-        def _h2(text):
-            story.append(Paragraph(text, styles["Heading2"]))
-            story.append(Spacer(1, 2*mm))
+    def h2(text):
+        story.append(Paragraph(text, S["h2"]))
+        story.append(HRFlowable(width="100%", thickness=0.5,
+                                color=colors.HexColor("#cccccc"), spaceAfter=3))
 
-        def _p(text):
-            story.append(Paragraph(str(text), styles["Normal"]))
-            story.append(Spacer(1, 2*mm))
+    def h3(text):
+        story.append(Paragraph(text, S["h3"]))
 
-        cover = payload["cover_page"]
-        _h1("Investor Suitability Profile")
-        _p(f"Client ID: {cover['client_id']}  |  Date: {cover['date']}  |  Status: {cover['status']}")
-        _p(cover["ai_disclosure"])
+    def p(text):
+        if text:
+            story.append(Paragraph(str(text), S["body"]))
 
-        if cover["status"] == "Provisional":
-            _p("⚠ PROVISIONAL REPORT — Manual advisor validation required.")
+    def bullets(items: list, fallback: str = "None"):
+        if not items:
+            story.append(Paragraph(f"\u2022  {fallback}", S["bullet"]))
+        else:
+            for item in items:
+                story.append(Paragraph(f"\u2022  {item}", S["bullet"]))
 
-        _h2("Executive Summary")
-        _p(payload["executive_summary"])
+    def warn(text):
+        story.append(Paragraph(f"\u26a0  {text}", S["warn"]))
+        story.append(Spacer(1, 2*mm))
 
-        ctx  = payload["profile_context"]
-        demo = ctx.get("demographics", {})
-        fin  = ctx.get("financial_snapshot", {})
-        _h2("Profile Context")
-        _p(f"Income: {demo.get('income_type','—')}  |  Employment: {demo.get('employment_stability','—')}  "
-           f"|  Dependents: {demo.get('dependents','—')}  |  City: {demo.get('city_tier','—')}")
-        _p(f"EMI: {fin.get('emi','—')}  |  Emergency Fund: {fin.get('savings','—')}")
+    def gap(n=4):
+        story.append(Spacer(1, n*mm))
 
-        _h2("4-Axis Assessment")
-        axis = payload["axis_assessment"]
-        axis_data = [["Axis", "Score", "Level", "Insight"]]
-        for key, label in [("risk","Risk"), ("cashflow","Cash Flow"),
-                            ("obligation","Obligation"), ("context","Sophistication"),
-                            ("financial_capacity","Capacity")]:
-            e = axis.get(key, {})
-            axis_data.append([label, str(e.get("score","—")), e.get("label","—").upper(), e.get("insight","")[:60]])
-        t = Table(axis_data, colWidths=[35*mm, 18*mm, 22*mm, 85*mm])
+    def kv_table(rows: list[tuple], col_widths=None):
+        """Two-column key-value table."""
+        w = col_widths or [55*mm, 105*mm]
+        data = [[Paragraph(f"<b>{k}</b>", S["meta"]),
+                 Paragraph(str(v), S["meta"])] for k, v in rows]
+        t = Table(data, colWidths=w)
         t.setStyle(TableStyle([
-            ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#003366")),
-            ("TEXTCOLOR",  (0,0), (-1,0), colors.white),
-            ("GRID",       (0,0), (-1,-1), 0.5, colors.grey),
-            ("FONTSIZE",   (0,0), (-1,-1), 9),
+            ("BACKGROUND", (0, 0), (0, -1), colors.HexColor("#e8eef4")),
+            ("GRID",       (0, 0), (-1, -1), 0.4, colors.HexColor("#cccccc")),
+            ("VALIGN",     (0, 0), (-1, -1), "TOP"),
+            ("TOPPADDING", (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 6),
         ]))
         story.append(t)
-        story.append(Spacer(1, 4*mm))
+        story.append(Spacer(1, 3*mm))
 
-        suit = payload["suitability"]
-        _h2("Cross-Axis Suitability")
-        _p(f"Archetype: {suit.get('archetype','—')}  |  Equity Range: {suit.get('equity_range','—')}")
-        _p(suit.get("classification", ""))
+    def grid_table(headers: list, rows: list, col_widths=None):
+        """Multi-column data table with header row."""
+        data = [[Paragraph(f"<b>{h}</b>", S["meta"]) for h in headers]]
+        for row in rows:
+            data.append([Paragraph(str(c), S["meta"]) for c in row])
+        t = Table(data, colWidths=col_widths)
+        t.setStyle(TableStyle([
+            ("BACKGROUND",    (0, 0), (-1, 0), colors.HexColor("#003366")),
+            ("TEXTCOLOR",     (0, 0), (-1, 0), colors.white),
+            ("GRID",          (0, 0), (-1, -1), 0.4, colors.HexColor("#cccccc")),
+            ("ROWBACKGROUNDS",(0, 1), (-1, -1),
+             [colors.white, colors.HexColor("#f4f7fb")]),
+            ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+            ("TOPPADDING",    (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 6),
+            ("FONTSIZE",      (0, 0), (-1, -1), 9),
+        ]))
+        story.append(t)
+        story.append(Spacer(1, 3*mm))
 
-        rb = payload["risk_bias"]
-        _h2("Risk & Bias Analysis")
-        for r in rb.get("key_risks", []):
-            _p(f"• {r}")
-        _p(f"Bias: {rb.get('bias_summary','—')}")
+    # -----------------------------------------------------------------------
+    # Unpack payload
+    # -----------------------------------------------------------------------
+    cover  = payload["cover_page"]
+    ctx    = payload["profile_context"]
+    axis   = payload["axis_assessment"]
+    suit   = payload["suitability"]
+    rb     = payload["risk_bias"]
+    strat  = payload["strategy"]
+    assum  = payload["assumptions"]
+    disc   = payload["disclosures"]
+    app    = payload["appendix"]
+    demo   = ctx.get("demographics", {})
+    fin    = ctx.get("financial_snapshot", {})
+    temp   = strat.get("temporal_strategy", {})
 
-        strat = payload["strategy"]
-        _h2("Recommended Strategy")
-        _p(f"Equity: {strat.get('equity_pct','—')}%  |  Debt: {strat.get('debt_pct','—')}%  "
-           f"|  Instrument: {strat.get('primary_instrument','—')}")
-        _p(f"First step: {strat.get('first_step','—')}")
-        if strat.get("advisory_note"):
-            _p(f"⚠ {strat['advisory_note']}")
+    # -----------------------------------------------------------------------
+    # COVER PAGE
+    # -----------------------------------------------------------------------
+    h1("Investor Suitability Profile")
+    kv_table([
+        ("Client ID",  cover["client_id"]),
+        ("Date",       cover["date"]),
+        ("Version",    cover["version"]),
+        ("Status",     cover["status"]),
+    ])
+    p(cover["ai_disclosure"])
 
-        _h2("Action Plan")
-        for a in payload.get("actions", []):
-            _p(f"• {a}")
+    if cover["status"] == "Provisional":
+        warn("PROVISIONAL REPORT — This report was generated under data limitations. "
+             "Manual advisor validation is required before use.")
+    gap()
 
-        _h2("Do Not Recommend")
-        for r in payload.get("restrictions", []):
-            _p(f"• {r}")
+    # -----------------------------------------------------------------------
+    # EXECUTIVE SUMMARY
+    # -----------------------------------------------------------------------
+    h2("Executive Summary")
+    p(payload["executive_summary"])
+    gap()
 
-        assum = payload["assumptions"]
-        _h2("Assumptions & Limitations")
-        _p(assum.get("completeness_note", ""))
-        for a in assum.get("assumptions", []):
-            _p(f"• {a}")
+    # -----------------------------------------------------------------------
+    # PROFILE CONTEXT
+    # -----------------------------------------------------------------------
+    h2("Profile Context")
 
-        disc = payload["disclosures"]
-        _h2("Regulatory Disclosures")
-        _p(disc["sebi_compliance"])
-        _p(disc["ai_usage"])
-        _p(disc["disclaimer"])
+    h3("Demographics")
+    kv_table([
+        ("Income Type",          demo.get("income_type", "—")),
+        ("Employment Stability", demo.get("employment_stability", "—")),
+        ("Dependents",           demo.get("dependents", "—")),
+        ("City Tier",            demo.get("city_tier", "—")),
+    ])
 
-        doc.build(story)
-        return os.path.abspath(output_path)
+    h3("Financial Snapshot")
+    kv_table([
+        ("EMI",            fin.get("emi", "—")),
+        ("Emergency Fund", fin.get("savings", "—")),
+        ("EMI Ratio",      fin.get("emi_ratio", "—")),
+    ])
 
-    except ImportError:
-        raise RuntimeError(
-            "No PDF library available. Install weasyprint (recommended) or reportlab:\n"
-            "  pip install weasyprint\n"
-            "  pip install reportlab"
+    life_events = ctx.get("life_events", [])
+    h3("Life Events")
+    if life_events:
+        grid_table(
+            ["Event", "Description", "Recency", "Weight"],
+            [[e["event"], e["description"], e["recency"], e["emotional_weight"]]
+             for e in life_events],
+            col_widths=[28*mm, 80*mm, 24*mm, 24*mm],
         )
+    else:
+        p("None reported.")
+
+    cultural = ctx.get("cultural_context", [])
+    h3("Cultural Context")
+    if cultural:
+        grid_table(
+            ["Type", "Description", "Negotiability"],
+            [[s["type"], s["description"], s["negotiability"]] for s in cultural],
+            col_widths=[35*mm, 100*mm, 25*mm],
+        )
+    else:
+        p("None detected.")
+
+    behavioral = ctx.get("behavioral_signals", [])
+    h3("Behavioral Signals")
+    if behavioral:
+        grid_table(
+            ["Type", "Description", "Strength"],
+            [[s["type"], s["description"], s["strength"]] for s in behavioral],
+            col_widths=[35*mm, 100*mm, 25*mm],
+        )
+    else:
+        p("None detected.")
+
+    contradictions = ctx.get("contradictions", [])
+    if contradictions:
+        h3("Contradictions")
+        grid_table(
+            ["Dominant", "Suppressed", "Explanation"],
+            [[c["dominant"], c["suppressed"], c["explanation"]] for c in contradictions],
+            col_widths=[35*mm, 35*mm, 90*mm],
+        )
+    gap()
+
+    # -----------------------------------------------------------------------
+    # 4-AXIS ASSESSMENT
+    # -----------------------------------------------------------------------
+    h2("4-Axis Assessment")
+    axis_names = [
+        ("risk",               "Risk Tolerance"),
+        ("cashflow",           "Cash Flow Stability"),
+        ("obligation",         "Obligation Burden"),
+        ("context",            "Financial Sophistication"),
+        ("financial_capacity", "Financial Capacity"),
+    ]
+    axis_rows = []
+    for key, label in axis_names:
+        e = axis.get(key, {})
+        score = e.get("score", "—")
+        lbl   = (e.get("label") or "unknown").upper()
+        insight = (e.get("insight") or "")[:80]
+        axis_rows.append([label, str(score), lbl, insight])
+
+    grid_table(
+        ["Axis", "Score", "Level", "Insight"],
+        axis_rows,
+        col_widths=[42*mm, 18*mm, 22*mm, 78*mm],
+    )
+    gap()
+
+    # -----------------------------------------------------------------------
+    # CROSS-AXIS SUITABILITY
+    # -----------------------------------------------------------------------
+    h2("Cross-Axis Suitability")
+    kv_table([
+        ("Archetype",    suit.get("archetype", "—")),
+        ("Equity Range", suit.get("equity_range", "—")),
+    ])
+    p(suit.get("classification", ""))
+
+    bc = suit.get("binding_constraint")
+    if bc and bc.get("type") not in (None, "none", ""):
+        h3(f"Binding Constraint: {bc['type'].replace('_', ' ').title()}")
+        p(bc.get("description", ""))
+        bullets(bc.get("actions", []))
+
+    insights = suit.get("suitability_insights", [])
+    if insights:
+        h3("Suitability Insights")
+        bullets(insights)
+    gap()
+
+    # -----------------------------------------------------------------------
+    # RISK & BIAS ANALYSIS
+    # -----------------------------------------------------------------------
+    h2("Risk & Bias Analysis")
+    h3("Key Risks")
+    bullets(rb.get("key_risks", []))
+
+    h3("Behavioral Bias")
+    p(rb.get("bias_summary", "No specific behavioral bias identified."))
+    bias_flags = rb.get("bias_flags", [])
+    if bias_flags:
+        bullets(bias_flags)
+    gap()
+
+    # -----------------------------------------------------------------------
+    # RECOMMENDED STRATEGY
+    # -----------------------------------------------------------------------
+    h2("Recommended Strategy")
+    kv_table([
+        ("Equity Allocation",  f"{strat.get('equity_pct', '—')}%"),
+        ("Debt Allocation",    f"{strat.get('debt_pct', '—')}%"),
+        ("Primary Instrument", strat.get("primary_instrument", "—")),
+        ("SIP Recommended",    "Yes" if strat.get("sip_recommended") else "No"),
+        ("First Step",         strat.get("first_step", "—")),
+    ])
+
+    if strat.get("advisory_note"):
+        warn(strat["advisory_note"])
+
+    h3("Temporal Strategy")
+    kv_table([
+        ("Temporary Allocation",   "Yes" if temp.get("is_temporary") else "No"),
+        ("Reassessment Trigger",   temp.get("reassessment_trigger", "—")),
+        ("Reassessment Timeline",  temp.get("reassessment_timeline", "—")),
+        ("Expected Shift",         temp.get("expected_shift", "—")),
+    ])
+    gap()
+
+    # -----------------------------------------------------------------------
+    # ACTION PLAN
+    # -----------------------------------------------------------------------
+    h2("Action Plan")
+    bullets(payload.get("actions", []), fallback="No specific actions identified.")
+    gap()
+
+    # -----------------------------------------------------------------------
+    # DO NOT RECOMMEND
+    # -----------------------------------------------------------------------
+    h2("Do Not Recommend")
+    bullets(payload.get("restrictions", []), fallback="No specific restrictions identified.")
+    gap()
+
+    # -----------------------------------------------------------------------
+    # ASSUMPTIONS & LIMITATIONS
+    # -----------------------------------------------------------------------
+    h2("Assumptions & Limitations")
+    p(assum.get("completeness_note", ""))
+    kv_table([
+        ("Data Completeness", f"{assum.get('data_completeness', '—')}%"),
+        ("Confidence Score",  str(assum.get("confidence_score", "—"))),
+    ])
+    missing = assum.get("missing_fields", [])
+    if missing:
+        p(f"Missing fields: {', '.join(str(m) for m in missing)}")
+    h3("Assumptions")
+    bullets(assum.get("assumptions", []))
+    gap()
+
+    # -----------------------------------------------------------------------
+    # REGULATORY DISCLOSURES
+    # -----------------------------------------------------------------------
+    h2("Regulatory Disclosures")
+    kv_table([
+        ("SEBI Compliance",    disc["sebi_compliance"]),
+        ("AI Usage",           disc["ai_usage"]),
+        ("Data Retention",     disc["data_retention"]),
+        ("Methodology",        disc["methodology_version"]),
+    ], col_widths=[40*mm, 120*mm])
+    story.append(Paragraph(disc["disclaimer"], S["small"]))
+    gap()
+
+    # -----------------------------------------------------------------------
+    # APPENDIX — Advisor Technical Reference
+    # -----------------------------------------------------------------------
+    h2("Appendix — Advisor Technical Reference")
+    warn("Not for client-facing use. For advisor review only.")
+
+    import json as _json
+    appendix_data = {
+        "debug":            app.get("debug", {}),
+        "trace_validation": app.get("trace_validation", {}),
+    }
+    raw_json = _json.dumps(appendix_data, indent=2, default=str)
+    if len(raw_json) > 6000:
+        raw_json = raw_json[:6000] + "\n... [truncated]"
+
+    # Render as monospace paragraphs (reportlab has no <pre> equivalent)
+    mono = ParagraphStyle("mono", parent=base["Code"],
+                          fontSize=7, leading=10, spaceAfter=1,
+                          fontName="Courier")
+    for line in raw_json.splitlines():
+        story.append(Paragraph(line.replace(" ", "&nbsp;").replace("<", "&lt;"), mono))
+
+    # -----------------------------------------------------------------------
+    # Build
+    # -----------------------------------------------------------------------
+    doc.build(story)
+    return os.path.abspath(output_path)
