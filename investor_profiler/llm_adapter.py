@@ -70,15 +70,41 @@ _DEFAULT_URLS = {
 # ---------------------------------------------------------------------------
 
 def _load_config_file() -> dict:
-    """Load llm_config.json from the same directory as this file, if it exists."""
-    cfg_path = Path(__file__).parent / "llm_config.json"
-    if cfg_path.exists():
+    """
+    Load LLM config with a two-file merge strategy:
+
+    1. investor_profiler/llm_config.json       — base config (provider, api_key, base_url, timeout)
+    2. investor_profiler/v2/llm_config.json    — override layer (model switching by benchmark)
+
+    The v2 file wins for any key it defines. This means:
+      - benchmark.py writes only the "model" field to v2/llm_config.json
+      - all other settings (api_key, provider, timeout) come from the root file
+      - main.py always picks up the current model without any extra wiring
+    """
+    base_dir = Path(__file__).parent
+    cfg: dict = {}
+
+    # Layer 1: root config
+    root_cfg = base_dir / "llm_config.json"
+    if root_cfg.exists():
         try:
-            with open(cfg_path) as f:
-                return json.load(f)
+            with open(root_cfg) as f:
+                cfg.update(json.load(f))
         except (json.JSONDecodeError, OSError):
             pass
-    return {}
+
+    # Layer 2: v2 override (benchmark writes model here)
+    v2_cfg = base_dir / "v2" / "llm_config.json"
+    if v2_cfg.exists():
+        try:
+            with open(v2_cfg) as f:
+                overrides = json.load(f)
+            # Only apply non-null, non-empty values from v2 config
+            cfg.update({k: v for k, v in overrides.items() if v not in (None, "", 0)})
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    return cfg
 
 
 # ---------------------------------------------------------------------------
@@ -140,6 +166,9 @@ class _Config:
                 )
 
         self.timeout = int(os.environ.get("LLM_TIMEOUT", 0) or file_cfg.get("timeout", 0)) or None
+        # Enforce a minimum 120s timeout — never allow infinite hang in production
+        if self.timeout is None:
+            self.timeout = 120
 
     def override(self, **kwargs):
         """Apply runtime overrides. When provider changes, reset base_url to its default."""

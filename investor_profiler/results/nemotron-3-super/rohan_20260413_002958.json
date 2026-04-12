@@ -1,0 +1,757 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Obligation-Bound Beginner. Rohan faces imminent lump-sum expenses under ₹20 lakhs with zero savings and no financial discipline, making any equity exposure inappropriate now. His high autonomy and present-oriented impulses must be countered with automated saving to build a foundation. The priority is capital preservation and liquidity, not growth, until near-term obligations are met and a safety net is established. Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first. Recommended equity range: 0% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "income instability",
+      "no savings",
+      "upcoming major expense",
+      "no investment experience",
+      "Prioritize liquidity — avoid long lock-in products",
+      "Profile contradictions detected — verify before recommending",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "The dominant contradiction is between his stated long-term goal of financial stability by age 32–33 and his current reality of zero savings, no investments, inconsistent spending, and no budgeting discipline — a gap between aspiration and behavior where the suppressed trait of discipline is overwhelmed by present-oriented impulses. The profile is unstable and distorted by recency and present bias — his current high discretionary spending and lack of planning are not reflections of enduring traits but of a transient phase of financial unawareness. His medium resilience and independent decision style suggest potential for growth, but without intervention, his current trajectory is unlikely to support his stated long-term goal.",
+    "recommended_actions": [
+      "Set up an automatic monthly transfer of ₹15,000 (30-40% of income) into a liquid fund to build emergency corpus"
+    ],
+    "do_not_recommend": [
+      "No equity exposure recommended at this time"
+    ],
+    "completeness_note": "Profile completeness is moderate (40%). Some fields were inferred or unavailable.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "gig",
+          "monthly_income": null,
+          "city_tier": "unknown",
+          "employment_stability": "volatile"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": null,
+          "emi_ratio": null,
+          "dependents": null
+        },
+        "experience": {
+          "experience_years": 0.0,
+          "financial_knowledge_score": 1,
+          "decision_autonomy": true
+        },
+        "behavioral": {
+          "loss_reaction": null,
+          "risk_behavior": null,
+          "resilience_level": "medium",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "house",
+          "future_obligation_score": 5.0
+        },
+        "life_events": [],
+        "cultural_signals": [
+          {
+            "type": "family_role",
+            "description": "Lives with family and may be expected to contribute to household expenses or support family in the future, though no explicit obligation is stated.",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "resilience",
+            "description": "Moderate resilience",
+            "strength": "moderate"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "constrained",
+            "suppressed_trait": "unknown",
+            "explanation": "Desires long-term financial stability by age 32–33 but currently exhibits inconsistent, unstructured spending and saving habits with no investments or budgeting discipline."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": false,
+          "hidden_obligation_detected": false,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": false
+        }
+      },
+      "axis_scores": {
+        "risk": null,
+        "cashflow": 35,
+        "obligation": 25,
+        "context": 35,
+        "financial_capacity": 26
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 30,
+          "label": "low",
+          "reason": "Gig/freelance income — high volatility, no employer safety net",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 5,
+          "label": "low",
+          "reason": "No debt data — minimal burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "dependency_load": {
+          "score": 25,
+          "label": "low",
+          "reason": "Dependents not mentioned — no burden assumed",
+          "modifiers": [
+            "Joint family / family role detected — actual dependency burden likely higher than stated dependents count"
+          ],
+          "data_available": false
+        },
+        "cultural_obligation": {
+          "score": 44,
+          "label": "moderate",
+          "reason": "Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Family role obligation (Lives with family and may be expected to contribute to household expenses or support family in the future, though no explicit obligation is stated.) — financial responsibility extends beyond nuclear family | Future financial commitment detected — adds 4 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 50/100 → score multiplier 1.00",
+            "State weight calibration: defaults used"
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 1,
+          "label": "low",
+          "reason": "",
+          "modifiers": [
+            "State behavioral weight: 50/100 → emotional amplifier 1.00"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Obligation-Bound Beginner",
+        "archetype_description": "Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs.",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "Rohan faces imminent lump-sum expenses under ₹20 lakhs with zero savings and no financial discipline, making any equity exposure inappropriate now. His high autonomy and present-oriented impulses must be countered with automated saving to build a foundation. The priority is capital preservation and liquidity, not growth, until near-term obligations are met and a safety net is established. Recommended strategy: liquid fund; equity 0%, debt 100%. Set up an automatic monthly transfer of ₹15,000 (30-40% of income) into a liquid fund to build emergency corpus",
+          "equity_range": "0% equity RIGHT NOW",
+          "equity_ceiling_pct": 0,
+          "guidance": [
+            "No equity exposure recommended at this time",
+            "Focus: debt reduction, emergency fund, insurance"
+          ],
+          "advisor_note": "Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first."
+        },
+        "advisor_narrative": "Archetype: Obligation-Bound Beginner. Advisor note: Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first. Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs. Contradictions: The dominant contradiction is between his stated long-term goal of financial stability by age 32–33 and his current reality of zero savings, no investments, inconsistent spending, and no budgeting discipline — a gap between aspiration and behavior where the suppressed trait of discipline is overwhelmed by present-oriented impulses. Cultural obligation burden is significant (score: 44/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Family role obligation (Lives with family and may be expected to contribute to household expenses or support family in the future, though no explicit obligation is stated.) — financial responsibility extends beyond nuclear family | Future financial commitment detected — adds 4 pts to obligation burden",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Prioritize liquidity — avoid long lock-in products",
+          "Profile contradictions detected — verify before recommending",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "Age 22, no fixed obligations, living with family",
+            "Anticipated near-term expenses: move, home office, car under ₹20 lakhs",
+            "Zero savings, no investment experience, entirely discretionary spending",
+            "High autonomy, present-oriented impulses (gadgets, food, travel)",
+            "Stated goal: long-term stability by early 30s, but no foundational habits",
+            "Zero investable capacity despite ₹4–5 lakhs annual income"
+          ],
+          "dominant_factors": [
+            "Imminent lump-sum obligations under ₹20L",
+            "Zero savings and no financial discipline",
+            "High autonomy with present-oriented spending"
+          ],
+          "secondary_factors": [
+            "Desire for long-term stability by early 30s",
+            "Medium resilience and neutral loss response",
+            "Low peer influence, self-directed but uninformed choices"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Desires long-term financial stability by age 32–33",
+              "signal_2": "Currently exhibits inconsistent, unstructured spending and saving habits with no investments or budgeting discipline",
+              "resolution": "The desire for future stability is overridden by present-oriented impulses and lack of behavioral habits, making it aspirational rather than actionable without intervention",
+              "dominant_trait": "constrained"
+            }
+          ],
+          "state_inference": "Rohan is currently in a state of pre-commitment freedom but faces an imminent obligation shock that will rapidly constrain his finances unless he immediately establishes structured saving habits.",
+          "decision_logic": [
+            "Without immediate intervention, his zero savings and discretionary spending will lead to cash flow strain when near-term obligations arise",
+            "His high autonomy and present-focused behavior mean he will not adopt disciplined saving without external prompting or structured systems",
+            "Any investment advice assuming risk tolerance is dangerous; his real risk capacity is near-zero due to lack of emergency buffer and impending liabilities"
+          ]
+        },
+        "current_allocation": "0% equity RIGHT NOW",
+        "baseline_allocation": "40%",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "pre-commitment with imminent obligation",
+          "dominant_trait": "constrained",
+          "resilience_level": "low",
+          "state_stability": "transitional"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "After establishing 3-month emergency fund and clearing near-term obligations",
+          "reassessment_timeline": "6-12 months",
+          "expected_shift": "Gradual increase to baseline 60% equity as savings discipline forms"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "income instability",
+            "no savings",
+            "upcoming major expense",
+            "no investment experience"
+          ],
+          "true_risk_capacity": "Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs.",
+          "stated_vs_actual_gap": "Stated goal of long-term stability by early 30s is misaligned with actual behavior of zero saving and present-oriented spending; intent-action gap is wide.",
+          "reliability": "medium"
+        },
+        "strategy": {
+          "primary_instrument": "liquid fund",
+          "equity_pct": 0,
+          "debt_pct": 100,
+          "sip_recommended": false,
+          "first_step": "Set up an automatic monthly transfer of ₹15,000 (30-40% of income) into a liquid fund to build emergency corpus"
+        },
+        "archetype": "Obligation-Bound Beginner",
+        "confidence": "medium",
+        "reasoning": "Rohan faces imminent lump-sum expenses under ₹20 lakhs with zero savings and no financial discipline, making any equity exposure inappropriate now. His high autonomy and present-oriented impulses must be countered with automated saving to build a foundation. The priority is capital preservation and liquidity, not growth, until near-term obligations are met and a safety net is established.",
+        "advisor_note": "Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "60% equity long-term",
+            "after": "40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0% equity RIGHT NOW",
+        "true_risk_profile": "Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs."
+      },
+      "debug": {
+        "rule_fields": {
+          "income_type": {
+            "value": "gig",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 1,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "house",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": true,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": 0.0,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 1,
+            "chosen": 1,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "house",
+            "chosen": "house",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": true,
+            "chosen": true,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "gig",
+            "llm_value": null,
+            "chosen": "gig",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 0.0,
+            "chosen": 0.0,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          }
+        ],
+        "rule_log": [
+          "Rule income_type: gig signal"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "near_term_obligation_level": "llm",
+          "financial_knowledge_score": "llm",
+          "obligation_type": "llm",
+          "decision_autonomy": "llm",
+          "dependents": "default",
+          "income_type": "rule",
+          "loss_reaction": "default",
+          "loss_reaction_description": "default",
+          "experience_years": "llm",
+          "risk_behavior": "default",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "future_obligation_score=5.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "monthly_income",
+          "emergency_months",
+          "emi_amount",
+          "dependents",
+          "loss_reaction",
+          "risk_behavior"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "No behavioral data — risk axis cannot be scored."
+          ],
+          "cashflow": [
+            "Gig income: high volatility.",
+            "Low financial pressure (signals): +5."
+          ],
+          "obligation": [
+            "Moderate near-term obligation (house).",
+            "Cultural obligation: Lives with family and may be expected to contribute to house."
+          ],
+          "context": [
+            "<1yr experience: novice.",
+            "Knowledge score 1/5: +0.",
+            "Independent decision-making: +10."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "travel",
+            "timeline": "near",
+            "scale": "low",
+            "matched": "travel"
+          }
+        ],
+        "future_obligation_score": 5.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "60% equity long-term",
+            "after": "40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+              "field": "baseline_allocation",
+              "before": "60% equity long-term",
+              "after": "40%",
+              "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+            },
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "defensive",
+              "after": "transitional",
+              "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (40%) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "60% equity long-term",
+            "after": "40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "Rohan faces imminent lump-sum expenses under ₹20 lakhs with zero savings and no financial discipline, making any equity exposure inappropriate now. His high autonomy and present-oriented impulses must be countered with automated saving to build a foundation. The priority is capital preservation and liquidity, not growth, until near-term obligations are met and a safety net is established.",
+      "confidence_score": 29.0,
+      "data_completeness": 40.0,
+      "suitability_insights": [
+        "Prioritize liquidity — avoid long lock-in products",
+        "Profile contradictions detected — verify before recommending",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "Obligation-Bound Beginner",
+    "equity_range": "0% equity RIGHT NOW",
+    "advisor_note": "Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "gig",
+        "monthly_income": null,
+        "city_tier": "unknown",
+        "employment_stability": "volatile"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": null,
+        "emi_ratio": null,
+        "dependents": null
+      },
+      "experience": {
+        "experience_years": 0.0,
+        "financial_knowledge_score": 1,
+        "decision_autonomy": true
+      },
+      "behavioral": {
+        "loss_reaction": null,
+        "risk_behavior": null,
+        "resilience_level": "medium",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "house",
+        "future_obligation_score": 5.0
+      },
+      "life_events": [],
+      "cultural_signals": [
+        {
+          "type": "family_role",
+          "description": "Lives with family and may be expected to contribute to household expenses or support family in the future, though no explicit obligation is stated.",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "resilience",
+          "description": "Moderate resilience",
+          "strength": "moderate"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "constrained",
+          "suppressed_trait": "unknown",
+          "explanation": "Desires long-term financial stability by age 32–33 but currently exhibits inconsistent, unstructured spending and saving habits with no investments or budgeting discipline."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": false,
+        "hidden_obligation_detected": false,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": false
+      }
+    },
+    "axis_scores": {
+      "risk": null,
+      "cashflow": 35,
+      "obligation": 25,
+      "context": 35,
+      "financial_capacity": 26
+    },
+    "cross_axis": {
+      "archetype": "Obligation-Bound Beginner",
+      "archetype_description": "Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs.",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "Rohan faces imminent lump-sum expenses under ₹20 lakhs with zero savings and no financial discipline, making any equity exposure inappropriate now. His high autonomy and present-oriented impulses must be countered with automated saving to build a foundation. The priority is capital preservation and liquidity, not growth, until near-term obligations are met and a safety net is established. Recommended strategy: liquid fund; equity 0%, debt 100%. Set up an automatic monthly transfer of ₹15,000 (30-40% of income) into a liquid fund to build emergency corpus",
+        "equity_range": "0% equity RIGHT NOW",
+        "equity_ceiling_pct": 0,
+        "guidance": [
+          "No equity exposure recommended at this time",
+          "Focus: debt reduction, emergency fund, insurance"
+        ],
+        "advisor_note": "Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first."
+      },
+      "advisor_narrative": "Archetype: Obligation-Bound Beginner. Advisor note: Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first. Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs. Contradictions: The dominant contradiction is between his stated long-term goal of financial stability by age 32–33 and his current reality of zero savings, no investments, inconsistent spending, and no budgeting discipline — a gap between aspiration and behavior where the suppressed trait of discipline is overwhelmed by present-oriented impulses. Cultural obligation burden is significant (score: 44/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Family role obligation (Lives with family and may be expected to contribute to household expenses or support family in the future, though no explicit obligation is stated.) — financial responsibility extends beyond nuclear family | Future financial commitment detected — adds 4 pts to obligation burden",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Prioritize liquidity — avoid long lock-in products",
+        "Profile contradictions detected — verify before recommending",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "Age 22, no fixed obligations, living with family",
+          "Anticipated near-term expenses: move, home office, car under ₹20 lakhs",
+          "Zero savings, no investment experience, entirely discretionary spending",
+          "High autonomy, present-oriented impulses (gadgets, food, travel)",
+          "Stated goal: long-term stability by early 30s, but no foundational habits",
+          "Zero investable capacity despite ₹4–5 lakhs annual income"
+        ],
+        "dominant_factors": [
+          "Imminent lump-sum obligations under ₹20L",
+          "Zero savings and no financial discipline",
+          "High autonomy with present-oriented spending"
+        ],
+        "secondary_factors": [
+          "Desire for long-term stability by early 30s",
+          "Medium resilience and neutral loss response",
+          "Low peer influence, self-directed but uninformed choices"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Desires long-term financial stability by age 32–33",
+            "signal_2": "Currently exhibits inconsistent, unstructured spending and saving habits with no investments or budgeting discipline",
+            "resolution": "The desire for future stability is overridden by present-oriented impulses and lack of behavioral habits, making it aspirational rather than actionable without intervention",
+            "dominant_trait": "constrained"
+          }
+        ],
+        "state_inference": "Rohan is currently in a state of pre-commitment freedom but faces an imminent obligation shock that will rapidly constrain his finances unless he immediately establishes structured saving habits.",
+        "decision_logic": [
+          "Without immediate intervention, his zero savings and discretionary spending will lead to cash flow strain when near-term obligations arise",
+          "His high autonomy and present-focused behavior mean he will not adopt disciplined saving without external prompting or structured systems",
+          "Any investment advice assuming risk tolerance is dangerous; his real risk capacity is near-zero due to lack of emergency buffer and impending liabilities"
+        ]
+      },
+      "current_allocation": "0% equity RIGHT NOW",
+      "baseline_allocation": "40%",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "pre-commitment with imminent obligation",
+        "dominant_trait": "constrained",
+        "resilience_level": "low",
+        "state_stability": "transitional"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "After establishing 3-month emergency fund and clearing near-term obligations",
+        "reassessment_timeline": "6-12 months",
+        "expected_shift": "Gradual increase to baseline 60% equity as savings discipline forms"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "income instability",
+          "no savings",
+          "upcoming major expense",
+          "no investment experience"
+        ],
+        "true_risk_capacity": "Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs.",
+        "stated_vs_actual_gap": "Stated goal of long-term stability by early 30s is misaligned with actual behavior of zero saving and present-oriented spending; intent-action gap is wide.",
+        "reliability": "medium"
+      },
+      "strategy": {
+        "primary_instrument": "liquid fund",
+        "equity_pct": 0,
+        "debt_pct": 100,
+        "sip_recommended": false,
+        "first_step": "Set up an automatic monthly transfer of ₹15,000 (30-40% of income) into a liquid fund to build emergency corpus"
+      },
+      "archetype": "Obligation-Bound Beginner",
+      "confidence": "medium",
+      "reasoning": "Rohan faces imminent lump-sum expenses under ₹20 lakhs with zero savings and no financial discipline, making any equity exposure inappropriate now. His high autonomy and present-oriented impulses must be countered with automated saving to build a foundation. The priority is capital preservation and liquidity, not growth, until near-term obligations are met and a safety net is established.",
+      "advisor_note": "Do not invest in equities or long-term instruments until you have at least 3 months of essential expenses in a liquid fund — your near-term goals come first.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+          "field": "baseline_allocation",
+          "before": "60% equity long-term",
+          "after": "40%",
+          "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+        },
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "defensive",
+          "after": "transitional",
+          "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (40%) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0% equity RIGHT NOW",
+      "true_risk_profile": "Very low — any investment loss could jeopardize ability to meet near-term lump-sum obligations like move, home office, or car under ₹20 lakhs."
+    },
+    "suitability_insights": [
+      "Prioritize liquidity — avoid long lock-in products",
+      "Profile contradictions detected — verify before recommending",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 29.0,
+    "data_completeness": 40.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

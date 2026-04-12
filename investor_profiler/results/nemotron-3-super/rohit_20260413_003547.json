@@ -1,0 +1,785 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: The Disciplined Traditionalist. Dominant factors include familial obligation to traditional savings, peer-driven emotional investing, and latent disciplined saving behavior. The individual exhibits constrained behavior — desiring growth via equity SIPs but stressed by deviation from parental norms. Despite this, consistency in SIPs reveals underlying discipline and long-term ambition, creating a transitional state where financial capability is present but expression is moderated by social expectations. Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time. Recommended equity range: 30-40% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "upcoming major expense",
+      "Education-first approach required before complex instruments",
+      "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "He states a preference for faster growth via equities (evidenced by initiating SIPs in mid-cap and sectoral funds) but suppresses this ambition under familial pressure, favoring safer assets when stressed — this creates a tension where his stated risk-seeking behavior is overridden by his dominant trait of feeling 'constrained' by parental expectations, especially during market volatility. The profile is moderately reliable but distorted by recency and peer influence. His recent shift to large-cap during a correction and compulsive portfolio checking reflect emotional reactions to short-term volatility and social comparison. His financial knowledge score (3/5) and reliance on Hindi YouTube finfluencers suggest susceptibility to oversimplified advice. However, his consistency in maintaining SIPs despite stress shows underlying discipline, anchoring the profile in real behavior — making it usable but requiring filtering for noise.",
+    "recommended_actions": [
+      "Increase SIP amount by 20% and allocate to a flexi-cap fund while maintaining current FD/gold holdings as a buffer"
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness: 80%.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "salaried",
+          "monthly_income": 75000.0,
+          "city_tier": "tier2",
+          "employment_stability": "stable"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": 4500.0,
+          "emi_ratio": 6.0,
+          "dependents": null
+        },
+        "experience": {
+          "experience_years": 1.17,
+          "financial_knowledge_score": 3,
+          "decision_autonomy": false
+        },
+        "behavioral": {
+          "loss_reaction": "cautious",
+          "risk_behavior": "medium",
+          "resilience_level": "medium",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "wedding",
+          "future_obligation_score": 10.0
+        },
+        "life_events": [
+          {
+            "type": "marriage",
+            "description": "marriage event detected",
+            "recency": "unknown",
+            "emotional_weight": "medium"
+          }
+        ],
+        "cultural_signals": [
+          {
+            "type": "hidden_obligation",
+            "description": "His parents expect him to prioritize buying a small flat after marriage and view equities as risky, creating pressure to conform to traditional savings preferences.",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "hidden_obligation",
+            "description": "He mentally counts his mother's gold jewellery scheme as part of his wedding fund, indicating an unspoken familial obligation to allocate those assets toward marriage.",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "anxiety",
+            "description": "Cautious response to losses",
+            "strength": "moderate"
+          },
+          {
+            "type": "resilience",
+            "description": "Moderate resilience",
+            "strength": "moderate"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "strong"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "constrained",
+            "suppressed_trait": "unknown",
+            "explanation": "He seeks faster growth through equities but feels stressed when deviating from his parents' preference for fixed deposits and gold, creating tension between his investment ambitions and familial expectations."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": true,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": true
+        }
+      },
+      "axis_scores": {
+        "risk": 28,
+        "cashflow": 78,
+        "obligation": 43,
+        "context": 28,
+        "financial_capacity": 44
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 83,
+          "label": "high",
+          "reason": "Salaried employment provides predictable monthly income | Moderate income (₹75,000/mo)",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 17,
+          "label": "low",
+          "reason": "EMI ratio 6.0% — low debt burden",
+          "modifiers": [],
+          "data_available": true
+        },
+        "dependency_load": {
+          "score": 5,
+          "label": "low",
+          "reason": "Dependents not mentioned — no burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "cultural_obligation": {
+          "score": 72,
+          "label": "high",
+          "reason": "Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 7 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 50/100 → score multiplier 1.00",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "State weight calibration: defaults used"
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 48,
+          "label": "moderate",
+          "reason": "Moderate risk behavior | Cautious response to losses — moderate concern",
+          "modifiers": [
+            "State behavioral weight: 50/100 → emotional amplifier 1.00",
+            "Anxiety-driven monitoring behavior detected",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "The Disciplined Traditionalist",
+        "archetype_description": "Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed.",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "Dominant factors include familial obligation to traditional savings, peer-driven emotional investing, and latent disciplined saving behavior. The individual exhibits constrained behavior — desiring growth via equity SIPs but stressed by deviation from parental norms. Despite this, consistency in SIPs reveals underlying discipline and long-term ambition, creating a transitional state where financial capability is present but expression is moderated by social expectations. Recommended strategy: equity SIP; equity 40%, debt 60%. Increase SIP amount by 20% and allocate to a flexi-cap fund while maintaining current FD/gold holdings as a buffer",
+          "equity_range": "30-40% equity RIGHT NOW",
+          "equity_ceiling_pct": 40,
+          "guidance": [
+            "Equity exposure up to 40% appropriate",
+            "Suitable: flexi-cap, multi-cap, balanced hybrid"
+          ],
+          "advisor_note": "Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time."
+        },
+        "advisor_narrative": "Archetype: The Disciplined Traditionalist. Advisor note: Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time. Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed. Contradictions: He states a preference for faster growth via equities (evidenced by initiating SIPs in mid-cap and sectoral funds) but suppresses this ambition under familial pressure, favoring safer assets when stressed — this creates a tension where his stated risk-seeking behavior is overridden by his dominant trait of feeling 'constrained' by parental expectations, especially during market volatility. Cultural obligation burden is significant (score: 72/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 7 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "Moderate income with shared financial responsibilities",
+            "Mental earmarking of mother's gold scheme for wedding fund",
+            "Parental pressure to prioritize FDs and gold post-marriage",
+            "Consistent SIPs despite market corrections",
+            "Peer and finfluencer-driven investment decisions",
+            "Emotional stress when deviating from traditional savings expectations"
+          ],
+          "dominant_factors": [
+            "Familial obligation to traditional savings",
+            "Peer-driven emotional investing",
+            "Latent disciplined saving behavior"
+          ],
+          "secondary_factors": [
+            "Stated growth-oriented equity preference",
+            "Moderate investable capacity (₹30k–35k/month)",
+            "Medium resilience under market stress"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Seeks faster growth through equity SIPs",
+              "signal_2": "Feels stressed deviating from parental preference for FDs and gold",
+              "resolution": "Under stress, defers to parental expectations for safety, reducing effective risk tolerance",
+              "dominant_trait": "constrained"
+            }
+          ],
+          "state_inference": "Financially capable young professional whose investment behavior is culturally constrained by familial expectations despite latent discipline and growth ambitions.",
+          "decision_logic": [
+            "Investment decisions are emotionally driven by peer comparison and social validation rather than internal analysis",
+            "Cultural obligations create hidden constraints that override stated risk preferences, leading to conservative behavior during stress"
+          ]
+        },
+        "current_allocation": "30-40% equity RIGHT NOW",
+        "baseline_allocation": "0-40%",
+        "allocation_mode": "conservative",
+        "state_context": {
+          "compound_state": "growth-seeking but socially constrained",
+          "dominant_trait": "constrained",
+          "resilience_level": "medium",
+          "state_stability": "transitional"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "marriage or major life event reducing parental influence",
+          "reassessment_timeline": "12-24 months",
+          "expected_shift": "gradual increase toward baseline allocation as confidence in independent decisions grows"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "upcoming major expense"
+          ],
+          "true_risk_capacity": "Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed.",
+          "stated_vs_actual_gap": "stated preference leans toward safety (FDs/gold) due to pressure, but actual behavior shows latent growth orientation via SIPs — gap exists but is narrowing",
+          "reliability": "medium"
+        },
+        "strategy": {
+          "primary_instrument": "equity SIP",
+          "equity_pct": 40,
+          "debt_pct": 60,
+          "sip_recommended": true,
+          "first_step": "Increase SIP amount by 20% and allocate to a flexi-cap fund while maintaining current FD/gold holdings as a buffer"
+        },
+        "archetype": "The Disciplined Traditionalist",
+        "confidence": "medium",
+        "reasoning": "Dominant factors include familial obligation to traditional savings, peer-driven emotional investing, and latent disciplined saving behavior. The individual exhibits constrained behavior — desiring growth via equity SIPs but stressed by deviation from parental norms. Despite this, consistency in SIPs reveals underlying discipline and long-term ambition, creating a transitional state where financial capability is present but expression is moderated by social expectations.",
+        "advisor_note": "Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time.",
+        "warning": null,
+        "retry_count": 1,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "50-60% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          }
+        ],
+        "equity_range": "30-40% equity RIGHT NOW",
+        "true_risk_profile": "Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed."
+      },
+      "debug": {
+        "rule_fields": {
+          "monthly_income": {
+            "value": 75000,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "emi_amount": {
+            "value": 4500.0,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "income_type": {
+            "value": "salaried",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "financial_knowledge_score": {
+            "value": 3,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": "medium",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": 1.17,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "wedding",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": "During a recent 10–12% correction in mid-caps, he shifted one SIP to a 'safer' large-cap fund on the advice of a colleague but did not stop investing, indicating a cautious reaction to losses.",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": false,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": "cautious",
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 3,
+            "chosen": 3,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": "medium",
+            "chosen": "medium",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 1.17,
+            "chosen": 1.17,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "wedding",
+            "chosen": "wedding",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": "During a recent 10–12% correction in mid-caps, he shifted one SIP to a 'safer' large-cap fund on the advice of a colleague but did not stop investing, indicating a cautious reaction to losses.",
+            "chosen": "During a recent 10–12% correction in mid-caps, he shifted one SIP to a 'safer' large-cap fund on the advice of a colleague but did not stop investing, indicating a cautious reaction to losses.",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": false,
+            "chosen": false,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": "cautious",
+            "chosen": "cautious",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "monthly_income",
+            "rule_value": 75000,
+            "llm_value": null,
+            "chosen": 75000,
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "emi_amount",
+            "rule_value": 4500.0,
+            "llm_value": null,
+            "chosen": 4500.0,
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "salaried",
+            "llm_value": null,
+            "chosen": "salaried",
+            "source": "rule",
+            "reason": "rule-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income: 'earning about 9 lpa' → 75000 (9.0 LPA/12)",
+          "Rule EMI: 'emi of ₹4,500,' → 4500.0",
+          "Rule income_type: LPA → salaried"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "financial_knowledge_score": "llm",
+          "risk_behavior": "llm",
+          "dependents": "default",
+          "near_term_obligation_level": "llm",
+          "experience_years": "llm",
+          "obligation_type": "llm",
+          "loss_reaction_description": "llm",
+          "decision_autonomy": "llm",
+          "loss_reaction": "llm",
+          "monthly_income": "rule",
+          "emi_amount": "rule",
+          "income_type": "rule",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "emi_ratio=6.00% = emi(4500.0) / income(75000.0) × 100",
+          "future_obligation_score=10.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "emergency_months",
+          "dependents"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "Cautious loss response — moderate-low risk appetite."
+          ],
+          "cashflow": [
+            "Salaried: stable income base.",
+            "Moderate income ₹75,000/mo: +8."
+          ],
+          "obligation": [
+            "EMI ratio 6.0%: low burden.",
+            "Moderate near-term obligation (wedding).",
+            "Cultural obligation: His parents expect him to prioritize buying a small flat aft.",
+            "Hidden obligations detected."
+          ],
+          "context": [
+            "1.2yr experience: +6.",
+            "Knowledge score 3/5: +10.",
+            "Peer/family-influenced decisions: -5.",
+            "High peer influence (signals): -8."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "wedding",
+            "timeline": "mid",
+            "scale": "medium",
+            "matched": "wedding"
+          }
+        ],
+        "future_obligation_score": 10.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "50-60% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+              "field": "baseline_allocation",
+              "before": "50-60% equity long-term",
+              "after": "0-40%",
+              "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "50-60% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "Dominant factors include familial obligation to traditional savings, peer-driven emotional investing, and latent disciplined saving behavior. The individual exhibits constrained behavior — desiring growth via equity SIPs but stressed by deviation from parental norms. Despite this, consistency in SIPs reveals underlying discipline and long-term ambition, creating a transitional state where financial capability is present but expression is moderated by social expectations.",
+      "confidence_score": 40.0,
+      "data_completeness": 80.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "The Disciplined Traditionalist",
+    "equity_range": "30-40% equity RIGHT NOW",
+    "advisor_note": "Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "salaried",
+        "monthly_income": 75000.0,
+        "city_tier": "tier2",
+        "employment_stability": "stable"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": 4500.0,
+        "emi_ratio": 6.0,
+        "dependents": null
+      },
+      "experience": {
+        "experience_years": 1.17,
+        "financial_knowledge_score": 3,
+        "decision_autonomy": false
+      },
+      "behavioral": {
+        "loss_reaction": "cautious",
+        "risk_behavior": "medium",
+        "resilience_level": "medium",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "wedding",
+        "future_obligation_score": 10.0
+      },
+      "life_events": [
+        {
+          "type": "marriage",
+          "description": "marriage event detected",
+          "recency": "unknown",
+          "emotional_weight": "medium"
+        }
+      ],
+      "cultural_signals": [
+        {
+          "type": "hidden_obligation",
+          "description": "His parents expect him to prioritize buying a small flat after marriage and view equities as risky, creating pressure to conform to traditional savings preferences.",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "hidden_obligation",
+          "description": "He mentally counts his mother's gold jewellery scheme as part of his wedding fund, indicating an unspoken familial obligation to allocate those assets toward marriage.",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "anxiety",
+          "description": "Cautious response to losses",
+          "strength": "moderate"
+        },
+        {
+          "type": "resilience",
+          "description": "Moderate resilience",
+          "strength": "moderate"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "strong"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "constrained",
+          "suppressed_trait": "unknown",
+          "explanation": "He seeks faster growth through equities but feels stressed when deviating from his parents' preference for fixed deposits and gold, creating tension between his investment ambitions and familial expectations."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": true,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": true
+      }
+    },
+    "axis_scores": {
+      "risk": 28,
+      "cashflow": 78,
+      "obligation": 43,
+      "context": 28,
+      "financial_capacity": 44
+    },
+    "cross_axis": {
+      "archetype": "The Disciplined Traditionalist",
+      "archetype_description": "Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed.",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "Dominant factors include familial obligation to traditional savings, peer-driven emotional investing, and latent disciplined saving behavior. The individual exhibits constrained behavior — desiring growth via equity SIPs but stressed by deviation from parental norms. Despite this, consistency in SIPs reveals underlying discipline and long-term ambition, creating a transitional state where financial capability is present but expression is moderated by social expectations. Recommended strategy: equity SIP; equity 40%, debt 60%. Increase SIP amount by 20% and allocate to a flexi-cap fund while maintaining current FD/gold holdings as a buffer",
+        "equity_range": "30-40% equity RIGHT NOW",
+        "equity_ceiling_pct": 40,
+        "guidance": [
+          "Equity exposure up to 40% appropriate",
+          "Suitable: flexi-cap, multi-cap, balanced hybrid"
+        ],
+        "advisor_note": "Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time."
+      },
+      "advisor_narrative": "Archetype: The Disciplined Traditionalist. Advisor note: Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time. Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed. Contradictions: He states a preference for faster growth via equities (evidenced by initiating SIPs in mid-cap and sectoral funds) but suppresses this ambition under familial pressure, favoring safer assets when stressed — this creates a tension where his stated risk-seeking behavior is overridden by his dominant trait of feeling 'constrained' by parental expectations, especially during market volatility. Cultural obligation burden is significant (score: 72/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 7 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "Moderate income with shared financial responsibilities",
+          "Mental earmarking of mother's gold scheme for wedding fund",
+          "Parental pressure to prioritize FDs and gold post-marriage",
+          "Consistent SIPs despite market corrections",
+          "Peer and finfluencer-driven investment decisions",
+          "Emotional stress when deviating from traditional savings expectations"
+        ],
+        "dominant_factors": [
+          "Familial obligation to traditional savings",
+          "Peer-driven emotional investing",
+          "Latent disciplined saving behavior"
+        ],
+        "secondary_factors": [
+          "Stated growth-oriented equity preference",
+          "Moderate investable capacity (₹30k–35k/month)",
+          "Medium resilience under market stress"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Seeks faster growth through equity SIPs",
+            "signal_2": "Feels stressed deviating from parental preference for FDs and gold",
+            "resolution": "Under stress, defers to parental expectations for safety, reducing effective risk tolerance",
+            "dominant_trait": "constrained"
+          }
+        ],
+        "state_inference": "Financially capable young professional whose investment behavior is culturally constrained by familial expectations despite latent discipline and growth ambitions.",
+        "decision_logic": [
+          "Investment decisions are emotionally driven by peer comparison and social validation rather than internal analysis",
+          "Cultural obligations create hidden constraints that override stated risk preferences, leading to conservative behavior during stress"
+        ]
+      },
+      "current_allocation": "30-40% equity RIGHT NOW",
+      "baseline_allocation": "0-40%",
+      "allocation_mode": "conservative",
+      "state_context": {
+        "compound_state": "growth-seeking but socially constrained",
+        "dominant_trait": "constrained",
+        "resilience_level": "medium",
+        "state_stability": "transitional"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "marriage or major life event reducing parental influence",
+        "reassessment_timeline": "12-24 months",
+        "expected_shift": "gradual increase toward baseline allocation as confidence in independent decisions grows"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "upcoming major expense"
+        ],
+        "true_risk_capacity": "Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed.",
+        "stated_vs_actual_gap": "stated preference leans toward safety (FDs/gold) due to pressure, but actual behavior shows latent growth orientation via SIPs — gap exists but is narrowing",
+        "reliability": "medium"
+      },
+      "strategy": {
+        "primary_instrument": "equity SIP",
+        "equity_pct": 40,
+        "debt_pct": 60,
+        "sip_recommended": true,
+        "first_step": "Increase SIP amount by 20% and allocate to a flexi-cap fund while maintaining current FD/gold holdings as a buffer"
+      },
+      "archetype": "The Disciplined Traditionalist",
+      "confidence": "medium",
+      "reasoning": "Dominant factors include familial obligation to traditional savings, peer-driven emotional investing, and latent disciplined saving behavior. The individual exhibits constrained behavior — desiring growth via equity SIPs but stressed by deviation from parental norms. Despite this, consistency in SIPs reveals underlying discipline and long-term ambition, creating a transitional state where financial capability is present but expression is moderated by social expectations.",
+      "advisor_note": "Do not force rapid deviation from comfort zone; gradual, visible progress in SIPs can build familial trust over time.",
+      "warning": null,
+      "retry_count": 1,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+          "field": "baseline_allocation",
+          "before": "50-60% equity long-term",
+          "after": "0-40%",
+          "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+        }
+      ],
+      "equity_range": "30-40% equity RIGHT NOW",
+      "true_risk_profile": "Despite familial pressure, the individual maintains consistent SIPs indicating underlying capacity to absorb market volatility and save regularly; true risk capacity is moderate to high, but behavioral expression is suppressed."
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 40.0,
+    "data_completeness": 80.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

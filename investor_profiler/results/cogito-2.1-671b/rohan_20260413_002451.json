@@ -1,0 +1,765 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Financially Vulnerable Spender. The individual exhibits dangerous financial behaviors including high discretionary spending with no savings, overconfidence without financial literacy, and panic responses to losses. With impending major financial commitments and inconsistent income, any market investment would be inappropriate. The priority must be establishing basic financial stability before considering investments. WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first. Recommended equity range: 0-0% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "income instability",
+      "no savings",
+      "upcoming major expense",
+      "no investment experience",
+      "Education-first approach required before complex instruments",
+      "Prioritize liquidity — avoid long lock-in products",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "Dominant trait 'panic' overrides his stated long-term goals, as evidenced by complete lack of action toward financial planning despite aspirations. His desire for independence in financial decisions conflicts with his low financial literacy and analytical capabilities. Profile is highly unstable and emotionally distorted by youthful optimism and social influences. His financial self-assessment is unreliable due to inexperience, lack of knowledge, and failure to account for the true cost of his planned lifestyle changes.",
+    "recommended_actions": [
+      "Open and fund a dedicated emergency savings account with minimum 1 month's expenses (suggest $X) within 30 days"
+    ],
+    "do_not_recommend": [
+      "No equity exposure recommended at this time"
+    ],
+    "completeness_note": "Profile completeness is moderate (40%). Some fields were inferred or unavailable.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "gig",
+          "monthly_income": null,
+          "city_tier": "unknown",
+          "employment_stability": "volatile"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": null,
+          "emi_ratio": null,
+          "dependents": null
+        },
+        "experience": {
+          "experience_years": 0.0,
+          "financial_knowledge_score": 1,
+          "decision_autonomy": true
+        },
+        "behavioral": {
+          "loss_reaction": null,
+          "risk_behavior": null,
+          "resilience_level": "low",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "house",
+          "future_obligation_score": 5.0
+        },
+        "life_events": [],
+        "cultural_signals": [],
+        "behavioral_signals": [
+          {
+            "type": "fear",
+            "description": "Panic response to portfolio losses",
+            "strength": "strong"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "moderate"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "panic",
+            "suppressed_trait": "unknown",
+            "explanation": "Expresses long-term financial goals but lacks any current financial discipline or planning to achieve them."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": false,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": false
+        }
+      },
+      "axis_scores": {
+        "risk": null,
+        "cashflow": 35,
+        "obligation": 15,
+        "context": 32,
+        "financial_capacity": 30
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 30,
+          "label": "low",
+          "reason": "Gig/freelance income — high volatility, no employer safety net",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 5,
+          "label": "low",
+          "reason": "No debt data — minimal burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "dependency_load": {
+          "score": 5,
+          "label": "low",
+          "reason": "Dependents not mentioned — no burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "cultural_obligation": {
+          "score": 36,
+          "label": "moderate",
+          "reason": "Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Future financial commitment detected — adds 4 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 85/100 → score multiplier 1.28",
+            "State weight calibration: Rohan's impending major financial commitments and lack of savings create high obligation burden, while his impulsive spending and overconfidence indicate severe behavioral risks, compounded by unstable income that could quickly lead to financial distress."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 24,
+          "label": "low",
+          "reason": "",
+          "modifiers": [
+            "State behavioral weight: 90/100 → emotional amplifier 1.40",
+            "Strong fear/panic signal — behavioral risk floored at 10",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Financially Vulnerable Spender",
+        "archetype_description": "Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses.",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "The individual exhibits dangerous financial behaviors including high discretionary spending with no savings, overconfidence without financial literacy, and panic responses to losses. With impending major financial commitments and inconsistent income, any market investment would be inappropriate. The priority must be establishing basic financial stability before considering investments. Recommended strategy: high-yield savings account / liquid fund; equity 0%, debt 0%. Open and fund a dedicated emergency savings account with minimum 1 month's expenses (suggest $X) within 30 days",
+          "equity_range": "0-0% equity RIGHT NOW",
+          "equity_ceiling_pct": 0,
+          "guidance": [
+            "No equity exposure recommended at this time",
+            "Focus: debt reduction, emergency fund, insurance"
+          ],
+          "advisor_note": "WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first."
+        },
+        "advisor_narrative": "Archetype: Financially Vulnerable Spender. Advisor note: WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first. Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses. Contradictions: Dominant trait 'panic' overrides his stated long-term goals, as evidenced by complete lack of action toward financial planning despite aspirations. His desire for independence in financial decisions conflicts with his low financial literacy and analytical capabilities. Cultural obligation burden is significant (score: 36/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Future financial commitment detected — adds 4 pts to obligation burden",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Prioritize liquidity — avoid long lock-in products",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "high discretionary spending with no savings",
+            "impending major financial commitments",
+            "low financial literacy with overconfidence",
+            "panic response to losses",
+            "inconsistent income with high planned expenses",
+            "social status-driven spending"
+          ],
+          "dominant_factors": [
+            "No financial safety net",
+            "Impulsive spending habits",
+            "Overconfidence without knowledge"
+          ],
+          "secondary_factors": [
+            "Medium peer influence",
+            "Stated long-term goals",
+            "Low current obligations"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Stated goal of financial stability",
+              "signal_2": "No current savings or financial planning",
+              "resolution": "Behavior contradicts stated intentions",
+              "dominant_trait": "Present bias over future goals"
+            },
+            {
+              "signal_1": "Panic response to losses",
+              "signal_2": "Planning high-leverage purchases",
+              "resolution": "Risk exposure conflicts with low resilience",
+              "dominant_trait": "Impulsive decision-making"
+            }
+          ],
+          "state_inference": "A financially vulnerable individual whose lack of planning and high-risk spending patterns create severe exposure to upcoming financial commitments.",
+          "decision_logic": [
+            "Current spending patterns are unsustainable for planned lifestyle upgrades",
+            "Behavioral traits suggest high likelihood of poor financial decisions under stress"
+          ]
+        },
+        "current_allocation": "0-0% equity RIGHT NOW",
+        "baseline_allocation": "5-15%",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "financial vulnerability with impulsive spending",
+          "dominant_trait": "inconsistent",
+          "resilience_level": "low",
+          "state_stability": "unstable"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "establishment of 6-month emergency fund and stable income pattern",
+          "reassessment_timeline": "12-18 months",
+          "expected_shift": "none until basic financial stability is achieved"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "income instability",
+            "no savings",
+            "upcoming major expense",
+            "no investment experience"
+          ],
+          "true_risk_capacity": "Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses.",
+          "stated_vs_actual_gap": "Significant gap between stated goal of financial stability and actual financial behaviors",
+          "reliability": "low"
+        },
+        "strategy": {
+          "primary_instrument": "high-yield savings account / liquid fund",
+          "equity_pct": 0,
+          "debt_pct": 0,
+          "sip_recommended": false,
+          "first_step": "Open and fund a dedicated emergency savings account with minimum 1 month's expenses (suggest $X) within 30 days"
+        },
+        "archetype": "Financially Vulnerable Spender",
+        "confidence": "high",
+        "reasoning": "The individual exhibits dangerous financial behaviors including high discretionary spending with no savings, overconfidence without financial literacy, and panic responses to losses. With impending major financial commitments and inconsistent income, any market investment would be inappropriate. The priority must be establishing basic financial stability before considering investments.",
+        "advisor_note": "WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R4_TRANSITIONAL_ORDERING",
+            "field": "baseline_allocation",
+            "before": "0-0% equity long-term",
+            "after": "5-15%",
+            "reason": "shift_detected=True — baseline_allocation must exceed current_allocation to reflect true long-term capacity beyond the current transitional state."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-0% equity RIGHT NOW) ≠ baseline_allocation (5-15%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0-0% equity RIGHT NOW",
+        "true_risk_profile": "Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses."
+      },
+      "debug": {
+        "rule_fields": {
+          "income_type": {
+            "value": "gig",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": 0.0,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": true,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 1,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "house",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "gig",
+            "llm_value": null,
+            "chosen": "gig",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 0.0,
+            "chosen": 0.0,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": true,
+            "chosen": true,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 1,
+            "chosen": 1,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "house",
+            "chosen": "house",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          }
+        ],
+        "rule_log": [
+          "Rule income_type: gig signal"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "near_term_obligation_level": "llm",
+          "income_type": "rule",
+          "dependents": "default",
+          "experience_years": "llm",
+          "decision_autonomy": "llm",
+          "financial_knowledge_score": "llm",
+          "loss_reaction": "default",
+          "loss_reaction_description": "default",
+          "obligation_type": "llm",
+          "risk_behavior": "default",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "future_obligation_score=5.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "monthly_income",
+          "emergency_months",
+          "emi_amount",
+          "dependents",
+          "loss_reaction",
+          "risk_behavior"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "No behavioral data — risk axis cannot be scored."
+          ],
+          "cashflow": [
+            "Gig income: high volatility.",
+            "Low financial pressure (signals): +5."
+          ],
+          "obligation": [
+            "Moderate near-term obligation (house)."
+          ],
+          "context": [
+            "<1yr experience: novice.",
+            "Knowledge score 1/5: +0.",
+            "Independent decision-making: +10.",
+            "Medium peer influence (signals): -3."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "travel",
+            "timeline": "near",
+            "scale": "low",
+            "matched": "travel"
+          }
+        ],
+        "future_obligation_score": 5.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R4_TRANSITIONAL_ORDERING",
+            "field": "baseline_allocation",
+            "before": "0-0% equity long-term",
+            "after": "5-15%",
+            "reason": "shift_detected=True — baseline_allocation must exceed current_allocation to reflect true long-term capacity beyond the current transitional state."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-0% equity RIGHT NOW) ≠ baseline_allocation (5-15%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R4_TRANSITIONAL_ORDERING",
+              "field": "baseline_allocation",
+              "before": "0-0% equity long-term",
+              "after": "5-15%",
+              "reason": "shift_detected=True — baseline_allocation must exceed current_allocation to reflect true long-term capacity beyond the current transitional state."
+            },
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "defensive",
+              "after": "transitional",
+              "reason": "current_allocation (0-0% equity RIGHT NOW) ≠ baseline_allocation (5-15%) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R4_TRANSITIONAL_ORDERING",
+            "field": "baseline_allocation",
+            "before": "0-0% equity long-term",
+            "after": "5-15%",
+            "reason": "shift_detected=True — baseline_allocation must exceed current_allocation to reflect true long-term capacity beyond the current transitional state."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-0% equity RIGHT NOW) ≠ baseline_allocation (5-15%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "The individual exhibits dangerous financial behaviors including high discretionary spending with no savings, overconfidence without financial literacy, and panic responses to losses. With impending major financial commitments and inconsistent income, any market investment would be inappropriate. The priority must be establishing basic financial stability before considering investments.",
+      "confidence_score": 29.0,
+      "data_completeness": 40.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Prioritize liquidity — avoid long lock-in products",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "Financially Vulnerable Spender",
+    "equity_range": "0-0% equity RIGHT NOW",
+    "advisor_note": "WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "gig",
+        "monthly_income": null,
+        "city_tier": "unknown",
+        "employment_stability": "volatile"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": null,
+        "emi_ratio": null,
+        "dependents": null
+      },
+      "experience": {
+        "experience_years": 0.0,
+        "financial_knowledge_score": 1,
+        "decision_autonomy": true
+      },
+      "behavioral": {
+        "loss_reaction": null,
+        "risk_behavior": null,
+        "resilience_level": "low",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "house",
+        "future_obligation_score": 5.0
+      },
+      "life_events": [],
+      "cultural_signals": [],
+      "behavioral_signals": [
+        {
+          "type": "fear",
+          "description": "Panic response to portfolio losses",
+          "strength": "strong"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "moderate"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "panic",
+          "suppressed_trait": "unknown",
+          "explanation": "Expresses long-term financial goals but lacks any current financial discipline or planning to achieve them."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": false,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": false
+      }
+    },
+    "axis_scores": {
+      "risk": null,
+      "cashflow": 35,
+      "obligation": 15,
+      "context": 32,
+      "financial_capacity": 30
+    },
+    "cross_axis": {
+      "archetype": "Financially Vulnerable Spender",
+      "archetype_description": "Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses.",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "The individual exhibits dangerous financial behaviors including high discretionary spending with no savings, overconfidence without financial literacy, and panic responses to losses. With impending major financial commitments and inconsistent income, any market investment would be inappropriate. The priority must be establishing basic financial stability before considering investments. Recommended strategy: high-yield savings account / liquid fund; equity 0%, debt 0%. Open and fund a dedicated emergency savings account with minimum 1 month's expenses (suggest $X) within 30 days",
+        "equity_range": "0-0% equity RIGHT NOW",
+        "equity_ceiling_pct": 0,
+        "guidance": [
+          "No equity exposure recommended at this time",
+          "Focus: debt reduction, emergency fund, insurance"
+        ],
+        "advisor_note": "WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first."
+      },
+      "advisor_narrative": "Archetype: Financially Vulnerable Spender. Advisor note: WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first. Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses. Contradictions: Dominant trait 'panic' overrides his stated long-term goals, as evidenced by complete lack of action toward financial planning despite aspirations. His desire for independence in financial decisions conflicts with his low financial literacy and analytical capabilities. Cultural obligation burden is significant (score: 36/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Future financial commitment detected — adds 4 pts to obligation burden",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Prioritize liquidity — avoid long lock-in products",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "high discretionary spending with no savings",
+          "impending major financial commitments",
+          "low financial literacy with overconfidence",
+          "panic response to losses",
+          "inconsistent income with high planned expenses",
+          "social status-driven spending"
+        ],
+        "dominant_factors": [
+          "No financial safety net",
+          "Impulsive spending habits",
+          "Overconfidence without knowledge"
+        ],
+        "secondary_factors": [
+          "Medium peer influence",
+          "Stated long-term goals",
+          "Low current obligations"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Stated goal of financial stability",
+            "signal_2": "No current savings or financial planning",
+            "resolution": "Behavior contradicts stated intentions",
+            "dominant_trait": "Present bias over future goals"
+          },
+          {
+            "signal_1": "Panic response to losses",
+            "signal_2": "Planning high-leverage purchases",
+            "resolution": "Risk exposure conflicts with low resilience",
+            "dominant_trait": "Impulsive decision-making"
+          }
+        ],
+        "state_inference": "A financially vulnerable individual whose lack of planning and high-risk spending patterns create severe exposure to upcoming financial commitments.",
+        "decision_logic": [
+          "Current spending patterns are unsustainable for planned lifestyle upgrades",
+          "Behavioral traits suggest high likelihood of poor financial decisions under stress"
+        ]
+      },
+      "current_allocation": "0-0% equity RIGHT NOW",
+      "baseline_allocation": "5-15%",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "financial vulnerability with impulsive spending",
+        "dominant_trait": "inconsistent",
+        "resilience_level": "low",
+        "state_stability": "unstable"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "establishment of 6-month emergency fund and stable income pattern",
+        "reassessment_timeline": "12-18 months",
+        "expected_shift": "none until basic financial stability is achieved"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "income instability",
+          "no savings",
+          "upcoming major expense",
+          "no investment experience"
+        ],
+        "true_risk_capacity": "Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses.",
+        "stated_vs_actual_gap": "Significant gap between stated goal of financial stability and actual financial behaviors",
+        "reliability": "low"
+      },
+      "strategy": {
+        "primary_instrument": "high-yield savings account / liquid fund",
+        "equity_pct": 0,
+        "debt_pct": 0,
+        "sip_recommended": false,
+        "first_step": "Open and fund a dedicated emergency savings account with minimum 1 month's expenses (suggest $X) within 30 days"
+      },
+      "archetype": "Financially Vulnerable Spender",
+      "confidence": "high",
+      "reasoning": "The individual exhibits dangerous financial behaviors including high discretionary spending with no savings, overconfidence without financial literacy, and panic responses to losses. With impending major financial commitments and inconsistent income, any market investment would be inappropriate. The priority must be establishing basic financial stability before considering investments.",
+      "advisor_note": "WARNING: Any market investment at this stage would be extremely risky given the complete lack of financial safety net and impulsive spending patterns. Focus exclusively on building emergency savings first.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R4_TRANSITIONAL_ORDERING",
+          "field": "baseline_allocation",
+          "before": "0-0% equity long-term",
+          "after": "5-15%",
+          "reason": "shift_detected=True — baseline_allocation must exceed current_allocation to reflect true long-term capacity beyond the current transitional state."
+        },
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "defensive",
+          "after": "transitional",
+          "reason": "current_allocation (0-0% equity RIGHT NOW) ≠ baseline_allocation (5-15%) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0-0% equity RIGHT NOW",
+      "true_risk_profile": "Extremely low due to zero safety net, inconsistent income, and impending financial commitments. Cannot afford any investment losses."
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Prioritize liquidity — avoid long lock-in products",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 29.0,
+    "data_completeness": 40.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

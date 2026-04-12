@@ -1,0 +1,765 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Anxious Provider. The combination of income volatility, family financial responsibility, and panic responses to losses indicates severely constrained risk capacity. Business expansion plans are contradicted by low financial resilience and anxiety-driven decision making. Current priority must be building financial stability before considering growth investments. Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions. Recommended equity range: 0-10% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "income instability",
+      "no savings",
+      "upcoming major expense",
+      "Education-first approach required before complex instruments",
+      "Profile contradictions detected — verify before recommending"
+    ],
+    "bias_summary": "Her ambition to expand her business conflicts with her low financial confidence and inconsistent investment behavior, with panic dominating over any suppressed risk-taking tendencies during stressful periods. Profile shows moderate instability due to emotional decision-making and recent peer-influenced investment behavior; financial picture is likely accurate but decision patterns may shift under stress or new influences.",
+    "recommended_actions": [
+      "Build emergency fund covering 6 months of expenses in liquid FD before any investments",
+      "Build emergency fund to minimum 3 months",
+      "Reduce highest-interest debt first",
+      "Stabilize income before any investment commitment"
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness: 70%.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "business",
+          "monthly_income": null,
+          "city_tier": "tier2",
+          "employment_stability": "moderate"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": null,
+          "emi_ratio": null,
+          "dependents": 3
+        },
+        "experience": {
+          "experience_years": 0.0,
+          "financial_knowledge_score": 2,
+          "decision_autonomy": false
+        },
+        "behavioral": {
+          "loss_reaction": "cautious",
+          "risk_behavior": "low",
+          "resilience_level": "low",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "house",
+          "future_obligation_score": 10.0
+        },
+        "life_events": [],
+        "cultural_signals": [
+          {
+            "type": "family_role",
+            "description": "Primary financial provider — family dependent on this investor",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "family_role",
+            "description": "Financially supports parents occasionally and relies on family for financial advice.",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "hidden_obligation",
+            "description": "Informal borrowing from family during low-income months.",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "fear",
+            "description": "Panic response to portfolio losses",
+            "strength": "strong"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "strong"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "panic",
+            "suppressed_trait": "unknown",
+            "explanation": "Wants to expand business but lacks financial confidence and consistency in investments."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": true,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": false
+        }
+      },
+      "axis_scores": {
+        "risk": 7,
+        "cashflow": 55,
+        "obligation": 63,
+        "context": 17,
+        "financial_capacity": 20
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 55,
+          "label": "moderate",
+          "reason": "Business income — moderate predictability, cyclical risk",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 5,
+          "label": "low",
+          "reason": "No debt data — minimal burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "dependency_load": {
+          "score": 60,
+          "label": "moderate",
+          "reason": "3 dependents — high load",
+          "modifiers": [],
+          "data_available": true
+        },
+        "cultural_obligation": {
+          "score": 100,
+          "label": "high",
+          "reason": "Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Family role obligation (Primary financial provider — family dependent on this investor) — financial responsibility extends beyond nuclear family | Family role obligation (Financially supports parents occasionally and relies on family for financial advice.) — financial responsibility extends beyond nuclear family | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 9 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 85/100 → score multiplier 1.28",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "State weight calibration: High income volatility and family obligations create significant constraints, while severe financial anxiety and panic responses substantially increase behavioral risks."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 24,
+          "label": "low",
+          "reason": "Low risk behavior — conservative orientation | Cautious response to losses — moderate concern",
+          "modifiers": [
+            "State behavioral weight: 90/100 → emotional amplifier 1.40",
+            "Strong fear/panic signal — behavioral risk floored at 10",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Anxious Provider",
+        "archetype_description": "Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress.",
+        "mismatch": null,
+        "binding_constraint": {
+          "type": "financial_capacity",
+          "description": "Financial capacity (20/99) is critically low. Investment discussion is premature — financial stability must come first.",
+          "priority_actions": [
+            "Build emergency fund to minimum 3 months",
+            "Reduce highest-interest debt first",
+            "Stabilize income before any investment commitment"
+          ]
+        },
+        "suitability": {
+          "classification": "The combination of income volatility, family financial responsibility, and panic responses to losses indicates severely constrained risk capacity. Business expansion plans are contradicted by low financial resilience and anxiety-driven decision making. Current priority must be building financial stability before considering growth investments. Recommended strategy: liquid fund / FD; equity 5%, debt 95%. Build emergency fund covering 6 months of expenses in liquid FD before any investments",
+          "equity_range": "0-10% equity RIGHT NOW",
+          "equity_ceiling_pct": 10,
+          "guidance": [
+            "Maximum equity exposure: 10% (large-cap only)",
+            "Suitable: liquid funds, short-duration debt funds, FD"
+          ],
+          "advisor_note": "Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions."
+        },
+        "advisor_narrative": "Archetype: Anxious Provider. Advisor note: Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions. Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress. Contradictions: Her ambition to expand her business conflicts with her low financial confidence and inconsistent investment behavior, with panic dominating over any suppressed risk-taking tendencies during stressful periods. Financial capacity (20/99) is critically low. Investment discussion is premature — financial stability must come first. Cultural obligation burden is significant (score: 100/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Family role obligation (Primary financial provider — family dependent on this investor) — financial responsibility extends beyond nuclear family | Family role obligation (Financially supports parents occasionally and relies on family for financial advice.) — financial responsibility extends beyond nuclear family | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 9 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Profile contradictions detected — verify before recommending"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "income volatility",
+            "family financial responsibility",
+            "low financial resilience",
+            "panic responses to losses",
+            "business expansion plans",
+            "informal borrowing"
+          ],
+          "dominant_factors": [
+            "seasonal income fluctuations",
+            "primary family provider",
+            "high financial anxiety"
+          ],
+          "secondary_factors": [
+            "business growth aspirations",
+            "medium-term financial obligations"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "business expansion plans",
+              "signal_2": "panic responses to market losses",
+              "resolution": "expansion ambitions suppressed by risk aversion",
+              "dominant_trait": "financial anxiety"
+            }
+          ],
+          "state_inference": "A financially stretched entrepreneur whose risk capacity is severely constrained by income volatility and family obligations, leading to anxiety-driven financial decisions.",
+          "decision_logic": [
+            "Income instability creates fundamental constraints on investment capacity",
+            "Emotional responses override rational financial planning during stress"
+          ]
+        },
+        "current_allocation": "0-10% equity RIGHT NOW",
+        "baseline_allocation": "20-30% equity long-term",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "financially stretched entrepreneur",
+          "dominant_trait": "panic",
+          "resilience_level": "low",
+          "state_stability": "unstable"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "6 months of stable income and emergency fund covering 6 months expenses",
+          "reassessment_timeline": "6-12 months",
+          "expected_shift": "gradual increase to baseline allocation once financial stability improves"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "income instability",
+            "no savings",
+            "upcoming major expense"
+          ],
+          "true_risk_capacity": "Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress.",
+          "stated_vs_actual_gap": "Likely overestimates risk capacity due to business expansion ambitions despite current constraints",
+          "reliability": "high"
+        },
+        "strategy": {
+          "primary_instrument": "liquid fund / FD",
+          "equity_pct": 5,
+          "debt_pct": 95,
+          "sip_recommended": false,
+          "first_step": "Build emergency fund covering 6 months of expenses in liquid FD before any investments"
+        },
+        "archetype": "Anxious Provider",
+        "confidence": "high",
+        "reasoning": "The combination of income volatility, family financial responsibility, and panic responses to losses indicates severely constrained risk capacity. Business expansion plans are contradicted by low financial resilience and anxiety-driven decision making. Current priority must be building financial stability before considering growth investments.",
+        "advisor_note": "Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0-10% equity RIGHT NOW",
+        "true_risk_profile": "Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress."
+      },
+      "debug": {
+        "rule_fields": {
+          "income_type": {
+            "value": "business",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "experience_years": {
+            "value": 0.0,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": 3,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 2,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "house",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": "Pauses SIP contributions during business income drops and becomes worried when hearing about losses from others, preferring 'safe' options suggested by family.",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": "cautious",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": "low",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": false,
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 0.0,
+            "chosen": 0.0,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": 3,
+            "chosen": 3,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 2,
+            "chosen": 2,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "house",
+            "chosen": "house",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": "Pauses SIP contributions during business income drops and becomes worried when hearing about losses from others, preferring 'safe' options suggested by family.",
+            "chosen": "Pauses SIP contributions during business income drops and becomes worried when hearing about losses from others, preferring 'safe' options suggested by family.",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": "cautious",
+            "chosen": "cautious",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "business",
+            "llm_value": null,
+            "chosen": "business",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": "low",
+            "chosen": "low",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": false,
+            "chosen": false,
+            "source": "llm",
+            "reason": "llm-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income_type: business signal"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "experience_years": "llm",
+          "dependents": "llm",
+          "near_term_obligation_level": "llm",
+          "financial_knowledge_score": "llm",
+          "obligation_type": "llm",
+          "loss_reaction_description": "llm",
+          "loss_reaction": "llm",
+          "income_type": "rule",
+          "risk_behavior": "llm",
+          "decision_autonomy": "llm",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "future_obligation_score=10.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "monthly_income",
+          "emergency_months",
+          "emi_amount"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "Panic loss response — risk appetite severely suppressed.",
+            "Low resilience: -5."
+          ],
+          "cashflow": [
+            "Business income: moderate stability."
+          ],
+          "obligation": [
+            "3 dependents: high load.",
+            "Moderate near-term obligation (house).",
+            "Cultural obligation: Financially supports parents occasionally and relies on fami.",
+            "Hidden obligations detected.",
+            "Primary provider with dependents: +8."
+          ],
+          "context": [
+            "<1yr experience: novice.",
+            "Knowledge score 2/5: +5.",
+            "Peer/family-influenced decisions: -5.",
+            "High peer influence (signals): -8."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "education",
+            "timeline": "near",
+            "scale": "medium",
+            "matched": "child's education"
+          },
+          {
+            "type": "wedding",
+            "timeline": "mid",
+            "scale": "medium",
+            "matched": "wedding"
+          }
+        ],
+        "future_obligation_score": 10.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "defensive",
+              "after": "transitional",
+              "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "The combination of income volatility, family financial responsibility, and panic responses to losses indicates severely constrained risk capacity. Business expansion plans are contradicted by low financial resilience and anxiety-driven decision making. Current priority must be building financial stability before considering growth investments.",
+      "confidence_score": 45.0,
+      "data_completeness": 70.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Profile contradictions detected — verify before recommending"
+      ]
+    },
+    "archetype": "Anxious Provider",
+    "equity_range": "0-10% equity RIGHT NOW",
+    "advisor_note": "Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "business",
+        "monthly_income": null,
+        "city_tier": "tier2",
+        "employment_stability": "moderate"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": null,
+        "emi_ratio": null,
+        "dependents": 3
+      },
+      "experience": {
+        "experience_years": 0.0,
+        "financial_knowledge_score": 2,
+        "decision_autonomy": false
+      },
+      "behavioral": {
+        "loss_reaction": "cautious",
+        "risk_behavior": "low",
+        "resilience_level": "low",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "house",
+        "future_obligation_score": 10.0
+      },
+      "life_events": [],
+      "cultural_signals": [
+        {
+          "type": "family_role",
+          "description": "Primary financial provider — family dependent on this investor",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "family_role",
+          "description": "Financially supports parents occasionally and relies on family for financial advice.",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "hidden_obligation",
+          "description": "Informal borrowing from family during low-income months.",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "fear",
+          "description": "Panic response to portfolio losses",
+          "strength": "strong"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "strong"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "panic",
+          "suppressed_trait": "unknown",
+          "explanation": "Wants to expand business but lacks financial confidence and consistency in investments."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": true,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": false
+      }
+    },
+    "axis_scores": {
+      "risk": 7,
+      "cashflow": 55,
+      "obligation": 63,
+      "context": 17,
+      "financial_capacity": 20
+    },
+    "cross_axis": {
+      "archetype": "Anxious Provider",
+      "archetype_description": "Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress.",
+      "mismatch": null,
+      "binding_constraint": {
+        "type": "financial_capacity",
+        "description": "Financial capacity (20/99) is critically low. Investment discussion is premature — financial stability must come first.",
+        "priority_actions": [
+          "Build emergency fund to minimum 3 months",
+          "Reduce highest-interest debt first",
+          "Stabilize income before any investment commitment"
+        ]
+      },
+      "suitability": {
+        "classification": "The combination of income volatility, family financial responsibility, and panic responses to losses indicates severely constrained risk capacity. Business expansion plans are contradicted by low financial resilience and anxiety-driven decision making. Current priority must be building financial stability before considering growth investments. Recommended strategy: liquid fund / FD; equity 5%, debt 95%. Build emergency fund covering 6 months of expenses in liquid FD before any investments",
+        "equity_range": "0-10% equity RIGHT NOW",
+        "equity_ceiling_pct": 10,
+        "guidance": [
+          "Maximum equity exposure: 10% (large-cap only)",
+          "Suitable: liquid funds, short-duration debt funds, FD"
+        ],
+        "advisor_note": "Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions."
+      },
+      "advisor_narrative": "Archetype: Anxious Provider. Advisor note: Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions. Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress. Contradictions: Her ambition to expand her business conflicts with her low financial confidence and inconsistent investment behavior, with panic dominating over any suppressed risk-taking tendencies during stressful periods. Financial capacity (20/99) is critically low. Investment discussion is premature — financial stability must come first. Cultural obligation burden is significant (score: 100/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Family role obligation (Primary financial provider — family dependent on this investor) — financial responsibility extends beyond nuclear family | Family role obligation (Financially supports parents occasionally and relies on family for financial advice.) — financial responsibility extends beyond nuclear family | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 9 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Profile contradictions detected — verify before recommending"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "income volatility",
+          "family financial responsibility",
+          "low financial resilience",
+          "panic responses to losses",
+          "business expansion plans",
+          "informal borrowing"
+        ],
+        "dominant_factors": [
+          "seasonal income fluctuations",
+          "primary family provider",
+          "high financial anxiety"
+        ],
+        "secondary_factors": [
+          "business growth aspirations",
+          "medium-term financial obligations"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "business expansion plans",
+            "signal_2": "panic responses to market losses",
+            "resolution": "expansion ambitions suppressed by risk aversion",
+            "dominant_trait": "financial anxiety"
+          }
+        ],
+        "state_inference": "A financially stretched entrepreneur whose risk capacity is severely constrained by income volatility and family obligations, leading to anxiety-driven financial decisions.",
+        "decision_logic": [
+          "Income instability creates fundamental constraints on investment capacity",
+          "Emotional responses override rational financial planning during stress"
+        ]
+      },
+      "current_allocation": "0-10% equity RIGHT NOW",
+      "baseline_allocation": "20-30% equity long-term",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "financially stretched entrepreneur",
+        "dominant_trait": "panic",
+        "resilience_level": "low",
+        "state_stability": "unstable"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "6 months of stable income and emergency fund covering 6 months expenses",
+        "reassessment_timeline": "6-12 months",
+        "expected_shift": "gradual increase to baseline allocation once financial stability improves"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "income instability",
+          "no savings",
+          "upcoming major expense"
+        ],
+        "true_risk_capacity": "Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress.",
+        "stated_vs_actual_gap": "Likely overestimates risk capacity due to business expansion ambitions despite current constraints",
+        "reliability": "high"
+      },
+      "strategy": {
+        "primary_instrument": "liquid fund / FD",
+        "equity_pct": 5,
+        "debt_pct": 95,
+        "sip_recommended": false,
+        "first_step": "Build emergency fund covering 6 months of expenses in liquid FD before any investments"
+      },
+      "archetype": "Anxious Provider",
+      "confidence": "high",
+      "reasoning": "The combination of income volatility, family financial responsibility, and panic responses to losses indicates severely constrained risk capacity. Business expansion plans are contradicted by low financial resilience and anxiety-driven decision making. Current priority must be building financial stability before considering growth investments.",
+      "advisor_note": "Strongly advise against any equity exposure until emergency fund is established and income stabilizes, as market volatility could trigger harmful financial decisions.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "defensive",
+          "after": "transitional",
+          "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0-10% equity RIGHT NOW",
+      "true_risk_profile": "Very low capacity due to income volatility, family financial responsibilities, and lack of financial buffer. Any market losses could trigger severe financial distress."
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Profile contradictions detected — verify before recommending"
+    ],
+    "confidence_score": 45.0,
+    "data_completeness": 70.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

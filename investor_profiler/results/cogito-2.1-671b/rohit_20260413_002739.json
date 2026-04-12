@@ -1,0 +1,796 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Culturally Constrained Accumulator. Cultural obligations and family pressure create a strong preference for capital preservation, overriding stated risk appetite. The investor needs to build confidence through small, consistent equity exposure while prioritizing emergency fund creation. Peer influence can be leveraged positively by framing the SIP as a standard practice among professionals. Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested. Recommended equity range: 0-10% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "no investment experience",
+      "Education-first approach required before complex instruments",
+      "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "Stated desire for aggressive growth through mid-cap and sectoral funds conflicts with his cautious dominant trait and family's conservative expectations. His portfolio decisions show reactive behavior rather than strategic planning, with peer influence temporarily overriding his natural caution. Profile shows moderate stability but is distorted by recency bias and social comparison. His financial views are still forming and heavily influenced by peers and family, making his current risk tolerance potentially unreliable for long-term planning without education.",
+    "recommended_actions": [
+      "Start ₹5k monthly SIP in Nifty 50 index fund, remaining ₹15k in liquid fund for emergency corpus"
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness: 90%.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "salaried",
+          "monthly_income": 75000.0,
+          "city_tier": "tier2",
+          "employment_stability": "stable"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": 4500.0,
+          "emi_ratio": 6.0,
+          "dependents": 0
+        },
+        "experience": {
+          "experience_years": 1.17,
+          "financial_knowledge_score": 2,
+          "decision_autonomy": false
+        },
+        "behavioral": {
+          "loss_reaction": "cautious",
+          "risk_behavior": "medium",
+          "resilience_level": "medium",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "wedding",
+          "future_obligation_score": 10.0
+        },
+        "life_events": [
+          {
+            "type": "marriage",
+            "description": "marriage event detected",
+            "recency": "recent",
+            "emotional_weight": "medium"
+          }
+        ],
+        "cultural_signals": [
+          {
+            "type": "hidden_obligation",
+            "description": "Expected to prioritize buying a flat after marriage and conform to family's conservative financial views.",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "hidden_obligation",
+            "description": "Gold jewellery scheme in mother's name that he mentally allocates to wedding fund.",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "anxiety",
+            "description": "Cautious response to losses",
+            "strength": "moderate"
+          },
+          {
+            "type": "resilience",
+            "description": "Moderate resilience",
+            "strength": "moderate"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "strong"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "cautious",
+            "suppressed_trait": "unknown",
+            "explanation": "Desires faster growth through equities but feels pressured to conform to family's conservative financial preferences."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": true,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": true
+        }
+      },
+      "axis_scores": {
+        "risk": 28,
+        "cashflow": 78,
+        "obligation": 43,
+        "context": 23,
+        "financial_capacity": 44
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 83,
+          "label": "high",
+          "reason": "Salaried employment provides predictable monthly income | Moderate income (₹75,000/mo)",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 17,
+          "label": "low",
+          "reason": "EMI ratio 6.0% — low debt burden",
+          "modifiers": [],
+          "data_available": true
+        },
+        "dependency_load": {
+          "score": 5,
+          "label": "low",
+          "reason": "No dependents — no dependency burden",
+          "modifiers": [],
+          "data_available": true
+        },
+        "cultural_obligation": {
+          "score": 85,
+          "label": "high",
+          "reason": "Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 8 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 75/100 → score multiplier 1.20",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "State weight calibration: High behavioral weight due to significant emotional conflict between cultural obligations and personal aspirations, high obligation weight from wedding and homeownership pressures, and moderate income weight as stability is important but secondary to current psychological and social constraints."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 52,
+          "label": "moderate",
+          "reason": "Moderate risk behavior | Cautious response to losses — moderate concern",
+          "modifiers": [
+            "State behavioral weight: 80/100 → emotional amplifier 1.30",
+            "Anxiety-driven monitoring behavior detected",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Culturally Constrained Accumulator",
+        "archetype_description": "Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "Cultural obligations and family pressure create a strong preference for capital preservation, overriding stated risk appetite. The investor needs to build confidence through small, consistent equity exposure while prioritizing emergency fund creation. Peer influence can be leveraged positively by framing the SIP as a standard practice among professionals. Recommended strategy: liquid fund + index fund SIP; equity 20%, debt 80%. Start ₹5k monthly SIP in Nifty 50 index fund, remaining ₹15k in liquid fund for emergency corpus",
+          "equity_range": "0-10% equity RIGHT NOW",
+          "equity_ceiling_pct": 10,
+          "guidance": [
+            "Maximum equity exposure: 10% (large-cap only)",
+            "Suitable: liquid funds, short-duration debt funds, FD"
+          ],
+          "advisor_note": "Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested."
+        },
+        "advisor_narrative": "Archetype: Culturally Constrained Accumulator. Advisor note: Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested. Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital Contradictions: Stated desire for aggressive growth through mid-cap and sectoral funds conflicts with his cautious dominant trait and family's conservative expectations. His portfolio decisions show reactive behavior rather than strategic planning, with peer influence temporarily overriding his natural caution. Cultural obligation burden is significant (score: 85/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 8 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": "Risk tolerance appears temporarily suppressed. Reassess in 3–6 months once situational pressures stabilize."
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "Career inflection point with marriage pressure",
+            "Cultural expectations of homeownership",
+            "First-generation investor with limited financial literacy",
+            "₹15-20k monthly investable capacity after obligations",
+            "Medium resilience with anxiety-driven portfolio checks",
+            "Stated vs actual risk capacity mismatch"
+          ],
+          "dominant_factors": [
+            "Cultural obligations pressure",
+            "Developing financial identity",
+            "Peer influence validation"
+          ],
+          "secondary_factors": [
+            "Growth aspirations",
+            "Risk tolerance development",
+            "Financial independence goals"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Desires equity growth",
+              "signal_2": "Family conservative pressure",
+              "resolution": "Compromises with cautious equity exposure",
+              "dominant_trait": "Cultural conformity"
+            },
+            {
+              "signal_1": "Stated high risk appetite",
+              "signal_2": "Anxiety during volatility",
+              "resolution": "Defaults to large-caps under stress",
+              "dominant_trait": "Risk-averse behavior"
+            }
+          ],
+          "state_inference": "A young professional navigating between cultural financial obligations and personal growth aspirations while developing his investment identity under social and family pressures.",
+          "decision_logic": [
+            "Life stage transitions heavily influence financial priorities",
+            "Social validation overrides personal conviction in decision-making"
+          ]
+        },
+        "current_allocation": "0-10% equity RIGHT NOW",
+        "baseline_allocation": "20-30% equity long-term",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "cultural obligations vs personal growth",
+          "dominant_trait": "cautious",
+          "resilience_level": "medium",
+          "state_stability": "transitional"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "successful completion of 6-month SIP without panic withdrawals",
+          "reassessment_timeline": "6 months",
+          "expected_shift": "gradual 5% increase in equity allocation if behavioral patterns improve"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "no investment experience"
+          ],
+          "true_risk_capacity": "Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital",
+          "stated_vs_actual_gap": "Significant gap - states high risk appetite but demonstrates risk-averse behavior under pressure",
+          "reliability": "medium"
+        },
+        "strategy": {
+          "primary_instrument": "liquid fund + index fund SIP",
+          "equity_pct": 20,
+          "debt_pct": 80,
+          "sip_recommended": true,
+          "first_step": "Start ₹5k monthly SIP in Nifty 50 index fund, remaining ₹15k in liquid fund for emergency corpus"
+        },
+        "archetype": "Culturally Constrained Accumulator",
+        "confidence": "high",
+        "reasoning": "Cultural obligations and family pressure create a strong preference for capital preservation, overriding stated risk appetite. The investor needs to build confidence through small, consistent equity exposure while prioritizing emergency fund creation. Peer influence can be leveraged positively by framing the SIP as a standard practice among professionals.",
+        "advisor_note": "Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "conservative",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0-10% equity RIGHT NOW",
+        "true_risk_profile": "Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital"
+      },
+      "debug": {
+        "rule_fields": {
+          "monthly_income": {
+            "value": 75000,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "emi_amount": {
+            "value": 4500.0,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "income_type": {
+            "value": "salaried",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "experience_years": {
+            "value": 1.17,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": false,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 2,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": "medium",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": "cautious",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "wedding",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": 0,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": "Shifted one SIP to a 'safer' large-cap fund during a 10-12% mid-cap correction but continued investing, showing stress but not exiting the market.",
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 1.17,
+            "chosen": 1.17,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": false,
+            "chosen": false,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 2,
+            "chosen": 2,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "emi_amount",
+            "rule_value": 4500.0,
+            "llm_value": null,
+            "chosen": 4500.0,
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": "medium",
+            "chosen": "medium",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": "cautious",
+            "chosen": "cautious",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "wedding",
+            "chosen": "wedding",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": 0,
+            "chosen": 0,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": "Shifted one SIP to a 'safer' large-cap fund during a 10-12% mid-cap correction but continued investing, showing stress but not exiting the market.",
+            "chosen": "Shifted one SIP to a 'safer' large-cap fund during a 10-12% mid-cap correction but continued investing, showing stress but not exiting the market.",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "salaried",
+            "llm_value": null,
+            "chosen": "salaried",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "monthly_income",
+            "rule_value": 75000,
+            "llm_value": null,
+            "chosen": 75000,
+            "source": "rule",
+            "reason": "rule-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income: 'earning about 9 lpa' → 75000 (9.0 LPA/12)",
+          "Rule EMI: 'emi of ₹4,500,' → 4500.0",
+          "Rule income_type: LPA → salaried"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "experience_years": "llm",
+          "decision_autonomy": "llm",
+          "financial_knowledge_score": "llm",
+          "emi_amount": "rule",
+          "risk_behavior": "llm",
+          "loss_reaction": "llm",
+          "obligation_type": "llm",
+          "dependents": "llm",
+          "near_term_obligation_level": "llm",
+          "loss_reaction_description": "llm",
+          "income_type": "rule",
+          "monthly_income": "rule",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "emi_ratio=6.00% = emi(4500.0) / income(75000.0) × 100",
+          "future_obligation_score=10.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "emergency_months"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "Cautious loss response — moderate-low risk appetite."
+          ],
+          "cashflow": [
+            "Salaried: stable income base.",
+            "Moderate income ₹75,000/mo: +8."
+          ],
+          "obligation": [
+            "EMI ratio 6.0%: low burden.",
+            "Moderate near-term obligation (wedding).",
+            "Cultural obligation: Expected to prioritize buying a flat after marriage and conf.",
+            "Hidden obligations detected."
+          ],
+          "context": [
+            "1.2yr experience: +6.",
+            "Knowledge score 2/5: +5.",
+            "Peer/family-influenced decisions: -5.",
+            "High peer influence (signals): -8."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "wedding",
+            "timeline": "mid",
+            "scale": "medium",
+            "matched": "wedding"
+          }
+        ],
+        "future_obligation_score": 10.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "conservative",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "conservative",
+              "after": "transitional",
+              "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "conservative",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "Cultural obligations and family pressure create a strong preference for capital preservation, overriding stated risk appetite. The investor needs to build confidence through small, consistent equity exposure while prioritizing emergency fund creation. Peer influence can be leveraged positively by framing the SIP as a standard practice among professionals.",
+      "confidence_score": 57.0,
+      "data_completeness": 90.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "Culturally Constrained Accumulator",
+    "equity_range": "0-10% equity RIGHT NOW",
+    "advisor_note": "Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "salaried",
+        "monthly_income": 75000.0,
+        "city_tier": "tier2",
+        "employment_stability": "stable"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": 4500.0,
+        "emi_ratio": 6.0,
+        "dependents": 0
+      },
+      "experience": {
+        "experience_years": 1.17,
+        "financial_knowledge_score": 2,
+        "decision_autonomy": false
+      },
+      "behavioral": {
+        "loss_reaction": "cautious",
+        "risk_behavior": "medium",
+        "resilience_level": "medium",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "wedding",
+        "future_obligation_score": 10.0
+      },
+      "life_events": [
+        {
+          "type": "marriage",
+          "description": "marriage event detected",
+          "recency": "recent",
+          "emotional_weight": "medium"
+        }
+      ],
+      "cultural_signals": [
+        {
+          "type": "hidden_obligation",
+          "description": "Expected to prioritize buying a flat after marriage and conform to family's conservative financial views.",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "hidden_obligation",
+          "description": "Gold jewellery scheme in mother's name that he mentally allocates to wedding fund.",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "anxiety",
+          "description": "Cautious response to losses",
+          "strength": "moderate"
+        },
+        {
+          "type": "resilience",
+          "description": "Moderate resilience",
+          "strength": "moderate"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "strong"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "cautious",
+          "suppressed_trait": "unknown",
+          "explanation": "Desires faster growth through equities but feels pressured to conform to family's conservative financial preferences."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": true,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": true
+      }
+    },
+    "axis_scores": {
+      "risk": 28,
+      "cashflow": 78,
+      "obligation": 43,
+      "context": 23,
+      "financial_capacity": 44
+    },
+    "cross_axis": {
+      "archetype": "Culturally Constrained Accumulator",
+      "archetype_description": "Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "Cultural obligations and family pressure create a strong preference for capital preservation, overriding stated risk appetite. The investor needs to build confidence through small, consistent equity exposure while prioritizing emergency fund creation. Peer influence can be leveraged positively by framing the SIP as a standard practice among professionals. Recommended strategy: liquid fund + index fund SIP; equity 20%, debt 80%. Start ₹5k monthly SIP in Nifty 50 index fund, remaining ₹15k in liquid fund for emergency corpus",
+        "equity_range": "0-10% equity RIGHT NOW",
+        "equity_ceiling_pct": 10,
+        "guidance": [
+          "Maximum equity exposure: 10% (large-cap only)",
+          "Suitable: liquid funds, short-duration debt funds, FD"
+        ],
+        "advisor_note": "Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested."
+      },
+      "advisor_narrative": "Archetype: Culturally Constrained Accumulator. Advisor note: Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested. Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital Contradictions: Stated desire for aggressive growth through mid-cap and sectoral funds conflicts with his cautious dominant trait and family's conservative expectations. His portfolio decisions show reactive behavior rather than strategic planning, with peer influence temporarily overriding his natural caution. Cultural obligation burden is significant (score: 85/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 8 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": "Risk tolerance appears temporarily suppressed. Reassess in 3–6 months once situational pressures stabilize."
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "Career inflection point with marriage pressure",
+          "Cultural expectations of homeownership",
+          "First-generation investor with limited financial literacy",
+          "₹15-20k monthly investable capacity after obligations",
+          "Medium resilience with anxiety-driven portfolio checks",
+          "Stated vs actual risk capacity mismatch"
+        ],
+        "dominant_factors": [
+          "Cultural obligations pressure",
+          "Developing financial identity",
+          "Peer influence validation"
+        ],
+        "secondary_factors": [
+          "Growth aspirations",
+          "Risk tolerance development",
+          "Financial independence goals"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Desires equity growth",
+            "signal_2": "Family conservative pressure",
+            "resolution": "Compromises with cautious equity exposure",
+            "dominant_trait": "Cultural conformity"
+          },
+          {
+            "signal_1": "Stated high risk appetite",
+            "signal_2": "Anxiety during volatility",
+            "resolution": "Defaults to large-caps under stress",
+            "dominant_trait": "Risk-averse behavior"
+          }
+        ],
+        "state_inference": "A young professional navigating between cultural financial obligations and personal growth aspirations while developing his investment identity under social and family pressures.",
+        "decision_logic": [
+          "Life stage transitions heavily influence financial priorities",
+          "Social validation overrides personal conviction in decision-making"
+        ]
+      },
+      "current_allocation": "0-10% equity RIGHT NOW",
+      "baseline_allocation": "20-30% equity long-term",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "cultural obligations vs personal growth",
+        "dominant_trait": "cautious",
+        "resilience_level": "medium",
+        "state_stability": "transitional"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "successful completion of 6-month SIP without panic withdrawals",
+        "reassessment_timeline": "6 months",
+        "expected_shift": "gradual 5% increase in equity allocation if behavioral patterns improve"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "no investment experience"
+        ],
+        "true_risk_capacity": "Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital",
+        "stated_vs_actual_gap": "Significant gap - states high risk appetite but demonstrates risk-averse behavior under pressure",
+        "reliability": "medium"
+      },
+      "strategy": {
+        "primary_instrument": "liquid fund + index fund SIP",
+        "equity_pct": 20,
+        "debt_pct": 80,
+        "sip_recommended": true,
+        "first_step": "Start ₹5k monthly SIP in Nifty 50 index fund, remaining ₹15k in liquid fund for emergency corpus"
+      },
+      "archetype": "Culturally Constrained Accumulator",
+      "confidence": "high",
+      "reasoning": "Cultural obligations and family pressure create a strong preference for capital preservation, overriding stated risk appetite. The investor needs to build confidence through small, consistent equity exposure while prioritizing emergency fund creation. Peer influence can be leveraged positively by framing the SIP as a standard practice among professionals.",
+      "advisor_note": "Caution: Resist increasing equity exposure until emergency fund covers 6 months of expenses and behavioral response to market volatility is tested.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "conservative",
+          "after": "transitional",
+          "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0-10% equity RIGHT NOW",
+      "true_risk_profile": "Low actual risk tolerance despite stated high appetite, as evidenced by anxiety during market volatility and cultural pressure to preserve capital"
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 57.0,
+    "data_completeness": 90.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

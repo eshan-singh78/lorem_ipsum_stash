@@ -1,0 +1,735 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Fragile Volatile Entrepreneur. The combination of seasonal income volatility and low emotional resilience makes the user prone to panic-selling. Social proof dependency and a fear of loss indicate that any significant equity exposure will lead to premature exits during downturns. Therefore, priority is shifted from growth to liquidity and psychological safety. Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations. Recommended equity range: 0-10% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "income instability",
+      "Education-first approach required before complex instruments",
+      "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "There is a sharp conflict between her attempt at disciplined investing (the SIP) and her actual behavior of pausing contributions during downturns. The dominant trait of panic overrides her intent to build wealth whenever her immediate cash flow tightens. The profile is unstable and distorted by peer influence and recency bias. Her decision to start an SIP was triggered by a friend's success rather than a personal risk assessment, making her current investment strategy a reflection of social trends rather than a stable financial plan.",
+    "recommended_actions": [
+      "Allocate 100% of next available surplus to a liquid fund until a safety net is built."
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness is moderate (60%). Some fields were inferred or unavailable.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "business",
+          "monthly_income": null,
+          "city_tier": "tier2",
+          "employment_stability": "moderate"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": null,
+          "emi_ratio": null,
+          "dependents": 3
+        },
+        "experience": {
+          "experience_years": null,
+          "financial_knowledge_score": 2,
+          "decision_autonomy": false
+        },
+        "behavioral": {
+          "loss_reaction": "cautious",
+          "risk_behavior": "low",
+          "resilience_level": "low",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "other",
+          "future_obligation_score": 10.0
+        },
+        "life_events": [],
+        "cultural_signals": [
+          {
+            "type": "family_role",
+            "description": "Provides occasional financial support to her parents.",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "hidden_obligation",
+            "description": "Informal borrowing from family during low-income months.",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "fear",
+            "description": "Panic response to portfolio losses",
+            "strength": "strong"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "strong"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "panic",
+            "suppressed_trait": "unknown",
+            "explanation": "Started a systematic investment plan but pauses it whenever business income drops."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": true,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": false
+        }
+      },
+      "axis_scores": {
+        "risk": 7,
+        "cashflow": 55,
+        "obligation": 55,
+        "context": 17,
+        "financial_capacity": 25
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 55,
+          "label": "moderate",
+          "reason": "Business income — moderate predictability, cyclical risk",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 5,
+          "label": "low",
+          "reason": "No debt data — minimal burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "dependency_load": {
+          "score": 60,
+          "label": "moderate",
+          "reason": "3 dependents — high load",
+          "modifiers": [],
+          "data_available": true
+        },
+        "cultural_obligation": {
+          "score": 86,
+          "label": "high",
+          "reason": "Moderate near-term obligation (other) — capital commitment expected within 1–2 years | Family role obligation (Provides occasional financial support to her parents.) — financial responsibility extends beyond nuclear family | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 9 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 90/100 → score multiplier 1.32",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "State weight calibration: The investor faces extreme constraints due to high household dependency, severe income volatility, and a low emotional threshold for market losses."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 24,
+          "label": "low",
+          "reason": "Low risk behavior — conservative orientation | Cautious response to losses — moderate concern",
+          "modifiers": [
+            "State behavioral weight: 85/100 → emotional amplifier 1.35",
+            "Strong fear/panic signal — behavioral risk floored at 10",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Fragile Volatile Entrepreneur",
+        "archetype_description": "Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience.",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "The combination of seasonal income volatility and low emotional resilience makes the user prone to panic-selling. Social proof dependency and a fear of loss indicate that any significant equity exposure will lead to premature exits during downturns. Therefore, priority is shifted from growth to liquidity and psychological safety. Recommended strategy: liquid fund; equity 10%, debt 90%. Allocate 100% of next available surplus to a liquid fund until a safety net is built.",
+          "equity_range": "0-10% equity RIGHT NOW",
+          "equity_ceiling_pct": 10,
+          "guidance": [
+            "Maximum equity exposure: 10% (large-cap only)",
+            "Suitable: liquid funds, short-duration debt funds, FD"
+          ],
+          "advisor_note": "Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations."
+        },
+        "advisor_narrative": "Archetype: Fragile Volatile Entrepreneur. Advisor note: Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations. Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience. Contradictions: There is a sharp conflict between her attempt at disciplined investing (the SIP) and her actual behavior of pausing contributions during downturns. The dominant trait of panic overrides her intent to build wealth whenever her immediate cash flow tightens. Cultural obligation burden is significant (score: 86/100). Moderate near-term obligation (other) — capital commitment expected within 1–2 years | Family role obligation (Provides occasional financial support to her parents.) — financial responsibility extends beyond nuclear family | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 9 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "seasonal income volatility",
+            "dependence on informal family support",
+            "fear of loss",
+            "social proof dependency",
+            "low emotional resilience",
+            "constrained investable capacity"
+          ],
+          "dominant_factors": [
+            "seasonal cash-flow volatility",
+            "low emotional resilience",
+            "social proof dependency"
+          ],
+          "secondary_factors": [
+            "stated preference for balanced funds",
+            "desire for business expansion"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "SIP commitment",
+              "signal_2": "panic-driven pauses",
+              "resolution": "Investment behavior is dictated by immediate cash flow and fear rather than a long-term plan",
+              "dominant_trait": "panic"
+            }
+          ],
+          "state_inference": "A fragile entrepreneur with high emotional volatility and unstable liquidity who prioritizes immediate safety over strategic growth.",
+          "decision_logic": [
+            "Real risk capacity is overridden by emotional fragility and lack of a financial safety net",
+            "Investment consistency is compromised by seasonal business cycles and peer-driven decision making"
+          ]
+        },
+        "current_allocation": "0-10% equity RIGHT NOW",
+        "baseline_allocation": "20-30% equity long-term",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "fragile entrepreneur with liquidity instability",
+          "dominant_trait": "panic",
+          "resilience_level": "low",
+          "state_stability": "unstable"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "establishment of 6-month emergency fund",
+          "reassessment_timeline": "6-12 months",
+          "expected_shift": "gradual increase in equity SIP as liquidity stabilizes"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "income instability"
+          ],
+          "true_risk_capacity": "Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience.",
+          "stated_vs_actual_gap": "High gap; desire for growth is overridden by panic-driven behavior and liquidity needs.",
+          "reliability": "low"
+        },
+        "strategy": {
+          "primary_instrument": "liquid fund",
+          "equity_pct": 10,
+          "debt_pct": 90,
+          "sip_recommended": false,
+          "first_step": "Allocate 100% of next available surplus to a liquid fund until a safety net is built."
+        },
+        "archetype": "Fragile Volatile Entrepreneur",
+        "confidence": "high",
+        "reasoning": "The combination of seasonal income volatility and low emotional resilience makes the user prone to panic-selling. Social proof dependency and a fear of loss indicate that any significant equity exposure will lead to premature exits during downturns. Therefore, priority is shifted from growth to liquidity and psychological safety.",
+        "advisor_note": "Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0-10% equity RIGHT NOW",
+        "true_risk_profile": "Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience."
+      },
+      "debug": {
+        "rule_fields": {
+          "income_type": {
+            "value": "business",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "risk_behavior": {
+            "value": "low",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": false,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "other",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 2,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": 3,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": "cautious",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": "Becomes worried when hearing about losses from others and pauses SIP contributions when business income drops.",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": "low",
+            "chosen": "low",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": false,
+            "chosen": false,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "business",
+            "llm_value": null,
+            "chosen": "business",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "other",
+            "chosen": "other",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 2,
+            "chosen": 2,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": 3,
+            "chosen": 3,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": "cautious",
+            "chosen": "cautious",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": "Becomes worried when hearing about losses from others and pauses SIP contributions when business income drops.",
+            "chosen": "Becomes worried when hearing about losses from others and pauses SIP contributions when business income drops.",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income_type: business signal"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "risk_behavior": "llm",
+          "decision_autonomy": "llm",
+          "income_type": "rule",
+          "experience_years": "default",
+          "obligation_type": "llm",
+          "financial_knowledge_score": "llm",
+          "dependents": "llm",
+          "loss_reaction": "llm",
+          "loss_reaction_description": "llm",
+          "near_term_obligation_level": "llm",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "future_obligation_score=10.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "monthly_income",
+          "emergency_months",
+          "emi_amount",
+          "experience_years"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "Panic loss response — risk appetite severely suppressed.",
+            "Low resilience: -5."
+          ],
+          "cashflow": [
+            "Business income: moderate stability."
+          ],
+          "obligation": [
+            "3 dependents: high load.",
+            "Moderate near-term obligation (other).",
+            "Cultural obligation: Provides occasional financial support to her parents..",
+            "Hidden obligations detected."
+          ],
+          "context": [
+            "Experience not reported.",
+            "Knowledge score 2/5: +5.",
+            "Peer/family-influenced decisions: -5.",
+            "High peer influence (signals): -8."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "education",
+            "timeline": "near",
+            "scale": "medium",
+            "matched": "child's education"
+          },
+          {
+            "type": "wedding",
+            "timeline": "mid",
+            "scale": "medium",
+            "matched": "wedding"
+          }
+        ],
+        "future_obligation_score": 10.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "defensive",
+              "after": "transitional",
+              "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "The combination of seasonal income volatility and low emotional resilience makes the user prone to panic-selling. Social proof dependency and a fear of loss indicate that any significant equity exposure will lead to premature exits during downturns. Therefore, priority is shifted from growth to liquidity and psychological safety.",
+      "confidence_score": 35.0,
+      "data_completeness": 60.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "Fragile Volatile Entrepreneur",
+    "equity_range": "0-10% equity RIGHT NOW",
+    "advisor_note": "Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "business",
+        "monthly_income": null,
+        "city_tier": "tier2",
+        "employment_stability": "moderate"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": null,
+        "emi_ratio": null,
+        "dependents": 3
+      },
+      "experience": {
+        "experience_years": null,
+        "financial_knowledge_score": 2,
+        "decision_autonomy": false
+      },
+      "behavioral": {
+        "loss_reaction": "cautious",
+        "risk_behavior": "low",
+        "resilience_level": "low",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "other",
+        "future_obligation_score": 10.0
+      },
+      "life_events": [],
+      "cultural_signals": [
+        {
+          "type": "family_role",
+          "description": "Provides occasional financial support to her parents.",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "hidden_obligation",
+          "description": "Informal borrowing from family during low-income months.",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "fear",
+          "description": "Panic response to portfolio losses",
+          "strength": "strong"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "strong"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "panic",
+          "suppressed_trait": "unknown",
+          "explanation": "Started a systematic investment plan but pauses it whenever business income drops."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": true,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": false
+      }
+    },
+    "axis_scores": {
+      "risk": 7,
+      "cashflow": 55,
+      "obligation": 55,
+      "context": 17,
+      "financial_capacity": 25
+    },
+    "cross_axis": {
+      "archetype": "Fragile Volatile Entrepreneur",
+      "archetype_description": "Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience.",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "The combination of seasonal income volatility and low emotional resilience makes the user prone to panic-selling. Social proof dependency and a fear of loss indicate that any significant equity exposure will lead to premature exits during downturns. Therefore, priority is shifted from growth to liquidity and psychological safety. Recommended strategy: liquid fund; equity 10%, debt 90%. Allocate 100% of next available surplus to a liquid fund until a safety net is built.",
+        "equity_range": "0-10% equity RIGHT NOW",
+        "equity_ceiling_pct": 10,
+        "guidance": [
+          "Maximum equity exposure: 10% (large-cap only)",
+          "Suitable: liquid funds, short-duration debt funds, FD"
+        ],
+        "advisor_note": "Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations."
+      },
+      "advisor_narrative": "Archetype: Fragile Volatile Entrepreneur. Advisor note: Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations. Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience. Contradictions: There is a sharp conflict between her attempt at disciplined investing (the SIP) and her actual behavior of pausing contributions during downturns. The dominant trait of panic overrides her intent to build wealth whenever her immediate cash flow tightens. Cultural obligation burden is significant (score: 86/100). Moderate near-term obligation (other) — capital commitment expected within 1–2 years | Family role obligation (Provides occasional financial support to her parents.) — financial responsibility extends beyond nuclear family | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 9 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "seasonal income volatility",
+          "dependence on informal family support",
+          "fear of loss",
+          "social proof dependency",
+          "low emotional resilience",
+          "constrained investable capacity"
+        ],
+        "dominant_factors": [
+          "seasonal cash-flow volatility",
+          "low emotional resilience",
+          "social proof dependency"
+        ],
+        "secondary_factors": [
+          "stated preference for balanced funds",
+          "desire for business expansion"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "SIP commitment",
+            "signal_2": "panic-driven pauses",
+            "resolution": "Investment behavior is dictated by immediate cash flow and fear rather than a long-term plan",
+            "dominant_trait": "panic"
+          }
+        ],
+        "state_inference": "A fragile entrepreneur with high emotional volatility and unstable liquidity who prioritizes immediate safety over strategic growth.",
+        "decision_logic": [
+          "Real risk capacity is overridden by emotional fragility and lack of a financial safety net",
+          "Investment consistency is compromised by seasonal business cycles and peer-driven decision making"
+        ]
+      },
+      "current_allocation": "0-10% equity RIGHT NOW",
+      "baseline_allocation": "20-30% equity long-term",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "fragile entrepreneur with liquidity instability",
+        "dominant_trait": "panic",
+        "resilience_level": "low",
+        "state_stability": "unstable"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "establishment of 6-month emergency fund",
+        "reassessment_timeline": "6-12 months",
+        "expected_shift": "gradual increase in equity SIP as liquidity stabilizes"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "income instability"
+        ],
+        "true_risk_capacity": "Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience.",
+        "stated_vs_actual_gap": "High gap; desire for growth is overridden by panic-driven behavior and liquidity needs.",
+        "reliability": "low"
+      },
+      "strategy": {
+        "primary_instrument": "liquid fund",
+        "equity_pct": 10,
+        "debt_pct": 90,
+        "sip_recommended": false,
+        "first_step": "Allocate 100% of next available surplus to a liquid fund until a safety net is built."
+      },
+      "archetype": "Fragile Volatile Entrepreneur",
+      "confidence": "high",
+      "reasoning": "The combination of seasonal income volatility and low emotional resilience makes the user prone to panic-selling. Social proof dependency and a fear of loss indicate that any significant equity exposure will lead to premature exits during downturns. Therefore, priority is shifted from growth to liquidity and psychological safety.",
+      "advisor_note": "Avoid equity SIPs until a robust cash buffer is established to prevent panic-driven liquidations.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "defensive",
+          "after": "transitional",
+          "reason": "current_allocation (0-10% equity RIGHT NOW) ≠ baseline_allocation (20-30% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0-10% equity RIGHT NOW",
+      "true_risk_profile": "Very low. The user cannot sustain market drawdowns due to seasonal income gaps and low emotional resilience."
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Stated risk preference does not reflect actual capacity — use conservative ceiling",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 35.0,
+    "data_completeness": 60.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

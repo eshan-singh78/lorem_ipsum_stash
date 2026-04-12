@@ -1,0 +1,821 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Panicked Saver Under Cultural Pressure. Despite having high financial capability, the investor shows panic-driven behavior during minor market dips (6% drop) and is under significant cultural pressure to maintain a secret wedding fund. The combination of low financial literacy and high social comparison creates an unstable decision-making environment. The hidden dual financial identity further complicates risk assessment, making emotional stability the primary concern over financial optimization. Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure Recommended equity range: 0-20%.",
+    "key_risks": [
+      "upcoming major expense",
+      "Education-first approach required before complex instruments",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "High digital fluency enables confident investment actions while low financial literacy creates vulnerability to market noise and social influence. She maintains financial independence in action but remains emotionally dependent on peer validation and parental approval. Profile is emotionally distorted by recency bias and social comparison, with decisions driven by Instagram success stories and YouTube finfluencers rather than personal financial goals. The secrecy element adds emotional volatility to her investment decisions.",
+    "recommended_actions": [
+      "Move 80% of equity holdings to liquid fund immediately"
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness: 80%.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "salaried",
+          "monthly_income": 62500.0,
+          "city_tier": "tier2",
+          "employment_stability": "stable"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": null,
+          "emi_ratio": null,
+          "dependents": 0
+        },
+        "experience": {
+          "experience_years": 0.7,
+          "financial_knowledge_score": 2,
+          "decision_autonomy": false
+        },
+        "behavioral": {
+          "loss_reaction": "cautious",
+          "risk_behavior": "low",
+          "resilience_level": "low",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "wedding",
+          "future_obligation_score": 0.0
+        },
+        "life_events": [],
+        "cultural_signals": [
+          {
+            "type": "hidden_obligation",
+            "description": "Feels obligated to save for her own wedding without her parents' knowledge",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "hidden_obligation",
+            "description": "Secretly saving for her wedding without her parents' knowledge",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "fear",
+            "description": "Panic response to portfolio losses",
+            "strength": "strong"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "strong"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "panic",
+            "suppressed_trait": "unknown",
+            "explanation": "High digital fluency but low financial literacy leads to reactive behavior despite having no immediate financial pressures"
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": true,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": false
+        }
+      },
+      "axis_scores": {
+        "risk": 7,
+        "cashflow": 77,
+        "obligation": 33,
+        "context": 17,
+        "financial_capacity": 52
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 77,
+          "label": "high",
+          "reason": "Salaried employment provides predictable monthly income | Low-moderate income (₹62,500/mo)",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 5,
+          "label": "low",
+          "reason": "No debt data — minimal burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "dependency_load": {
+          "score": 5,
+          "label": "low",
+          "reason": "No dependents — no dependency burden",
+          "modifiers": [],
+          "data_available": true
+        },
+        "cultural_obligation": {
+          "score": 77,
+          "label": "high",
+          "reason": "Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests",
+          "modifiers": [
+            "Narrative obligation weight: 75/100 → score multiplier 1.20",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "State weight calibration: High behavioral weight due to emotional volatility and social pressures, significant obligation weight from secret wedding fund and cultural expectations, while moderate income stability provides some flexibility."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 24,
+          "label": "low",
+          "reason": "Low risk behavior — conservative orientation | Cautious response to losses — moderate concern",
+          "modifiers": [
+            "State behavioral weight: 90/100 → emotional amplifier 1.40",
+            "Strong fear/panic signal — behavioral risk floored at 10",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Panicked Saver Under Cultural Pressure",
+        "archetype_description": "High financial capability but low emotional tolerance for market volatility due to wedding fund pressure",
+        "mismatch": {
+          "type": "capacity_exceeds_risk",
+          "severity": "moderate",
+          "description": "Financial capacity (52/99) well above risk appetite (7/99). Investor is more conservative than their financial situation requires.",
+          "implication": "Gradual equity exposure may be appropriate as confidence builds. Do not push — let the investor lead the pace."
+        },
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "Despite having high financial capability, the investor shows panic-driven behavior during minor market dips (6% drop) and is under significant cultural pressure to maintain a secret wedding fund. The combination of low financial literacy and high social comparison creates an unstable decision-making environment. The hidden dual financial identity further complicates risk assessment, making emotional stability the primary concern over financial optimization. Recommended strategy: liquid fund / short-term debt; equity 20%, debt 80%. Move 80% of equity holdings to liquid fund immediately",
+          "equity_range": "0-20%",
+          "equity_ceiling_pct": 20,
+          "guidance": [
+            "Maximum equity exposure: 20% (large-cap / index funds)",
+            "Suitable: balanced advantage funds, conservative hybrid"
+          ],
+          "advisor_note": "Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure"
+        },
+        "advisor_narrative": "Archetype: Panicked Saver Under Cultural Pressure. Advisor note: Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure High financial capability but low emotional tolerance for market volatility due to wedding fund pressure Contradictions: High digital fluency enables confident investment actions while low financial literacy creates vulnerability to market noise and social influence. She maintains financial independence in action but remains emotionally dependent on peer validation and parental approval. Financial capacity (52/99) well above risk appetite (7/99). Investor is more conservative than their financial situation requires. Implication: Gradual equity exposure may be appropriate as confidence builds. Do not push — let the investor lead the pace. Cultural obligation burden is significant (score: 77/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests Hidden obligation detected — investable surplus is lower than income suggests.",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "secret wedding fund preparation",
+            "panic-driven market reactions",
+            "high social comparison influence",
+            "low financial literacy",
+            "hidden dual financial identity",
+            "no immediate financial pressure"
+          ],
+          "dominant_factors": [
+            "Cultural pressure for secret wedding",
+            "Low risk tolerance despite equity exposure",
+            "High peer influence on decisions"
+          ],
+          "secondary_factors": [
+            "Moderate investable capacity",
+            "No dependents or EMIs",
+            "Digital fluency without financial knowledge"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Invests in equities",
+              "signal_2": "Panics at 6% market dip",
+              "resolution": "Actual risk tolerance lower than stated",
+              "dominant_trait": "Panic-driven behavior"
+            },
+            {
+              "signal_1": "Financially independent professional",
+              "signal_2": "Hides investments from parents",
+              "resolution": "Cultural expectations override financial autonomy",
+              "dominant_trait": "Dual financial identity"
+            }
+          ],
+          "state_inference": "A financially capable professional whose investment decisions are primarily driven by cultural pressures and emotional reactions rather than financial strategy.",
+          "decision_logic": [
+            "Panic response to minor market movement indicates misaligned risk exposure",
+            "Secret financial obligations create hidden constraints on investment strategy"
+          ]
+        },
+        "current_allocation": "0-20%",
+        "baseline_allocation": "0-40%",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "emotionally driven investor under cultural pressure",
+          "dominant_trait": "panic",
+          "resilience_level": "low",
+          "state_stability": "unstable"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "market stability or wedding completion",
+          "reassessment_timeline": "6-12 months",
+          "expected_shift": "gradual return to baseline allocation post-wedding"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "upcoming major expense"
+          ],
+          "true_risk_capacity": "High financial capability but low emotional tolerance for market volatility due to wedding fund pressure",
+          "stated_vs_actual_gap": "Stated risk tolerance (equity exposure) contradicts actual panic behavior during minor dips",
+          "reliability": "low"
+        },
+        "strategy": {
+          "primary_instrument": "liquid fund / short-term debt",
+          "equity_pct": 20,
+          "debt_pct": 80,
+          "sip_recommended": false,
+          "first_step": "Move 80% of equity holdings to liquid fund immediately"
+        },
+        "archetype": "Panicked Saver Under Cultural Pressure",
+        "confidence": "high",
+        "reasoning": "Despite having high financial capability, the investor shows panic-driven behavior during minor market dips (6% drop) and is under significant cultural pressure to maintain a secret wedding fund. The combination of low financial literacy and high social comparison creates an unstable decision-making environment. The hidden dual financial identity further complicates risk assessment, making emotional stability the primary concern over financial optimization.",
+        "advisor_note": "Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure",
+        "warning": null,
+        "retry_count": 1,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R1_PANIC_DOMINANCE",
+            "field": "current_allocation",
+            "before": "20-25% equity RIGHT NOW",
+            "after": "0-20%",
+            "reason": "dominant_trait='panic' — panic-driven investors must not exceed 20% equity in current allocation regardless of stated preference."
+          },
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "60-70% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "conservative",
+            "after": "transitional",
+            "reason": "current_allocation (0-20%) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0-20%",
+        "true_risk_profile": "High financial capability but low emotional tolerance for market volatility due to wedding fund pressure"
+      },
+      "debug": {
+        "rule_fields": {
+          "monthly_income": {
+            "value": 62500,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "income_type": {
+            "value": "salaried",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "loss_reaction_description": {
+            "value": "Felt anxious and considered stopping her SIP after a 6% market dip, but there's no indication she actually stopped.",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": "cautious",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": "low",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "wedding",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": 0.7,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": false,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": 0,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 2,
+            "confidence": "high",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": "Felt anxious and considered stopping her SIP after a 6% market dip, but there's no indication she actually stopped.",
+            "chosen": "Felt anxious and considered stopping her SIP after a 6% market dip, but there's no indication she actually stopped.",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": "cautious",
+            "chosen": "cautious",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": "low",
+            "chosen": "low",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 2,
+            "chosen": 2,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "wedding",
+            "chosen": "wedding",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "monthly_income",
+            "rule_value": 62500,
+            "llm_value": null,
+            "chosen": 62500,
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 0.7,
+            "chosen": 0.7,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": false,
+            "chosen": false,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": 0,
+            "chosen": 0,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "salaried",
+            "llm_value": null,
+            "chosen": "salaried",
+            "source": "rule",
+            "reason": "rule-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income: 'earning about 7.5 lpa' → 62500 (7.5 LPA/12)",
+          "Rule income_type: LPA → salaried"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "loss_reaction_description": "llm",
+          "loss_reaction": "llm",
+          "risk_behavior": "llm",
+          "financial_knowledge_score": "llm",
+          "near_term_obligation_level": "llm",
+          "obligation_type": "llm",
+          "monthly_income": "rule",
+          "experience_years": "llm",
+          "decision_autonomy": "llm",
+          "dependents": "llm",
+          "income_type": "rule",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "emergency_months",
+          "emi_amount"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "Panic loss response — risk appetite severely suppressed.",
+            "Low resilience: -5."
+          ],
+          "cashflow": [
+            "Salaried: stable income base.",
+            "Low-moderate income: +2.",
+            "Low financial pressure (signals): +5."
+          ],
+          "obligation": [
+            "Moderate near-term obligation (wedding).",
+            "Cultural obligation: Feels obligated to save for her own wedding without her pare.",
+            "Hidden obligations detected."
+          ],
+          "context": [
+            "<1yr experience: novice.",
+            "Knowledge score 2/5: +5.",
+            "Peer/family-influenced decisions: -5.",
+            "High peer influence (signals): -8."
+          ]
+        },
+        "future_events_detected": [],
+        "future_obligation_score": 0.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R1_PANIC_DOMINANCE",
+            "field": "current_allocation",
+            "before": "20-25% equity RIGHT NOW",
+            "after": "0-20%",
+            "reason": "dominant_trait='panic' — panic-driven investors must not exceed 20% equity in current allocation regardless of stated preference."
+          },
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "60-70% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "conservative",
+            "after": "transitional",
+            "reason": "current_allocation (0-20%) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R1_PANIC_DOMINANCE",
+              "field": "current_allocation",
+              "before": "20-25% equity RIGHT NOW",
+              "after": "0-20%",
+              "reason": "dominant_trait='panic' — panic-driven investors must not exceed 20% equity in current allocation regardless of stated preference."
+            },
+            {
+              "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+              "field": "baseline_allocation",
+              "before": "60-70% equity long-term",
+              "after": "0-40%",
+              "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+            },
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "conservative",
+              "after": "transitional",
+              "reason": "current_allocation (0-20%) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R1_PANIC_DOMINANCE",
+            "field": "current_allocation",
+            "before": "20-25% equity RIGHT NOW",
+            "after": "0-20%",
+            "reason": "dominant_trait='panic' — panic-driven investors must not exceed 20% equity in current allocation regardless of stated preference."
+          },
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "60-70% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "conservative",
+            "after": "transitional",
+            "reason": "current_allocation (0-20%) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "Despite having high financial capability, the investor shows panic-driven behavior during minor market dips (6% drop) and is under significant cultural pressure to maintain a secret wedding fund. The combination of low financial literacy and high social comparison creates an unstable decision-making environment. The hidden dual financial identity further complicates risk assessment, making emotional stability the primary concern over financial optimization.",
+      "confidence_score": 51.0,
+      "data_completeness": 80.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "Panicked Saver Under Cultural Pressure",
+    "equity_range": "0-20%",
+    "advisor_note": "Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure",
+    "profile_context": {
+      "demographics": {
+        "income_type": "salaried",
+        "monthly_income": 62500.0,
+        "city_tier": "tier2",
+        "employment_stability": "stable"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": null,
+        "emi_ratio": null,
+        "dependents": 0
+      },
+      "experience": {
+        "experience_years": 0.7,
+        "financial_knowledge_score": 2,
+        "decision_autonomy": false
+      },
+      "behavioral": {
+        "loss_reaction": "cautious",
+        "risk_behavior": "low",
+        "resilience_level": "low",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "wedding",
+        "future_obligation_score": 0.0
+      },
+      "life_events": [],
+      "cultural_signals": [
+        {
+          "type": "hidden_obligation",
+          "description": "Feels obligated to save for her own wedding without her parents' knowledge",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "hidden_obligation",
+          "description": "Secretly saving for her wedding without her parents' knowledge",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "fear",
+          "description": "Panic response to portfolio losses",
+          "strength": "strong"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "strong"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "panic",
+          "suppressed_trait": "unknown",
+          "explanation": "High digital fluency but low financial literacy leads to reactive behavior despite having no immediate financial pressures"
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": true,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": false
+      }
+    },
+    "axis_scores": {
+      "risk": 7,
+      "cashflow": 77,
+      "obligation": 33,
+      "context": 17,
+      "financial_capacity": 52
+    },
+    "cross_axis": {
+      "archetype": "Panicked Saver Under Cultural Pressure",
+      "archetype_description": "High financial capability but low emotional tolerance for market volatility due to wedding fund pressure",
+      "mismatch": {
+        "type": "capacity_exceeds_risk",
+        "severity": "moderate",
+        "description": "Financial capacity (52/99) well above risk appetite (7/99). Investor is more conservative than their financial situation requires.",
+        "implication": "Gradual equity exposure may be appropriate as confidence builds. Do not push — let the investor lead the pace."
+      },
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "Despite having high financial capability, the investor shows panic-driven behavior during minor market dips (6% drop) and is under significant cultural pressure to maintain a secret wedding fund. The combination of low financial literacy and high social comparison creates an unstable decision-making environment. The hidden dual financial identity further complicates risk assessment, making emotional stability the primary concern over financial optimization. Recommended strategy: liquid fund / short-term debt; equity 20%, debt 80%. Move 80% of equity holdings to liquid fund immediately",
+        "equity_range": "0-20%",
+        "equity_ceiling_pct": 20,
+        "guidance": [
+          "Maximum equity exposure: 20% (large-cap / index funds)",
+          "Suitable: balanced advantage funds, conservative hybrid"
+        ],
+        "advisor_note": "Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure"
+      },
+      "advisor_narrative": "Archetype: Panicked Saver Under Cultural Pressure. Advisor note: Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure High financial capability but low emotional tolerance for market volatility due to wedding fund pressure Contradictions: High digital fluency enables confident investment actions while low financial literacy creates vulnerability to market noise and social influence. She maintains financial independence in action but remains emotionally dependent on peer validation and parental approval. Financial capacity (52/99) well above risk appetite (7/99). Investor is more conservative than their financial situation requires. Implication: Gradual equity exposure may be appropriate as confidence builds. Do not push — let the investor lead the pace. Cultural obligation burden is significant (score: 77/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests Hidden obligation detected — investable surplus is lower than income suggests.",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "secret wedding fund preparation",
+          "panic-driven market reactions",
+          "high social comparison influence",
+          "low financial literacy",
+          "hidden dual financial identity",
+          "no immediate financial pressure"
+        ],
+        "dominant_factors": [
+          "Cultural pressure for secret wedding",
+          "Low risk tolerance despite equity exposure",
+          "High peer influence on decisions"
+        ],
+        "secondary_factors": [
+          "Moderate investable capacity",
+          "No dependents or EMIs",
+          "Digital fluency without financial knowledge"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Invests in equities",
+            "signal_2": "Panics at 6% market dip",
+            "resolution": "Actual risk tolerance lower than stated",
+            "dominant_trait": "Panic-driven behavior"
+          },
+          {
+            "signal_1": "Financially independent professional",
+            "signal_2": "Hides investments from parents",
+            "resolution": "Cultural expectations override financial autonomy",
+            "dominant_trait": "Dual financial identity"
+          }
+        ],
+        "state_inference": "A financially capable professional whose investment decisions are primarily driven by cultural pressures and emotional reactions rather than financial strategy.",
+        "decision_logic": [
+          "Panic response to minor market movement indicates misaligned risk exposure",
+          "Secret financial obligations create hidden constraints on investment strategy"
+        ]
+      },
+      "current_allocation": "0-20%",
+      "baseline_allocation": "0-40%",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "emotionally driven investor under cultural pressure",
+        "dominant_trait": "panic",
+        "resilience_level": "low",
+        "state_stability": "unstable"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "market stability or wedding completion",
+        "reassessment_timeline": "6-12 months",
+        "expected_shift": "gradual return to baseline allocation post-wedding"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "upcoming major expense"
+        ],
+        "true_risk_capacity": "High financial capability but low emotional tolerance for market volatility due to wedding fund pressure",
+        "stated_vs_actual_gap": "Stated risk tolerance (equity exposure) contradicts actual panic behavior during minor dips",
+        "reliability": "low"
+      },
+      "strategy": {
+        "primary_instrument": "liquid fund / short-term debt",
+        "equity_pct": 20,
+        "debt_pct": 80,
+        "sip_recommended": false,
+        "first_step": "Move 80% of equity holdings to liquid fund immediately"
+      },
+      "archetype": "Panicked Saver Under Cultural Pressure",
+      "confidence": "high",
+      "reasoning": "Despite having high financial capability, the investor shows panic-driven behavior during minor market dips (6% drop) and is under significant cultural pressure to maintain a secret wedding fund. The combination of low financial literacy and high social comparison creates an unstable decision-making environment. The hidden dual financial identity further complicates risk assessment, making emotional stability the primary concern over financial optimization.",
+      "advisor_note": "Address emotional relationship with money before making any investment decisions - the 6% panic threshold indicates extremely low risk tolerance despite stated equity exposure",
+      "warning": null,
+      "retry_count": 1,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R1_PANIC_DOMINANCE",
+          "field": "current_allocation",
+          "before": "20-25% equity RIGHT NOW",
+          "after": "0-20%",
+          "reason": "dominant_trait='panic' — panic-driven investors must not exceed 20% equity in current allocation regardless of stated preference."
+        },
+        {
+          "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+          "field": "baseline_allocation",
+          "before": "60-70% equity long-term",
+          "after": "0-40%",
+          "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+        },
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "conservative",
+          "after": "transitional",
+          "reason": "current_allocation (0-20%) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0-20%",
+      "true_risk_profile": "High financial capability but low emotional tolerance for market volatility due to wedding fund pressure"
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 51.0,
+    "data_completeness": 80.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

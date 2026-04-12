@@ -16,6 +16,30 @@ Architecture:
   → OUTPUT
 
 v16 principle: retry until correct → enforce deterministically → log everything
+
+─────────────────────────────────────────────────────────────────────────────
+v2 COMPATIBILITY FLAGS  (opt-in, default OFF — v1 behaviour unchanged)
+─────────────────────────────────────────────────────────────────────────────
+  --v2-signals   Replace Stage 4 (signal_extraction) with v2/signals.py.
+                 Flat 21-field schema, num_predict=768.  Fixes truncation on
+                 small models.  v2 Signals object is bridged back to the v1
+                 SignalOutput interface so every downstream stage is unaffected.
+
+  --v2-scoring   Replace Stage 8 (axis_scoring + context_categories) with
+                 v2/scoring.py.  Fully deterministic — removes the two LLM
+                 calibration calls (_query_axis_calibration,
+                 _query_state_weights).  Same input → same scores always.
+                 Requires --v2-signals (signals must be valid for scoring).
+
+  --v2-decision  Replace Stage 9 (validation_layer) with deterministic
+                 guardrails from v2/decision.py.  Removes the LLM validation
+                 call.  The v1 decision engine still runs; only the post-
+                 decision validation step is swapped.
+
+All three flags together = 3 fewer LLM calls per request, deterministic
+scores, and no LLM in the validation path.  The v1 narrative, state
+synthesis, decision engine, cross-axis, and report layers are untouched.
+─────────────────────────────────────────────────────────────────────────────
 """
 
 import json
@@ -100,6 +124,227 @@ from cross_axis import build_cross_axis_report, cross_axis_report_to_dict
 from report_layer import generate_report
 from report_formatter import build_pdf_payload, render_pdf
 from llm_adapter import configure as configure_llm, get_config as get_llm_config
+
+# ---------------------------------------------------------------------------
+# v2 bridge — lazy imports, only loaded when the corresponding flag is set
+# ---------------------------------------------------------------------------
+
+def _load_v2_signals():
+    """Import v2 signal extractor (flat schema, 768 tokens)."""
+    import sys, os
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "v2"))
+    from signals import extract_signals as _v2_extract, Signals as _V2Signals
+    return _v2_extract, _V2Signals
+
+
+def _load_v2_scoring():
+    """Import v2 deterministic scoring engine."""
+    import sys, os
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "v2"))
+    from scoring import compute_scores as _v2_score, scores_to_dict as _v2_scores_dict
+    return _v2_score, _v2_scores_dict
+
+
+# ---------------------------------------------------------------------------
+# v2 signal → v1 SignalOutput bridge
+# Converts the flat v2 Signals dataclass into the nested v1 SignalOutput so
+# every downstream v1 stage (narrative, state_synthesis, decision_engine,
+# context_categories, axis_scoring, cross_axis) works without modification.
+# ---------------------------------------------------------------------------
+
+def _bridge_v2_signals_to_v1(v2_sig) -> "SignalOutput":
+    """
+    Build a v1-compatible SignalOutput from a v2 Signals object.
+    Only the fields that v1 downstream stages actually read are populated.
+    Everything else gets a safe default.
+    """
+    from signal_extraction import (
+        SignalOutput, LifeEventSignal, ResponsibilitySignal,
+        BehaviorSignal, DecisionStyleSignal, FinancialStateSignal,
+        ContradictionSignal, TemporalContext, IntentSignal,
+    )
+
+    # Life events
+    life_events = []
+    if v2_sig.life_event_type != "none":
+        life_events.append(LifeEventSignal(
+            type=v2_sig.life_event_type,
+            description=f"{v2_sig.life_event_type} event detected",
+            recency=v2_sig.life_event_recency,
+            impact=v2_sig.life_event_impact,
+        ))
+
+    # Responsibility
+    responsibility = ResponsibilitySignal(
+        role=v2_sig.provider_role,
+        dependents_count=None,
+        dependents_description="",
+        financial_pressure=v2_sig.financial_pressure,
+        cultural_obligations=[v2_sig.cultural_obligation] if v2_sig.cultural_obligation else [],
+    )
+
+    # Behavior
+    behavior = BehaviorSignal(
+        loss_response=v2_sig.loss_response,
+        loss_response_detail="",
+        consistency=v2_sig.consistency,
+        resilience_level=v2_sig.resilience_level,
+        resilience_evidence="",
+    )
+
+    # Decision style
+    decision_style = DecisionStyleSignal(
+        autonomy=v2_sig.autonomy,
+        peer_influence=v2_sig.peer_influence,
+        peer_influence_detail="",
+        analytical_tendency=v2_sig.analytical,
+    )
+
+    # Financial state
+    financial_state = FinancialStateSignal(
+        constraint_level=v2_sig.constraint_level,
+        constraint_detail="",
+        obligation_scale=v2_sig.constraint_level,
+        hidden_obligations=v2_sig.hidden_obligations or None,
+    )
+
+    # Contradictions — v1 expects a list of ContradictionSignal
+    contradictions = []
+    if v2_sig.dominant_trait not in ("unknown", "stable") and v2_sig.contradiction_note:
+        contradictions.append(ContradictionSignal(
+            type="stated_vs_actual",
+            dominant_trait=v2_sig.dominant_trait,
+            suppressed_trait="unknown",
+            explanation=v2_sig.contradiction_note,
+        ))
+
+    # Temporal context
+    temporal_context = TemporalContext(
+        has_behavioral_shift=v2_sig.has_shift,
+        baseline_orientation="",
+        current_orientation="",
+        shift_cause=None,
+        shift_recency="recent" if v2_sig.has_shift else None,
+        shift_permanence=v2_sig.shift_permanence if v2_sig.has_shift else None,
+    )
+
+    # Intent
+    intent = []
+    if v2_sig.primary_intent != "none":
+        intent.append(IntentSignal(
+            goal=f"Plans related to {v2_sig.primary_intent}",
+            category=v2_sig.primary_intent,
+            timeline=v2_sig.intent_timeline if v2_sig.intent_timeline != "none" else "mid",
+            firmness=v2_sig.intent_firmness if v2_sig.intent_firmness != "none" else "tentative",
+            firmness_evidence="",
+        ))
+
+    return SignalOutput(
+        life_events=life_events,
+        responsibility=responsibility,
+        behavior=behavior,
+        decision_style=decision_style,
+        financial_state=financial_state,
+        contradictions=contradictions,
+        temporal_context=temporal_context,
+        intent=intent,
+        raw={},
+        warning=v2_sig.warning,
+        signals_valid=v2_sig.valid,
+    )
+
+
+# ---------------------------------------------------------------------------
+# v2 scoring → v1 AxisScores bridge
+# Converts v2 Scores into the v1 AxisScores dataclass so cross_axis and
+# validation_layer receive the exact object shape they expect.
+# ---------------------------------------------------------------------------
+
+def _bridge_v2_scores_to_v1(v2_sc) -> "AxisScores":
+    """Build a v1-compatible AxisScores from a v2 Scores object."""
+    from axis_scoring import AxisScores
+    return AxisScores(
+        risk=v2_sc.risk,
+        cashflow=v2_sc.cashflow,
+        obligation=v2_sc.obligation,
+        context=v2_sc.context,
+        financial_capacity=v2_sc.capacity,
+        risk_reasons=v2_sc.risk_reasons,
+        cashflow_reasons=v2_sc.cashflow_reasons,
+        obligation_reasons=v2_sc.obligation_reasons,
+        context_reasons=v2_sc.context_reasons,
+    )
+
+
+# ---------------------------------------------------------------------------
+# v2 deterministic validation — replaces LLM validate_scores_vs_decision
+# ---------------------------------------------------------------------------
+
+def _v2_deterministic_validation(decision, axis_scores, narrative, investor_state=None):
+    """
+    Deterministic replacement for validate_scores_vs_decision().
+    Checks the same invariants without an LLM call.
+    Returns a ValidationResult-compatible object.
+    """
+    from validation_layer import ValidationResult
+    import re
+
+    def _upper(s):
+        if not s: return None
+        m = re.search(r"(\d+)\s*[-–]\s*(\d+)\s*%?", str(s))
+        if m: return int(m.group(2))
+        m = re.search(r"(\d+)\s*%?", str(s))
+        if m: return int(m.group(1))
+        return None
+
+    mismatches = []
+    sc = getattr(decision, "state_context", None)
+    trait = getattr(sc, "dominant_trait", "unknown") if sc else "unknown"
+    upper = _upper(getattr(decision, "current_allocation", ""))
+
+    # Check 1: panic/cautious → equity must be ≤ 25%
+    if trait in ("panic", "cautious") and upper and upper > 25:
+        mismatches.append({
+            "axis": "dominant_trait",
+            "score": upper,
+            "decision_implies": 25,
+            "reason": f"dominant_trait='{trait}' but current_allocation upper={upper}% > 25%",
+        })
+
+    # Check 2: high obligation → capacity should be low
+    if axis_scores.obligation > 70 and axis_scores.financial_capacity > 50:
+        mismatches.append({
+            "axis": "obligation",
+            "score": axis_scores.obligation,
+            "decision_implies": None,
+            "reason": "High obligation but high financial_capacity — inconsistent",
+        })
+
+    # Check 3: allocation_mode sync
+    cur_u  = _upper(getattr(decision, "current_allocation", "")) or 0
+    base_u = _upper(getattr(decision, "baseline_allocation", "")) or 0
+    mode   = getattr(decision, "allocation_mode", "normal")
+    if cur_u != base_u and mode in ("normal", "static"):
+        mismatches.append({
+            "axis": "allocation_mode",
+            "score": None,
+            "decision_implies": None,
+            "reason": f"current≠baseline but allocation_mode='{mode}'",
+        })
+
+    alignment = "strong" if not mismatches else ("partial" if len(mismatches) == 1 else "weak")
+    note = "; ".join(m["reason"] for m in mismatches) if mismatches else ""
+
+    return ValidationResult(
+        scores_support_decision=len(mismatches) == 0,
+        mismatches=mismatches,
+        mismatch_note=note,
+        overall_alignment=alignment,
+        guardrail_compliance="compliant",
+        guardrail_note="",
+        warning=None,
+    )
+
 
 _KEY_FIELDS = [
     "income_type", "monthly_income", "emergency_months",
@@ -239,8 +484,23 @@ def _compute_confidence_score(confidences: dict, validated: dict) -> int:
     return int(round((total / len(_KEY_FIELDS)) * 100))
 
 
-def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
-    """Full pipeline: investor paragraph → structured InvestorDNA profile."""
+def run_pipeline(
+    paragraph: str,
+    verbose: bool = False,
+    use_v2_signals: bool = False,
+    use_v2_scoring: bool = False,
+    use_v2_decision: bool = False,
+) -> dict:
+    """
+    Full pipeline: investor paragraph → structured InvestorDNA profile.
+
+    v2 flags (all default OFF — v1 behaviour unchanged):
+      use_v2_signals  — swap Stage 4 signal extraction with v2 flat schema
+      use_v2_scoring  — swap Stage 8 axis scoring with v2 deterministic engine
+      use_v2_decision — swap Stage 9 LLM validation with v2 deterministic guardrails
+    """
+    if use_v2_scoring and not use_v2_signals:
+        raise ValueError("use_v2_scoring requires use_v2_signals — pass use_v2_signals=True")
 
     # -----------------------------------------------------------------------
     # Stage 1: Extraction
@@ -332,13 +592,29 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     # Stage 4: Signal Extraction — single LLM call, ALL signals extracted once
     # This is the single source of truth for all behavioral/contextual signals.
     # Replaces all regex in profile_context, state_classifier, etc.
+    #
+    # --v2-signals: uses v2/signals.py (flat schema, 768 tokens) then bridges
+    #               the result back to the v1 SignalOutput interface.
     # -----------------------------------------------------------------------
     if verbose:
         print("\n[4] Signal extraction (LLM — unified signal layer)...")
 
-    _logger.start("Stage 4/9 — Signal extraction (LLM)")
-    signals = extract_signals(paragraph)
-    _logger.done()
+    if use_v2_signals:
+        _logger.start("Stage 4/9 — Signal extraction (v2 flat schema)")
+        _v2_extract, _V2Signals = _load_v2_signals()
+        _v2_raw = _v2_extract(paragraph)
+        signals = _bridge_v2_signals_to_v1(_v2_raw)
+        _logger.done()
+        if verbose:
+            print(f"  [v2] dominant_trait={_v2_raw.dominant_trait}  "
+                  f"loss={_v2_raw.loss_response}  resilience={_v2_raw.resilience_level}  "
+                  f"valid={_v2_raw.valid}")
+            if _v2_raw.warning:
+                print(f"  WARNING: {_v2_raw.warning}")
+    else:
+        _logger.start("Stage 4/9 — Signal extraction (LLM)")
+        signals = extract_signals(paragraph)
+        _logger.done()
 
     if not signals.signals_valid:
         # Signals failed — build a minimal fallback path and continue to report
@@ -523,25 +799,86 @@ def run_pipeline(paragraph: str, verbose: bool = False) -> dict:
     # -----------------------------------------------------------------------
     # Stage 8: Scoring — categories + axis AFTER decision
     # investor_state drives calibration, not raw flags
+    #
+    # --v2-scoring: replaces the two LLM calibration calls
+    #   (_query_axis_calibration, _query_state_weights) with deterministic
+    #   rules derived from signals.  Bridges result back to v1 AxisScores.
     # -----------------------------------------------------------------------
     if verbose:
         print("\n[8] Scoring layer (state-driven, secondary signals)...")
 
-    categories  = assess_all_categories(profile_ctx, investor_state=investor_state)
-    axis_scores = compute_axis_scores(categories, profile_ctx, investor_state=investor_state, signals=signals)
+    if use_v2_scoring and use_v2_signals and not is_fallback_path:
+        _v2_score, _v2_scores_dict = _load_v2_scoring()
+        # Build v2 ExtractedFields from v1 plain_validated.
+        # Use the already-registered v2 extraction module to avoid the sys.modules
+        # cache collision with v1's extraction.py (which has no ExtractedFields).
+        import sys as _sys, os as _os, importlib.util as _ilu
+        _v2_dir = _os.path.join(_os.path.dirname(__file__), "v2")
+        _v2_ext_mod = _sys.modules.get("investor_profiler.v2.extraction")
+        if _v2_ext_mod is None:
+            _spec = _ilu.spec_from_file_location(
+                "investor_profiler.v2.extraction",
+                _os.path.join(_v2_dir, "extraction.py"),
+            )
+            _v2_ext_mod = _ilu.module_from_spec(_spec)
+            _sys.modules["investor_profiler.v2.extraction"] = _v2_ext_mod
+            _spec.loader.exec_module(_v2_ext_mod)
+        _V2Fields = _v2_ext_mod.ExtractedFields
+        _v2_fields = _V2Fields(
+            monthly_income=plain_validated.get("monthly_income"),
+            emi_amount=plain_validated.get("emi_amount"),
+            emergency_months=plain_validated.get("emergency_months"),
+            emi_ratio=plain_validated.get("emi_ratio"),
+            income_type=plain_validated.get("income_type") or "unknown",
+            dependents=plain_validated.get("dependents"),
+            experience_years=plain_validated.get("experience_years"),
+            financial_knowledge_score=plain_validated.get("financial_knowledge_score"),
+            decision_autonomy=plain_validated.get("decision_autonomy"),
+            loss_reaction=plain_validated.get("loss_reaction"),
+            risk_behavior=plain_validated.get("risk_behavior"),
+            near_term_obligation_level=plain_validated.get("near_term_obligation_level") or "none",
+            obligation_type=plain_validated.get("obligation_type"),
+            data_completeness=data_completeness,
+            missing_fields=missing_fields,
+            warning=None,
+            non_english=False,
+        )
+        _v2_sc = _v2_score(_v2_fields, _v2_raw)
+        axis_scores = _bridge_v2_scores_to_v1(_v2_sc)
+        # v1 categories object is still needed by cross_axis — compute it normally
+        categories = assess_all_categories(profile_ctx, investor_state=investor_state)
+        if verbose:
+            print(f"  [v2-scoring] risk={axis_scores.risk}  cashflow={axis_scores.cashflow}  "
+                  f"obligation={axis_scores.obligation}  context={axis_scores.context}  "
+                  f"capacity={axis_scores.financial_capacity}  archetype={_v2_sc.archetype}")
+    else:
+        categories  = assess_all_categories(profile_ctx, investor_state=investor_state)
+        axis_scores = compute_axis_scores(categories, profile_ctx, investor_state=investor_state, signals=signals)
 
-    if verbose:
+    if verbose and not (use_v2_scoring and use_v2_signals and not is_fallback_path):
         print(f"  Risk: {axis_scores.risk}  Cashflow: {axis_scores.cashflow}  "
               f"Obligation: {axis_scores.obligation}  Context: {axis_scores.context}  "
               f"Capacity: {axis_scores.financial_capacity}")
 
     # -----------------------------------------------------------------------
     # Stage 9: Validation — do scores support the decision?
+    #
+    # --v2-decision: replaces the LLM validate_scores_vs_decision call with
+    #   deterministic checks (no LLM call, no false-positive on failure).
     # -----------------------------------------------------------------------
     if verbose:
         print("\n[9] Validation layer (scores vs decision)...")
 
-    validation = validate_scores_vs_decision(decision, axis_scores, narrative, investor_state=investor_state)
+    if use_v2_decision:
+        validation = _v2_deterministic_validation(
+            decision, axis_scores, narrative, investor_state=investor_state
+        )
+        if verbose:
+            print(f"  [v2-decision] deterministic validation — "
+                  f"alignment={validation.overall_alignment}  "
+                  f"mismatches={len(validation.mismatches)}")
+    else:
+        validation = validate_scores_vs_decision(decision, axis_scores, narrative, investor_state=investor_state)
     _logger.done()
 
     if verbose:
@@ -658,7 +995,36 @@ def main():
                         help="LLM provider: ollama | ollama_cloud | openrouter")
     parser.add_argument("--model",        type=str, default=None,
                         help="Model name (overrides default for chosen provider)")
+    # -----------------------------------------------------------------------
+    # v2 opt-in flags — each replaces one problematic v1 stage
+    # -----------------------------------------------------------------------
+    parser.add_argument(
+        "--v2-signals", action="store_true", default=False,
+        help=(
+            "Use v2 signal extraction (flat 21-field schema, 768 tokens). "
+            "Fixes truncation failures on small models. "
+            "Result is bridged back to v1 SignalOutput — all downstream stages unaffected."
+        ),
+    )
+    parser.add_argument(
+        "--v2-scoring", action="store_true", default=False,
+        help=(
+            "Use v2 deterministic scoring (removes 2 LLM calibration calls). "
+            "Same input → same scores always. Requires --v2-signals."
+        ),
+    )
+    parser.add_argument(
+        "--v2-decision", action="store_true", default=False,
+        help=(
+            "Use v2 deterministic validation (removes LLM validate_scores_vs_decision call). "
+            "Replaces the LLM check with 3 deterministic invariant checks."
+        ),
+    )
     args = parser.parse_args()
+
+    # --v2-scoring requires --v2-signals (needs the v2 Signals object for bridging)
+    if args.v2_scoring and not args.v2_signals:
+        parser.error("--v2-scoring requires --v2-signals")
 
     # Apply LLM provider override before pipeline runs
     if args.provider or args.model:
@@ -667,6 +1033,13 @@ def main():
     if args.verbose:
         cfg = get_llm_config()
         print(f"[LLM] provider={cfg['provider']}  model={cfg['model']}  url={cfg['base_url']}")
+        active_flags = [f for f, v in [
+            ("--v2-signals", args.v2_signals),
+            ("--v2-scoring", args.v2_scoring),
+            ("--v2-decision", args.v2_decision),
+        ] if v]
+        if active_flags:
+            print(f"[v2 flags] {' '.join(active_flags)}")
 
     if args.file:
         with open(args.file) as f:
@@ -687,7 +1060,13 @@ def main():
         print("Error: No input provided.")
         return
 
-    result = run_pipeline(paragraph, verbose=args.verbose)
+    result = run_pipeline(
+        paragraph,
+        verbose=args.verbose,
+        use_v2_signals=args.v2_signals,
+        use_v2_scoring=args.v2_scoring,
+        use_v2_decision=args.v2_decision,
+    )
     print("\n" + "=" * 60)
     print("INVESTORDNA PROFILE OUTPUT v7")
     print("=" * 60)

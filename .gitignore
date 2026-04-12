@@ -7,3 +7,4 @@ __pycache__/
 
 # LLM config — contains API keys, never commit
 llm_config.json
+**/llm_config.json

@@ -1,0 +1,193 @@
+{
+  "status": "partial",
+  "report": {
+    "executive_summary": "Decision engine failed after all retries — conservative conservative default applied. Manual advisor assessment required. LLM was unavailable. Recommended equity range: 5-10%.",
+    "key_risks": [],
+    "bias_summary": "",
+    "recommended_actions": [
+      "Park funds in liquid fund until advisor assessment is complete."
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness is low (10%). Missing fields: monthly_income, emergency_months, emi_amount, dependents, experience_years. Recommendations should be treated as provisional.",
+    "full_profile": {
+      "profile_context": {},
+      "axis_scores": {
+        "risk": 0,
+        "cashflow": 0,
+        "obligation": 0,
+        "context": 0,
+        "financial_capacity": 0
+      },
+      "category_scores": {},
+      "cross_axis": {
+        "suitability": {
+          "classification": "Insufficient data"
+        },
+        "suitability_insights": [],
+        "advisor_narrative": "",
+        "investor_narrative": "",
+        "archetype": ""
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [],
+          "dominant_factors": [],
+          "secondary_factors": [],
+          "contradictions": [],
+          "state_inference": "",
+          "decision_logic": []
+        },
+        "current_allocation": "5-10%",
+        "baseline_allocation": "15-20%",
+        "allocation_mode": "conservative",
+        "state_context": {
+          "compound_state": "unknown — LLM unavailable",
+          "dominant_trait": "unknown",
+          "resilience_level": "medium",
+          "state_stability": "stable"
+        },
+        "temporal_strategy": {
+          "is_temporary": false,
+          "reassessment_trigger": "Retry when LLM is available",
+          "reassessment_timeline": "immediate",
+          "expected_shift": "none"
+        },
+        "risk_assessment": {
+          "identified_risks": [],
+          "true_risk_capacity": "Could not be determined — LLM unavailable.",
+          "stated_vs_actual_gap": "unknown",
+          "reliability": "low"
+        },
+        "strategy": {
+          "primary_instrument": "liquid fund",
+          "equity_pct": 5,
+          "debt_pct": 95,
+          "sip_recommended": false,
+          "first_step": "Park funds in liquid fund until advisor assessment is complete."
+        },
+        "archetype": "Unclassified",
+        "confidence": "low",
+        "reasoning": "Decision engine failed after all retries — conservative fallback applied.",
+        "advisor_note": "Manual advisor assessment required. LLM was unavailable.",
+        "warning": "LLM failed after 0 retries — conservative fallback used.",
+        "retry_count": 0,
+        "fallback_used": true,
+        "guardrail_adjustments": [],
+        "equity_range": "5-10%",
+        "true_risk_profile": "Could not be determined — LLM unavailable."
+      },
+      "debug": {
+        "missing_fields": [
+          "monthly_income",
+          "emergency_months",
+          "emi_amount",
+          "dependents",
+          "experience_years",
+          "financial_knowledge_score",
+          "loss_reaction",
+          "risk_behavior",
+          "near_term_obligation_level"
+        ],
+        "future_obligation_score": 5.0,
+        "blocking_violations": []
+      },
+      "trace_validation": {
+        "is_valid": false,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": true
+      },
+      "constraint_report": {
+        "guardrail_adjustments": [],
+        "pre_guardrail_trace_valid": false,
+        "post_guardrail_trace_valid": false,
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": [],
+        "pre_guardrail_violations": [],
+        "post_guardrail_violations": []
+      },
+      "final_decision": "Insufficient data — fallback applied.",
+      "confidence_score": 0.0,
+      "data_completeness": 10.0,
+      "suitability_insights": []
+    },
+    "archetype": "",
+    "equity_range": "5-10%",
+    "advisor_note": "Manual advisor assessment required. LLM was unavailable.",
+    "profile_context": {},
+    "axis_scores": {
+      "risk": 0,
+      "cashflow": 0,
+      "obligation": 0,
+      "context": 0,
+      "financial_capacity": 0
+    },
+    "cross_axis": {
+      "suitability": {
+        "classification": "Insufficient data"
+      },
+      "suitability_insights": [],
+      "advisor_narrative": "",
+      "investor_narrative": "",
+      "archetype": ""
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [],
+        "dominant_factors": [],
+        "secondary_factors": [],
+        "contradictions": [],
+        "state_inference": "",
+        "decision_logic": []
+      },
+      "current_allocation": "5-10%",
+      "baseline_allocation": "15-20%",
+      "allocation_mode": "conservative",
+      "state_context": {
+        "compound_state": "unknown — LLM unavailable",
+        "dominant_trait": "unknown",
+        "resilience_level": "medium",
+        "state_stability": "stable"
+      },
+      "temporal_strategy": {
+        "is_temporary": false,
+        "reassessment_trigger": "Retry when LLM is available",
+        "reassessment_timeline": "immediate",
+        "expected_shift": "none"
+      },
+      "risk_assessment": {
+        "identified_risks": [],
+        "true_risk_capacity": "Could not be determined — LLM unavailable.",
+        "stated_vs_actual_gap": "unknown",
+        "reliability": "low"
+      },
+      "strategy": {
+        "primary_instrument": "liquid fund",
+        "equity_pct": 5,
+        "debt_pct": 95,
+        "sip_recommended": false,
+        "first_step": "Park funds in liquid fund until advisor assessment is complete."
+      },
+      "archetype": "Unclassified",
+      "confidence": "low",
+      "reasoning": "Decision engine failed after all retries — conservative fallback applied.",
+      "advisor_note": "Manual advisor assessment required. LLM was unavailable.",
+      "warning": "LLM failed after 0 retries — conservative fallback used.",
+      "retry_count": 0,
+      "fallback_used": true,
+      "guardrail_adjustments": [],
+      "equity_range": "5-10%",
+      "true_risk_profile": "Could not be determined — LLM unavailable."
+    },
+    "suitability_insights": [],
+    "confidence_score": 0.0,
+    "data_completeness": 10.0
+  },
+  "meta": {
+    "reason": "all_fields_null",
+    "confidence": "low",
+    "fallback_used": true
+  }
+}

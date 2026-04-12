@@ -1,0 +1,813 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: Fragile Status-Seeker. The combination of upcoming marriage costs and familial real estate pressure creates a critical need for liquidity. Low current savings (₹90,000) make any significant equity exposure dangerous. The 'cautious' trait dominates because the fear of parental disappointment and financial shortfall outweighs the desire for growth. Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded. Recommended equity range: 0-15% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "upcoming major expense",
+      "Education-first approach required before complex instruments",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "There is a sharp conflict between his desire for high-growth assets to maintain status among peers and a deep-seated fear of failure that would disappoint his risk-averse parents. The profile is unstable and highly distorted by recency and peer influence. His investment choices are not based on goals but on HR prompts, colleague suggestions, and YouTube influencers, making his current portfolio a reflection of his social circle rather than his needs.",
+    "recommended_actions": [
+      "Move ₹90,000 into a liquid fund or separate savings account for marriage expenses."
+    ],
+    "do_not_recommend": [],
+    "completeness_note": "Profile completeness: 80%.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "salaried",
+          "monthly_income": 75000.0,
+          "city_tier": "tier2",
+          "employment_stability": "stable"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": 4500.0,
+          "emi_ratio": 6.0,
+          "dependents": null
+        },
+        "experience": {
+          "experience_years": 1.17,
+          "financial_knowledge_score": 2,
+          "decision_autonomy": false
+        },
+        "behavioral": {
+          "loss_reaction": "cautious",
+          "risk_behavior": "medium",
+          "resilience_level": "medium",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "wedding",
+          "future_obligation_score": 10.0
+        },
+        "life_events": [
+          {
+            "type": "marriage",
+            "description": "marriage event detected",
+            "recency": "recent",
+            "emotional_weight": "high"
+          }
+        ],
+        "cultural_signals": [
+          {
+            "type": "hidden_obligation",
+            "description": "Expected to prioritize buying a small flat after marriage to satisfy parents.",
+            "negotiability": "fixed"
+          },
+          {
+            "type": "hidden_obligation",
+            "description": "Gold jewellery scheme in mother's name intended for wedding funds.",
+            "negotiability": "fixed"
+          }
+        ],
+        "behavioral_signals": [
+          {
+            "type": "anxiety",
+            "description": "Cautious response to losses",
+            "strength": "moderate"
+          },
+          {
+            "type": "resilience",
+            "description": "Moderate resilience",
+            "strength": "moderate"
+          },
+          {
+            "type": "peer_influence",
+            "description": "Investment decisions influenced by peers",
+            "strength": "strong"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "cautious",
+            "suppressed_trait": "unknown",
+            "explanation": "Desires fast growth for status among peers but fears disappointing parents who view equities as risky."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": true,
+          "hidden_obligation_detected": true,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": true
+        }
+      },
+      "axis_scores": {
+        "risk": 28,
+        "cashflow": 78,
+        "obligation": 43,
+        "context": 23,
+        "financial_capacity": 44
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 83,
+          "label": "high",
+          "reason": "Salaried employment provides predictable monthly income | Moderate income (₹75,000/mo)",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 17,
+          "label": "low",
+          "reason": "EMI ratio 6.0% — low debt burden",
+          "modifiers": [],
+          "data_available": true
+        },
+        "dependency_load": {
+          "score": 5,
+          "label": "low",
+          "reason": "Dependents not mentioned — no burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "cultural_obligation": {
+          "score": 96,
+          "label": "high",
+          "reason": "Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 10 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 95/100 → score multiplier 1.36",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "Advisor insight: open conversation about goal-based investing for this milestone",
+            "State weight calibration: High weights are assigned due to imminent high-cost life events and a strong tendency to prioritize social signaling over financial stability."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 54,
+          "label": "moderate",
+          "reason": "Moderate risk behavior | Cautious response to losses — moderate concern",
+          "modifiers": [
+            "State behavioral weight: 85/100 → emotional amplifier 1.35",
+            "Anxiety-driven monitoring behavior detected",
+            "Peer-influenced decisions increase behavioral risk"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "Fragile Status-Seeker",
+        "archetype_description": "Very low due to imminent high-cost life events and minimal liquid reserves.",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "The combination of upcoming marriage costs and familial real estate pressure creates a critical need for liquidity. Low current savings (₹90,000) make any significant equity exposure dangerous. The 'cautious' trait dominates because the fear of parental disappointment and financial shortfall outweighs the desire for growth. Recommended strategy: Liquid Fund / High-Yield Savings; equity 10%, debt 90%. Move ₹90,000 into a liquid fund or separate savings account for marriage expenses.",
+          "equity_range": "0-15% equity RIGHT NOW",
+          "equity_ceiling_pct": 15,
+          "guidance": [
+            "Maximum equity exposure: 15% (large-cap only)",
+            "Suitable: liquid funds, short-duration debt funds, FD"
+          ],
+          "advisor_note": "Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded."
+        },
+        "advisor_narrative": "Archetype: Fragile Status-Seeker. Advisor note: Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded. Very low due to imminent high-cost life events and minimal liquid reserves. Contradictions: There is a sharp conflict between his desire for high-growth assets to maintain status among peers and a deep-seated fear of failure that would disappoint his risk-averse parents. Cultural obligation burden is significant (score: 96/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 10 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Education-first approach required before complex instruments",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "Upcoming marriage expenses",
+            "Cultural real estate pressure",
+            "Low liquidity (₹90,000)",
+            "Peer-based portfolio comparison",
+            "Flight to safety during correction",
+            "Low EMI burden"
+          ],
+          "dominant_factors": [
+            "Imminent high-cost life events",
+            "Social validation needs",
+            "Familial real estate obligations"
+          ],
+          "secondary_factors": [
+            "Healthy monthly surplus",
+            "Stated desire for growth"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Desire for fast growth/status",
+              "signal_2": "Fear of parental disappointment/risk",
+              "resolution": "Growth desire is a facade; risk aversion dominates during volatility",
+              "dominant_trait": "cautious"
+            }
+          ],
+          "state_inference": "Status-driven transitional fragility characterized by low liquidity and high emotional volatility.",
+          "decision_logic": [
+            "Imminent liabilities (wedding/housing) override long-term growth capacity",
+            "Fragile conviction leads to panic-selling despite stated goals"
+          ]
+        },
+        "current_allocation": "0-15% equity RIGHT NOW",
+        "baseline_allocation": "0-40%",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "Status-driven transitional fragility",
+          "dominant_trait": "cautious",
+          "resilience_level": "low",
+          "state_stability": "transitional"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "Completion of marriage expenses and real estate settlement",
+          "reassessment_timeline": "6-12 months",
+          "expected_shift": "Gradual increase in equity exposure as liquidity stabilizes"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "upcoming major expense"
+          ],
+          "true_risk_capacity": "Very low due to imminent high-cost life events and minimal liquid reserves.",
+          "stated_vs_actual_gap": "Desire for status-driven growth is contradicted by actual financial fragility.",
+          "reliability": "medium"
+        },
+        "strategy": {
+          "primary_instrument": "Liquid Fund / High-Yield Savings",
+          "equity_pct": 10,
+          "debt_pct": 90,
+          "sip_recommended": false,
+          "first_step": "Move ₹90,000 into a liquid fund or separate savings account for marriage expenses."
+        },
+        "archetype": "Fragile Status-Seeker",
+        "confidence": "high",
+        "reasoning": "The combination of upcoming marriage costs and familial real estate pressure creates a critical need for liquidity. Low current savings (₹90,000) make any significant equity exposure dangerous. The 'cautious' trait dominates because the fear of parental disappointment and financial shortfall outweighs the desire for growth.",
+        "advisor_note": "Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "40-60% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-15% equity RIGHT NOW) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0-15% equity RIGHT NOW",
+        "true_risk_profile": "Very low due to imminent high-cost life events and minimal liquid reserves."
+      },
+      "debug": {
+        "rule_fields": {
+          "monthly_income": {
+            "value": 75000,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "emi_amount": {
+            "value": 4500.0,
+            "confidence": "medium",
+            "source": "rule"
+          },
+          "income_type": {
+            "value": "salaried",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "risk_behavior": {
+            "value": "medium",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": "Shifted a mid-cap SIP to a safer large-cap fund during a 10-12% correction on a colleague's advice, though he continued investing.",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 2,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "wedding",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": 1.17,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": false,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": "cautious",
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "monthly_income",
+            "rule_value": 75000,
+            "llm_value": null,
+            "chosen": 75000,
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": "medium",
+            "chosen": "medium",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": "Shifted a mid-cap SIP to a safer large-cap fund during a 10-12% correction on a colleague's advice, though he continued investing.",
+            "chosen": "Shifted a mid-cap SIP to a safer large-cap fund during a 10-12% correction on a colleague's advice, though he continued investing.",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "salaried",
+            "llm_value": null,
+            "chosen": "salaried",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 2,
+            "chosen": 2,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "emi_amount",
+            "rule_value": 4500.0,
+            "llm_value": null,
+            "chosen": 4500.0,
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "wedding",
+            "chosen": "wedding",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 1.17,
+            "chosen": 1.17,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": false,
+            "chosen": false,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": "cautious",
+            "chosen": "cautious",
+            "source": "llm",
+            "reason": "llm-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income: 'earning about 9 lpa' → 75000 (9.0 LPA/12)",
+          "Rule EMI: 'emi of ₹4,500,' → 4500.0",
+          "Rule income_type: LPA → salaried"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "near_term_obligation_level": "llm",
+          "monthly_income": "rule",
+          "risk_behavior": "llm",
+          "loss_reaction_description": "llm",
+          "income_type": "rule",
+          "financial_knowledge_score": "llm",
+          "emi_amount": "rule",
+          "obligation_type": "llm",
+          "dependents": "default",
+          "experience_years": "llm",
+          "decision_autonomy": "llm",
+          "loss_reaction": "llm",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "emi_ratio=6.00% = emi(4500.0) / income(75000.0) × 100",
+          "future_obligation_score=10.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "emergency_months",
+          "dependents"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "Cautious loss response — moderate-low risk appetite."
+          ],
+          "cashflow": [
+            "Salaried: stable income base.",
+            "Moderate income ₹75,000/mo: +8."
+          ],
+          "obligation": [
+            "EMI ratio 6.0%: low burden.",
+            "Moderate near-term obligation (wedding).",
+            "Cultural obligation: Expected to prioritize buying a small flat after marriage to.",
+            "Hidden obligations detected."
+          ],
+          "context": [
+            "1.2yr experience: +6.",
+            "Knowledge score 2/5: +5.",
+            "Peer/family-influenced decisions: -5.",
+            "High peer influence (signals): -8."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "wedding",
+            "timeline": "mid",
+            "scale": "medium",
+            "matched": "wedding"
+          }
+        ],
+        "future_obligation_score": 10.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "40-60% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-15% equity RIGHT NOW) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+              "field": "baseline_allocation",
+              "before": "40-60% equity long-term",
+              "after": "0-40%",
+              "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+            },
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "defensive",
+              "after": "transitional",
+              "reason": "current_allocation (0-15% equity RIGHT NOW) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+            "field": "baseline_allocation",
+            "before": "40-60% equity long-term",
+            "after": "0-40%",
+            "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+          },
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0-15% equity RIGHT NOW) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "The combination of upcoming marriage costs and familial real estate pressure creates a critical need for liquidity. Low current savings (₹90,000) make any significant equity exposure dangerous. The 'cautious' trait dominates because the fear of parental disappointment and financial shortfall outweighs the desire for growth.",
+      "confidence_score": 47.0,
+      "data_completeness": 80.0,
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "Fragile Status-Seeker",
+    "equity_range": "0-15% equity RIGHT NOW",
+    "advisor_note": "Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "salaried",
+        "monthly_income": 75000.0,
+        "city_tier": "tier2",
+        "employment_stability": "stable"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": 4500.0,
+        "emi_ratio": 6.0,
+        "dependents": null
+      },
+      "experience": {
+        "experience_years": 1.17,
+        "financial_knowledge_score": 2,
+        "decision_autonomy": false
+      },
+      "behavioral": {
+        "loss_reaction": "cautious",
+        "risk_behavior": "medium",
+        "resilience_level": "medium",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "wedding",
+        "future_obligation_score": 10.0
+      },
+      "life_events": [
+        {
+          "type": "marriage",
+          "description": "marriage event detected",
+          "recency": "recent",
+          "emotional_weight": "high"
+        }
+      ],
+      "cultural_signals": [
+        {
+          "type": "hidden_obligation",
+          "description": "Expected to prioritize buying a small flat after marriage to satisfy parents.",
+          "negotiability": "fixed"
+        },
+        {
+          "type": "hidden_obligation",
+          "description": "Gold jewellery scheme in mother's name intended for wedding funds.",
+          "negotiability": "fixed"
+        }
+      ],
+      "behavioral_signals": [
+        {
+          "type": "anxiety",
+          "description": "Cautious response to losses",
+          "strength": "moderate"
+        },
+        {
+          "type": "resilience",
+          "description": "Moderate resilience",
+          "strength": "moderate"
+        },
+        {
+          "type": "peer_influence",
+          "description": "Investment decisions influenced by peers",
+          "strength": "strong"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "cautious",
+          "suppressed_trait": "unknown",
+          "explanation": "Desires fast growth for status among peers but fears disappointing parents who view equities as risky."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": true,
+        "hidden_obligation_detected": true,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": true
+      }
+    },
+    "axis_scores": {
+      "risk": 28,
+      "cashflow": 78,
+      "obligation": 43,
+      "context": 23,
+      "financial_capacity": 44
+    },
+    "cross_axis": {
+      "archetype": "Fragile Status-Seeker",
+      "archetype_description": "Very low due to imminent high-cost life events and minimal liquid reserves.",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "The combination of upcoming marriage costs and familial real estate pressure creates a critical need for liquidity. Low current savings (₹90,000) make any significant equity exposure dangerous. The 'cautious' trait dominates because the fear of parental disappointment and financial shortfall outweighs the desire for growth. Recommended strategy: Liquid Fund / High-Yield Savings; equity 10%, debt 90%. Move ₹90,000 into a liquid fund or separate savings account for marriage expenses.",
+        "equity_range": "0-15% equity RIGHT NOW",
+        "equity_ceiling_pct": 15,
+        "guidance": [
+          "Maximum equity exposure: 15% (large-cap only)",
+          "Suitable: liquid funds, short-duration debt funds, FD"
+        ],
+        "advisor_note": "Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded."
+      },
+      "advisor_narrative": "Archetype: Fragile Status-Seeker. Advisor note: Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded. Very low due to imminent high-cost life events and minimal liquid reserves. Contradictions: There is a sharp conflict between his desire for high-growth assets to maintain status among peers and a deep-seated fear of failure that would disappoint his risk-averse parents. Cultural obligation burden is significant (score: 96/100). Moderate near-term obligation (wedding) — capital commitment expected within 1–2 years | Hidden financial obligation detected — investable surplus is lower than income suggests | Hidden financial obligation detected — investable surplus is lower than income suggests | Future financial commitment detected — adds 10 pts to obligation burden Hidden obligation detected — investable surplus is lower than income suggests.",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. Your financial commitments are significant, but there is room to build a disciplined investment habit. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Education-first approach required before complex instruments",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "Upcoming marriage expenses",
+          "Cultural real estate pressure",
+          "Low liquidity (₹90,000)",
+          "Peer-based portfolio comparison",
+          "Flight to safety during correction",
+          "Low EMI burden"
+        ],
+        "dominant_factors": [
+          "Imminent high-cost life events",
+          "Social validation needs",
+          "Familial real estate obligations"
+        ],
+        "secondary_factors": [
+          "Healthy monthly surplus",
+          "Stated desire for growth"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Desire for fast growth/status",
+            "signal_2": "Fear of parental disappointment/risk",
+            "resolution": "Growth desire is a facade; risk aversion dominates during volatility",
+            "dominant_trait": "cautious"
+          }
+        ],
+        "state_inference": "Status-driven transitional fragility characterized by low liquidity and high emotional volatility.",
+        "decision_logic": [
+          "Imminent liabilities (wedding/housing) override long-term growth capacity",
+          "Fragile conviction leads to panic-selling despite stated goals"
+        ]
+      },
+      "current_allocation": "0-15% equity RIGHT NOW",
+      "baseline_allocation": "0-40%",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "Status-driven transitional fragility",
+        "dominant_trait": "cautious",
+        "resilience_level": "low",
+        "state_stability": "transitional"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "Completion of marriage expenses and real estate settlement",
+        "reassessment_timeline": "6-12 months",
+        "expected_shift": "Gradual increase in equity exposure as liquidity stabilizes"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "upcoming major expense"
+        ],
+        "true_risk_capacity": "Very low due to imminent high-cost life events and minimal liquid reserves.",
+        "stated_vs_actual_gap": "Desire for status-driven growth is contradicted by actual financial fragility.",
+        "reliability": "medium"
+      },
+      "strategy": {
+        "primary_instrument": "Liquid Fund / High-Yield Savings",
+        "equity_pct": 10,
+        "debt_pct": 90,
+        "sip_recommended": false,
+        "first_step": "Move ₹90,000 into a liquid fund or separate savings account for marriage expenses."
+      },
+      "archetype": "Fragile Status-Seeker",
+      "confidence": "high",
+      "reasoning": "The combination of upcoming marriage costs and familial real estate pressure creates a critical need for liquidity. Low current savings (₹90,000) make any significant equity exposure dangerous. The 'cautious' trait dominates because the fear of parental disappointment and financial shortfall outweighs the desire for growth.",
+      "advisor_note": "Prioritize capital preservation over growth until the marriage and real estate obligations are fully funded.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R9_RECENCY_BIAS_BASELINE_CAP",
+          "field": "baseline_allocation",
+          "before": "40-60% equity long-term",
+          "after": "0-40%",
+          "reason": "shift_detected=True AND shift_permanence='likely_temporary' — baseline_allocation capped at 40% because the behavioral shift may not represent stable long-term capacity."
+        },
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "defensive",
+          "after": "transitional",
+          "reason": "current_allocation (0-15% equity RIGHT NOW) ≠ baseline_allocation (0-40%) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0-15% equity RIGHT NOW",
+      "true_risk_profile": "Very low due to imminent high-cost life events and minimal liquid reserves."
+    },
+    "suitability_insights": [
+      "Education-first approach required before complex instruments",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 47.0,
+    "data_completeness": 80.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}

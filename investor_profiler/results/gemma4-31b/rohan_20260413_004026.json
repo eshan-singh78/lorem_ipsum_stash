@@ -1,0 +1,698 @@
+{
+  "status": "success",
+  "report": {
+    "executive_summary": "Investor archetype: High-Income Fragile Spender. The combination of zero savings and volatile freelance income creates a critical liquidity gap. Imminent increases in fixed overheads further reduce the margin for error. Until a cash buffer is established, any equity allocation represents an unacceptable risk of forced liquidation. Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy. Recommended equity range: 0% equity RIGHT NOW.",
+    "key_risks": [
+      "no emergency fund",
+      "income instability",
+      "no savings",
+      "upcoming major expense",
+      "no investment experience",
+      "Prioritize liquidity — avoid long lock-in products",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "bias_summary": "There is a sharp divide between his long-term aspiration for stability by age 32 and his current behavior, which is characterized by an absence of budgeting and a preference for immediate consumption. The profile is unstable and distorted by recency and optimism. He is currently operating in a 'honeymoon phase' of independence where the absence of bills masks his lack of financial discipline.",
+    "recommended_actions": [
+      "Redirect 100% of investable surplus to a liquid emergency fund until 6 months of overheads are covered."
+    ],
+    "do_not_recommend": [
+      "No equity exposure recommended at this time"
+    ],
+    "completeness_note": "Profile completeness is moderate (40%). Some fields were inferred or unavailable.",
+    "full_profile": {
+      "profile_context": {
+        "demographics": {
+          "income_type": "gig",
+          "monthly_income": null,
+          "city_tier": "unknown",
+          "employment_stability": "volatile"
+        },
+        "financial_snapshot": {
+          "emergency_months": null,
+          "emi_amount": null,
+          "emi_ratio": null,
+          "dependents": null
+        },
+        "experience": {
+          "experience_years": 0.0,
+          "financial_knowledge_score": 1,
+          "decision_autonomy": true
+        },
+        "behavioral": {
+          "loss_reaction": null,
+          "risk_behavior": null,
+          "resilience_level": "medium",
+          "resilience_evidence": ""
+        },
+        "obligation": {
+          "near_term_obligation_level": "moderate",
+          "obligation_type": "house",
+          "future_obligation_score": 5.0
+        },
+        "life_events": [],
+        "cultural_signals": [],
+        "behavioral_signals": [
+          {
+            "type": "resilience",
+            "description": "Moderate resilience",
+            "strength": "moderate"
+          }
+        ],
+        "contradictions": [
+          {
+            "type": "stated_vs_actual",
+            "dominant_trait": "inconsistent",
+            "suppressed_trait": "unknown",
+            "explanation": "Desires long-term financial stability but currently lacks any savings discipline or structured budgeting."
+          }
+        ],
+        "flags": {
+          "grief_state": false,
+          "peer_driven": false,
+          "hidden_obligation_detected": false,
+          "fragmentation_risk": false,
+          "recency_bias_risk": false,
+          "emerging_constraint": false
+        }
+      },
+      "axis_scores": {
+        "risk": null,
+        "cashflow": 35,
+        "obligation": 15,
+        "context": 35,
+        "financial_capacity": 30
+      },
+      "category_scores": {
+        "income_stability": {
+          "score": 30,
+          "label": "low",
+          "reason": "Gig/freelance income — high volatility, no employer safety net",
+          "modifiers": [],
+          "data_available": true
+        },
+        "emergency_preparedness": {
+          "score": null,
+          "label": "unknown",
+          "reason": "Emergency fund not reported — cannot assess (not penalized)",
+          "modifiers": [],
+          "data_available": false
+        },
+        "debt_burden": {
+          "score": 5,
+          "label": "low",
+          "reason": "No debt data — minimal burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "dependency_load": {
+          "score": 5,
+          "label": "low",
+          "reason": "Dependents not mentioned — no burden assumed",
+          "modifiers": [],
+          "data_available": false
+        },
+        "cultural_obligation": {
+          "score": 36,
+          "label": "moderate",
+          "reason": "Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Future financial commitment detected — adds 4 pts to obligation burden",
+          "modifiers": [
+            "Narrative obligation weight: 85/100 → score multiplier 1.28",
+            "State weight calibration: The investor faces a critical intersection of imminent high fixed costs, volatile income, and a severe lack of spending discipline."
+          ],
+          "data_available": true
+        },
+        "behavioral_risk": {
+          "score": 1,
+          "label": "low",
+          "reason": "",
+          "modifiers": [
+            "State behavioral weight: 95/100 → emotional amplifier 1.45"
+          ],
+          "data_available": true
+        }
+      },
+      "cross_axis": {
+        "archetype": "High-Income Fragile Spender",
+        "archetype_description": "Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous.",
+        "mismatch": null,
+        "binding_constraint": null,
+        "suitability": {
+          "classification": "The combination of zero savings and volatile freelance income creates a critical liquidity gap. Imminent increases in fixed overheads further reduce the margin for error. Until a cash buffer is established, any equity allocation represents an unacceptable risk of forced liquidation. Recommended strategy: High-yield savings / Liquid fund; equity 0%, debt 100%. Redirect 100% of investable surplus to a liquid emergency fund until 6 months of overheads are covered.",
+          "equity_range": "0% equity RIGHT NOW",
+          "equity_ceiling_pct": 0,
+          "guidance": [
+            "No equity exposure recommended at this time",
+            "Focus: debt reduction, emergency fund, insurance"
+          ],
+          "advisor_note": "Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy."
+        },
+        "advisor_narrative": "Archetype: High-Income Fragile Spender. Advisor note: Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy. Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous. Contradictions: There is a sharp divide between his long-term aspiration for stability by age 32 and his current behavior, which is characterized by an absence of budgeting and a preference for immediate consumption. Cultural obligation burden is significant (score: 36/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Future financial commitment detected — adds 4 pts to obligation burden",
+        "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+        "suitability_insights": [
+          "Prioritize liquidity — avoid long lock-in products",
+          "Profile reliability is low — treat all scores as provisional"
+        ],
+        "drift_expectation": null
+      },
+      "decision": {
+        "reasoning_trace": {
+          "signals_considered": [
+            "zero existing savings",
+            "volatile freelance income",
+            "imminent surge in fixed overheads",
+            "lack of analytical framework",
+            "untested risk resilience",
+            "high discretionary spending"
+          ],
+          "dominant_factors": [
+            "Zero investable capacity",
+            "Volatile freelance income",
+            "Rising fixed overheads"
+          ],
+          "secondary_factors": [
+            "Age-based risk capacity",
+            "Stated desire for stability"
+          ],
+          "contradictions": [
+            {
+              "signal_1": "Desire for stability",
+              "signal_2": "Inconsistent spending habits",
+              "resolution": "Lack of financial discipline overrides stated goals",
+              "dominant_trait": "inconsistent"
+            }
+          ],
+          "state_inference": "High-earning professional in a pre-crisis consumption phase with low actual risk capacity due to lack of liquidity.",
+          "decision_logic": [
+            "Real risk capacity is low despite age due to zero safety net and volatile income",
+            "Imminent lifestyle inflation (3BHK, office, car) further restricts liquidity for investment"
+          ]
+        },
+        "current_allocation": "0% equity RIGHT NOW",
+        "baseline_allocation": "60-80% equity long-term",
+        "allocation_mode": "transitional",
+        "state_context": {
+          "compound_state": "pre-crisis liquidity deficit",
+          "dominant_trait": "inconsistent",
+          "resilience_level": "low",
+          "state_stability": "unstable"
+        },
+        "temporal_strategy": {
+          "is_temporary": true,
+          "reassessment_trigger": "establishment of 6-month emergency fund",
+          "reassessment_timeline": "3-6 months",
+          "expected_shift": "gradual transition from cash to equity SIPs"
+        },
+        "risk_assessment": {
+          "identified_risks": [
+            "no emergency fund",
+            "income instability",
+            "no savings",
+            "upcoming major expense",
+            "no investment experience"
+          ],
+          "true_risk_capacity": "Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous.",
+          "stated_vs_actual_gap": "High earning potential masks a critical lack of actual financial resilience.",
+          "reliability": "medium"
+        },
+        "strategy": {
+          "primary_instrument": "High-yield savings / Liquid fund",
+          "equity_pct": 0,
+          "debt_pct": 100,
+          "sip_recommended": false,
+          "first_step": "Redirect 100% of investable surplus to a liquid emergency fund until 6 months of overheads are covered."
+        },
+        "archetype": "High-Income Fragile Spender",
+        "confidence": "high",
+        "reasoning": "The combination of zero savings and volatile freelance income creates a critical liquidity gap. Imminent increases in fixed overheads further reduce the margin for error. Until a cash buffer is established, any equity allocation represents an unacceptable risk of forced liquidation.",
+        "advisor_note": "Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy.",
+        "warning": null,
+        "retry_count": 0,
+        "fallback_used": false,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (60-80% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "equity_range": "0% equity RIGHT NOW",
+        "true_risk_profile": "Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous."
+      },
+      "debug": {
+        "rule_fields": {
+          "income_type": {
+            "value": "gig",
+            "confidence": "medium",
+            "source": "rule"
+          }
+        },
+        "llm_fields": {
+          "risk_behavior": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "experience_years": {
+            "value": 0,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "loss_reaction_description": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "dependents": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "loss_reaction": {
+            "value": null,
+            "confidence": "low",
+            "source": "llm"
+          },
+          "financial_knowledge_score": {
+            "value": 1,
+            "confidence": "high",
+            "source": "llm"
+          },
+          "near_term_obligation_level": {
+            "value": "moderate",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "obligation_type": {
+            "value": "house",
+            "confidence": "low",
+            "source": "llm"
+          },
+          "decision_autonomy": {
+            "value": true,
+            "confidence": "low",
+            "source": "llm"
+          }
+        },
+        "merge_log": [
+          {
+            "field": "risk_behavior",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "experience_years",
+            "rule_value": null,
+            "llm_value": 0,
+            "chosen": 0,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "loss_reaction_description",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "income_type",
+            "rule_value": "gig",
+            "llm_value": null,
+            "chosen": "gig",
+            "source": "rule",
+            "reason": "rule-owned"
+          },
+          {
+            "field": "dependents",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "loss_reaction",
+            "rule_value": null,
+            "llm_value": null,
+            "chosen": null,
+            "source": "default",
+            "reason": "llm-owned: both null"
+          },
+          {
+            "field": "financial_knowledge_score",
+            "rule_value": null,
+            "llm_value": 1,
+            "chosen": 1,
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "near_term_obligation_level",
+            "rule_value": null,
+            "llm_value": "moderate",
+            "chosen": "moderate",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "obligation_type",
+            "rule_value": null,
+            "llm_value": "house",
+            "chosen": "house",
+            "source": "llm",
+            "reason": "llm-owned"
+          },
+          {
+            "field": "decision_autonomy",
+            "rule_value": null,
+            "llm_value": true,
+            "chosen": true,
+            "source": "llm",
+            "reason": "llm-owned"
+          }
+        ],
+        "rule_log": [
+          "Rule income_type: gig signal"
+        ],
+        "invariant_log": [],
+        "field_sources": {
+          "risk_behavior": "default",
+          "experience_years": "llm",
+          "loss_reaction_description": "default",
+          "income_type": "rule",
+          "dependents": "default",
+          "loss_reaction": "default",
+          "financial_knowledge_score": "llm",
+          "near_term_obligation_level": "llm",
+          "obligation_type": "llm",
+          "decision_autonomy": "llm",
+          "emi_ratio": "derived",
+          "emi_ratio_source": "derived",
+          "future_obligation_score": "derived"
+        },
+        "derived_fields": [
+          "future_obligation_score=5.0 (from intent detection)"
+        ],
+        "confidence_corrections": [],
+        "invariant_violations": [],
+        "missing_fields": [
+          "monthly_income",
+          "emergency_months",
+          "emi_amount",
+          "dependents",
+          "loss_reaction",
+          "risk_behavior"
+        ],
+        "axis_reasons": {
+          "risk": [
+            "No behavioral data — risk axis cannot be scored."
+          ],
+          "cashflow": [
+            "Gig income: high volatility.",
+            "Low financial pressure (signals): +5."
+          ],
+          "obligation": [
+            "Moderate near-term obligation (house)."
+          ],
+          "context": [
+            "<1yr experience: novice.",
+            "Knowledge score 1/5: +0.",
+            "Independent decision-making: +10."
+          ]
+        },
+        "future_events_detected": [
+          {
+            "type": "travel",
+            "timeline": "near",
+            "scale": "low",
+            "matched": "travel"
+          }
+        ],
+        "future_obligation_score": 5.0,
+        "extraction_warning": null,
+        "signal_warning": null,
+        "narrative_warning": null,
+        "decision_warning": null,
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (60-80% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "trace_validation": {
+          "is_valid": true,
+          "violations": [],
+          "warnings": [],
+          "correction_feedback": ""
+        },
+        "constraint_report": {
+          "pre_guardrail_trace_valid": true,
+          "pre_guardrail_violations": [],
+          "guardrail_adjustments": [
+            {
+              "rule": "R6_ALLOCATION_MODE_SYNC",
+              "field": "allocation_mode",
+              "before": "defensive",
+              "after": "transitional",
+              "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (60-80% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+            }
+          ],
+          "post_guardrail_trace_valid": true,
+          "post_guardrail_violations": [],
+          "hard_enforced": false,
+          "hard_enforce_note": "",
+          "warnings": []
+        },
+        "blocking_violations": [],
+        "state_synthesis_warning": null,
+        "validation_warning": null
+      },
+      "trace_validation": {
+        "is_valid": true,
+        "violations": [],
+        "warnings": [],
+        "correction_feedback": "",
+        "not_applicable": false
+      },
+      "constraint_report": {
+        "pre_guardrail_trace_valid": true,
+        "pre_guardrail_violations": [],
+        "guardrail_adjustments": [
+          {
+            "rule": "R6_ALLOCATION_MODE_SYNC",
+            "field": "allocation_mode",
+            "before": "defensive",
+            "after": "transitional",
+            "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (60-80% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+          }
+        ],
+        "post_guardrail_trace_valid": true,
+        "post_guardrail_violations": [],
+        "hard_enforced": false,
+        "hard_enforce_note": "",
+        "warnings": []
+      },
+      "final_decision": "The combination of zero savings and volatile freelance income creates a critical liquidity gap. Imminent increases in fixed overheads further reduce the margin for error. Until a cash buffer is established, any equity allocation represents an unacceptable risk of forced liquidation.",
+      "confidence_score": 29.0,
+      "data_completeness": 40.0,
+      "suitability_insights": [
+        "Prioritize liquidity — avoid long lock-in products",
+        "Profile reliability is low — treat all scores as provisional"
+      ]
+    },
+    "archetype": "High-Income Fragile Spender",
+    "equity_range": "0% equity RIGHT NOW",
+    "advisor_note": "Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy.",
+    "profile_context": {
+      "demographics": {
+        "income_type": "gig",
+        "monthly_income": null,
+        "city_tier": "unknown",
+        "employment_stability": "volatile"
+      },
+      "financial_snapshot": {
+        "emergency_months": null,
+        "emi_amount": null,
+        "emi_ratio": null,
+        "dependents": null
+      },
+      "experience": {
+        "experience_years": 0.0,
+        "financial_knowledge_score": 1,
+        "decision_autonomy": true
+      },
+      "behavioral": {
+        "loss_reaction": null,
+        "risk_behavior": null,
+        "resilience_level": "medium",
+        "resilience_evidence": ""
+      },
+      "obligation": {
+        "near_term_obligation_level": "moderate",
+        "obligation_type": "house",
+        "future_obligation_score": 5.0
+      },
+      "life_events": [],
+      "cultural_signals": [],
+      "behavioral_signals": [
+        {
+          "type": "resilience",
+          "description": "Moderate resilience",
+          "strength": "moderate"
+        }
+      ],
+      "contradictions": [
+        {
+          "type": "stated_vs_actual",
+          "dominant_trait": "inconsistent",
+          "suppressed_trait": "unknown",
+          "explanation": "Desires long-term financial stability but currently lacks any savings discipline or structured budgeting."
+        }
+      ],
+      "flags": {
+        "grief_state": false,
+        "peer_driven": false,
+        "hidden_obligation_detected": false,
+        "fragmentation_risk": false,
+        "recency_bias_risk": false,
+        "emerging_constraint": false
+      }
+    },
+    "axis_scores": {
+      "risk": null,
+      "cashflow": 35,
+      "obligation": 15,
+      "context": 35,
+      "financial_capacity": 30
+    },
+    "cross_axis": {
+      "archetype": "High-Income Fragile Spender",
+      "archetype_description": "Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous.",
+      "mismatch": null,
+      "binding_constraint": null,
+      "suitability": {
+        "classification": "The combination of zero savings and volatile freelance income creates a critical liquidity gap. Imminent increases in fixed overheads further reduce the margin for error. Until a cash buffer is established, any equity allocation represents an unacceptable risk of forced liquidation. Recommended strategy: High-yield savings / Liquid fund; equity 0%, debt 100%. Redirect 100% of investable surplus to a liquid emergency fund until 6 months of overheads are covered.",
+        "equity_range": "0% equity RIGHT NOW",
+        "equity_ceiling_pct": 0,
+        "guidance": [
+          "No equity exposure recommended at this time",
+          "Focus: debt reduction, emergency fund, insurance"
+        ],
+        "advisor_note": "Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy."
+      },
+      "advisor_narrative": "Archetype: High-Income Fragile Spender. Advisor note: Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy. Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous. Contradictions: There is a sharp divide between his long-term aspiration for stability by age 32 and his current behavior, which is characterized by an absence of budgeting and a preference for immediate consumption. Cultural obligation burden is significant (score: 36/100). Moderate near-term obligation (house) — capital commitment expected within 1–2 years | Future financial commitment detected — adds 4 pts to obligation burden",
+      "investor_narrative": "You protect your financial foundation with care and caution. This is a strength — stability is the foundation of long-term wealth. You carry significant responsibility for others, which shapes every financial decision you make. That responsibility is also your motivation — protecting what matters most. Right now, your priority is building financial resilience — a strong foundation makes everything else possible. Growth edge: Confidence grows with knowledge. Start with the basics and build from there.",
+      "suitability_insights": [
+        "Prioritize liquidity — avoid long lock-in products",
+        "Profile reliability is low — treat all scores as provisional"
+      ],
+      "drift_expectation": null
+    },
+    "decision": {
+      "reasoning_trace": {
+        "signals_considered": [
+          "zero existing savings",
+          "volatile freelance income",
+          "imminent surge in fixed overheads",
+          "lack of analytical framework",
+          "untested risk resilience",
+          "high discretionary spending"
+        ],
+        "dominant_factors": [
+          "Zero investable capacity",
+          "Volatile freelance income",
+          "Rising fixed overheads"
+        ],
+        "secondary_factors": [
+          "Age-based risk capacity",
+          "Stated desire for stability"
+        ],
+        "contradictions": [
+          {
+            "signal_1": "Desire for stability",
+            "signal_2": "Inconsistent spending habits",
+            "resolution": "Lack of financial discipline overrides stated goals",
+            "dominant_trait": "inconsistent"
+          }
+        ],
+        "state_inference": "High-earning professional in a pre-crisis consumption phase with low actual risk capacity due to lack of liquidity.",
+        "decision_logic": [
+          "Real risk capacity is low despite age due to zero safety net and volatile income",
+          "Imminent lifestyle inflation (3BHK, office, car) further restricts liquidity for investment"
+        ]
+      },
+      "current_allocation": "0% equity RIGHT NOW",
+      "baseline_allocation": "60-80% equity long-term",
+      "allocation_mode": "transitional",
+      "state_context": {
+        "compound_state": "pre-crisis liquidity deficit",
+        "dominant_trait": "inconsistent",
+        "resilience_level": "low",
+        "state_stability": "unstable"
+      },
+      "temporal_strategy": {
+        "is_temporary": true,
+        "reassessment_trigger": "establishment of 6-month emergency fund",
+        "reassessment_timeline": "3-6 months",
+        "expected_shift": "gradual transition from cash to equity SIPs"
+      },
+      "risk_assessment": {
+        "identified_risks": [
+          "no emergency fund",
+          "income instability",
+          "no savings",
+          "upcoming major expense",
+          "no investment experience"
+        ],
+        "true_risk_capacity": "Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous.",
+        "stated_vs_actual_gap": "High earning potential masks a critical lack of actual financial resilience.",
+        "reliability": "medium"
+      },
+      "strategy": {
+        "primary_instrument": "High-yield savings / Liquid fund",
+        "equity_pct": 0,
+        "debt_pct": 100,
+        "sip_recommended": false,
+        "first_step": "Redirect 100% of investable surplus to a liquid emergency fund until 6 months of overheads are covered."
+      },
+      "archetype": "High-Income Fragile Spender",
+      "confidence": "high",
+      "reasoning": "The combination of zero savings and volatile freelance income creates a critical liquidity gap. Imminent increases in fixed overheads further reduce the margin for error. Until a cash buffer is established, any equity allocation represents an unacceptable risk of forced liquidation.",
+      "advisor_note": "Prioritize solvency over growth; investing while lacking an emergency fund is gambling, not strategy.",
+      "warning": null,
+      "retry_count": 0,
+      "fallback_used": false,
+      "guardrail_adjustments": [
+        {
+          "rule": "R6_ALLOCATION_MODE_SYNC",
+          "field": "allocation_mode",
+          "before": "defensive",
+          "after": "transitional",
+          "reason": "current_allocation (0% equity RIGHT NOW) ≠ baseline_allocation (60-80% equity long-term) — allocation_mode must be 'transitional' when current and baseline differ."
+        }
+      ],
+      "equity_range": "0% equity RIGHT NOW",
+      "true_risk_profile": "Near zero. The lack of liquidity combined with rising overheads makes any market exposure dangerous."
+    },
+    "suitability_insights": [
+      "Prioritize liquidity — avoid long lock-in products",
+      "Profile reliability is low — treat all scores as provisional"
+    ],
+    "confidence_score": 29.0,
+    "data_completeness": 40.0
+  },
+  "meta": {
+    "reason": "",
+    "confidence": "high",
+    "fallback_used": false
+  }
+}
