@@ -3,3 +3,7 @@
 .kiro/
 __pycache__/
 .pytest_cache/
+*.pdf
+
+# LLM config — contains API keys, never commit
+llm_config.json

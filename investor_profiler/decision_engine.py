@@ -17,11 +17,10 @@ Design principle: Break one complex task into multiple simple tasks.
 
 import json
 import re
-import requests
 from dataclasses import dataclass, field
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL       = "llama3.1:8b"
+from llm_adapter import llm_call
+
 MAX_RETRIES     = 3
 DEBUG_REASONING = False
 
@@ -502,19 +501,8 @@ def resolve_priority(signals, investor_state) -> str:
 # ---------------------------------------------------------------------------
 
 def _llm_call(prompt: str, num_predict: int = 1024) -> dict:
-    """Single Ollama call. Returns parsed dict or raises."""
-    payload = {
-        "model":   LLM_MODEL,
-        "prompt":  prompt,
-        "stream":  False,
-        "options": {"temperature": 0, "num_predict": num_predict},
-        "format":  "json",
-    }
-    resp = requests.post(
-        f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
-    )
-    resp.raise_for_status()
-    return _parse_json(resp.json().get("response", ""))
+    """Single LLM call via adapter. Returns parsed dict or raises."""
+    return llm_call(prompt, num_predict=num_predict)
 
 
 def _call_reasoning(narrative, investor_state, signals) -> dict:
@@ -534,7 +522,7 @@ def _call_reasoning(narrative, investor_state, signals) -> dict:
             raw = _llm_call(prompt, num_predict=768)
             if raw.get("dominant_factors") and raw.get("state_inference"):
                 return raw
-        except (requests.RequestException, json.JSONDecodeError, ValueError):
+        except (Exception,):
             if attempt == 2:
                 return {}
     return {}
@@ -561,7 +549,7 @@ def _call_decision(trace_raw: dict, priority_str: str, correction_hint: str = ""
             raw = _llm_call(prompt, num_predict=1024)
             if raw.get("current_allocation") and raw.get("state_context"):
                 return raw
-        except (requests.RequestException, json.JSONDecodeError, ValueError):
+        except (Exception,):
             if attempt == 2:
                 return {}
     return {}
@@ -710,7 +698,7 @@ def validate_reasoning(narrative, decision: DecisionOutput) -> tuple[bool, str, 
             raw.get("inconsistency", ""),
             raw.get("correction_hint", ""),
         )
-    except (requests.RequestException, json.JSONDecodeError, ValueError):
+    except (Exception,):
         return True, "", ""
 
 

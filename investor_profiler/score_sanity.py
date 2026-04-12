@@ -15,11 +15,9 @@ is instructed to weight narrative more heavily.
 
 import json
 import re
-import requests
 from dataclasses import dataclass, field
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL       = "llama3.1:8b"
+from llm_adapter import llm_call
 
 _SANITY_PROMPT = """You are a senior financial advisor reviewing computed scores against a narrative.
 
@@ -95,29 +93,15 @@ def check_score_sanity(narrative, axis_scores) -> SanityResult:
         financial_capacity=axis_scores.financial_capacity,
     )
 
-    payload = {
-        "model":   LLM_MODEL,
-        "prompt":  prompt,
-        "stream":  False,
-        "options": {"temperature": 0, "num_predict": 512},
-        "format":  "json",
-    }
-
     warning  = None
     raw_dict = {}
 
     for attempt in (1, 2):
         try:
-            resp = requests.post(
-                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
-            )
-            resp.raise_for_status()
-            text = resp.json().get("response", "").strip()
-            m = re.search(r"\{.*\}", text, re.DOTALL)
-            if m:
-                raw_dict = json.loads(m.group(0))
+            raw_dict = llm_call(prompt, num_predict=512)
+            if raw_dict:
                 break
-        except (requests.RequestException, json.JSONDecodeError, ValueError) as e:
+        except (Exception,) as e:
             if attempt == 2:
                 warning = f"Score sanity check failed: {e}"
 

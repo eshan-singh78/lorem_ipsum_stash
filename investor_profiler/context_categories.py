@@ -15,11 +15,9 @@ from dataclasses import dataclass
 from typing import Any
 import json
 import re
-import requests
 from profile_context import ProfileContext
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL       = "llama3.1:8b"
+from llm_adapter import llm_call
 
 
 _WEIGHT_QUERY_PROMPT = """You are a financial advisor calibrating scoring weights for an investor.
@@ -67,30 +65,15 @@ def _query_state_weights(investor_state) -> dict:
         state_implications=", ".join(getattr(investor_state, "state_implications", [])),
     )
 
-    payload = {
-        "model":   LLM_MODEL,
-        "prompt":  prompt,
-        "stream":  False,
-        "options": {"temperature": 0, "num_predict": 256},
-        "format":  "json",
-    }
-
     for attempt in (1, 2):
         try:
-            resp = requests.post(
-                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
-            )
-            resp.raise_for_status()
-            text = resp.json().get("response", "").strip()
-            m = re.search(r"\{.*\}", text, re.DOTALL)
-            if m:
-                raw = json.loads(m.group(0))
-                return {
-                    "obligation_weight": max(1, min(100, int(raw.get("obligation_weight", 50)))),
-                    "behavioral_weight": max(1, min(100, int(raw.get("behavioral_weight", 50)))),
-                    "income_weight":     max(1, min(100, int(raw.get("income_weight", 50)))),
-                    "reasoning":         raw.get("reasoning", ""),
-                }
+            raw = llm_call(prompt, num_predict=256)
+            return {
+                "obligation_weight": max(1, min(100, int(raw.get("obligation_weight", 50)))),
+                "behavioral_weight": max(1, min(100, int(raw.get("behavioral_weight", 50)))),
+                "income_weight":     max(1, min(100, int(raw.get("income_weight", 50)))),
+                "reasoning":         raw.get("reasoning", ""),
+            }
         except Exception:
             pass
 

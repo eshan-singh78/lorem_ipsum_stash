@@ -13,15 +13,12 @@ Design principles:
 
 import json
 import re
-import requests
 
+from llm_adapter import llm_call
 from field_registry import (
     FieldValue, RULE_OWNED_FIELDS, LLM_OWNED_FIELDS,
     DERIVED_FIELDS, make_field, check_invariants,
 )
-
-OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL       = "llama3.1:8b"
 
 
 # ---------------------------------------------------------------------------
@@ -394,7 +391,7 @@ def run_llm_analysis(
     prompt += f"\n\nInvestor description:\n{normalized_text}"
 
     payload = {
-        "model":   LLM_MODEL,
+        "model":   "unused",   # handled by adapter
         "prompt":  prompt,
         "stream":  False,
         "options": {"temperature": 0, "num_predict": 512},
@@ -406,13 +403,9 @@ def run_llm_analysis(
 
     for attempt in (1, 2):
         try:
-            resp = requests.post(
-                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
-            )
-            resp.raise_for_status()
-            raw_dict = _parse_json(resp.json().get("response", ""))
+            raw_dict = llm_call(prompt, num_predict=512)
             break
-        except (requests.RequestException, json.JSONDecodeError, ValueError) as e:
+        except (Exception,) as e:
             if attempt == 2:
                 warning  = f"LLM analysis failed after 2 attempts: {e}"
                 raw_dict = {}

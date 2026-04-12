@@ -24,8 +24,7 @@ import re
 import requests
 from dataclasses import dataclass, field
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL       = "llama3.1:8b"
+from llm_adapter import llm_call
 
 _SYNTHESIS_PROMPT = """You are a senior financial advisor.
 
@@ -330,27 +329,15 @@ def synthesize_state(
         signals=signal_summary,
     )
 
-    payload = {
-        "model":   LLM_MODEL,
-        "prompt":  prompt,
-        "stream":  False,
-        "options": {"temperature": 0, "num_predict": 768},
-        "format":  "json",
-    }
-
     warning  = None
     raw_dict = {}
 
     for attempt in (1, 2):
         try:
-            resp = requests.post(
-                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
-            )
-            resp.raise_for_status()
-            raw_dict = _parse_json(resp.json().get("response", ""))
+            raw_dict = llm_call(prompt, num_predict=768)
             if raw_dict.get("compound_state"):
                 break
-        except (requests.RequestException, json.JSONDecodeError, ValueError) as e:
+        except (Exception,) as e:
             if attempt == 2:
                 warning = f"State synthesis failed: {e}"
                 raw_dict = {}

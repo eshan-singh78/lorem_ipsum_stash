@@ -18,8 +18,7 @@ import re
 import requests
 from dataclasses import dataclass, field
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL       = "llama3.1:8b"
+from llm_adapter import llm_call
 
 _NARRATIVE_PROMPT = """You are an experienced financial advisor analyzing an investor.
 
@@ -231,38 +230,29 @@ def generate_narrative(
     minimal_facts  = _build_minimal_facts(plain_fields)
     signal_context = _build_signal_context(signals)
 
+    # Keep prompt size manageable for smaller cloud models
+    if len(signal_context) > 1500:
+        signal_context = signal_context[:1500] + "\n... [truncated for brevity]"
+
     prompt = _NARRATIVE_PROMPT.format(
-        text=normalized_text,
+        text=normalized_text[:1200],   # cap raw text too
         minimal_facts=minimal_facts,
         signal_context=signal_context,
     )
-
-    payload = {
-        "model":   LLM_MODEL,
-        "prompt":  prompt,
-        "stream":  False,
-        "options": {"temperature": 0, "num_predict": 1024},
-        "format":  "json",
-    }
 
     warning  = None
     raw_dict = {}
 
     for attempt in (1, 2):
         try:
-            resp = requests.post(
-                f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=None,
-            )
-            resp.raise_for_status()
-            raw_dict = _parse_json(resp.json().get("response", ""))
-            # Validate all required keys present
+            raw_dict = llm_call(prompt, num_predict=2048)
             if not _REQUIRED_KEYS.issubset(raw_dict.keys()):
                 missing = _REQUIRED_KEYS - raw_dict.keys()
                 if attempt == 2:
                     warning = f"Narrative incomplete — missing keys: {missing}"
             else:
                 break
-        except (requests.RequestException, json.JSONDecodeError, ValueError) as e:
+        except (Exception,) as e:
             if attempt == 2:
                 warning = f"Narrative generation failed after 2 attempts: {e}"
                 raw_dict = {}

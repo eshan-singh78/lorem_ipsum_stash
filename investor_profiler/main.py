@@ -99,6 +99,7 @@ from validation_layer import validate_scores_vs_decision, validation_to_dict
 from cross_axis import build_cross_axis_report, cross_axis_report_to_dict
 from report_layer import generate_report
 from report_formatter import build_pdf_payload, render_pdf
+from llm_adapter import configure as configure_llm, get_config as get_llm_config
 
 _KEY_FIELDS = [
     "income_type", "monthly_income", "emergency_months",
@@ -653,7 +654,19 @@ def main():
     parser.add_argument("--verbose",      "-v", action="store_true")
     parser.add_argument("--generate-pdf", action="store_true", help="Generate PDF report")
     parser.add_argument("--pdf-name",     type=str, default=None, help="Custom PDF filename")
+    parser.add_argument("--provider",     type=str, default=None,
+                        help="LLM provider: ollama | ollama_cloud | openrouter")
+    parser.add_argument("--model",        type=str, default=None,
+                        help="Model name (overrides default for chosen provider)")
     args = parser.parse_args()
+
+    # Apply LLM provider override before pipeline runs
+    if args.provider or args.model:
+        configure_llm(provider=args.provider, model=args.model)
+
+    if args.verbose:
+        cfg = get_llm_config()
+        print(f"[LLM] provider={cfg['provider']}  model={cfg['model']}  url={cfg['base_url']}")
 
     if args.file:
         with open(args.file) as f:
