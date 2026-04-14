@@ -53,7 +53,7 @@ _VALID_PROVIDERS = {PROVIDER_OLLAMA, PROVIDER_OLLAMA_CLOUD, PROVIDER_OPENROUTER}
 # Default model names per provider
 _DEFAULT_MODELS = {
     PROVIDER_OLLAMA:       "llama3.1:8b",
-    PROVIDER_OLLAMA_CLOUD: "llama3.1:8b",
+    PROVIDER_OLLAMA_CLOUD: "cogito-2.1:671b-cloud",
     PROVIDER_OPENROUTER:   "meta-llama/llama-3.1-8b-instruct:free",
 }
 
